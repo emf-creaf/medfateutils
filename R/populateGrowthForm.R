@@ -122,3 +122,78 @@ populateHeightParams<-function(SpParams,
   if(sum(is.na(SpParams$Hmed))>0) message(paste0(sum(is.na(SpParams$Hmed))," missing Hmed/Hmax values (out of ", nrow(SpParams),") after populating with input data.\n"))
   return(SpParams)
 }
+
+
+#' @rdname populateSpParamsFromInventory
+#'
+#' @param diameter_values A numeric vector of tree diameter at breast height (in cm)
+#' @param quantile_fHDmin Quantile for fHDmin
+#' @param quantile_fHDmax Quantile for fHDmax
+#'
+#' @export
+populateTreeDiameterHeightParams<-function(SpParams,
+                                           species_codes,
+                                           height_values,
+                                           diameter_values,
+                                           quantile_fHDmin = 0.05,
+                                           quantile_fHDmax = 0.95,
+                                           erase_previous = FALSE) {
+  if((length(species_codes)!=length(height_values)) || (length(diameter_values)!=length(height_values))) {
+    stop("Vectors for codes and values should have the same length!")
+  }
+
+  height_values = as.numeric(height_values)
+  diameter_values = as.numeric(diameter_values)
+  species_codes = as.character(species_codes)
+
+
+  toRemove = is.na(height_values) |  is.na(diameter_values) | is.na(species_codes)
+  if(sum(toRemove)>0) {
+    diameter_values = diameter_values[!toRemove]
+    height_values = height_values[!toRemove]
+    species_codes = species_codes[!toRemove]
+    message(paste0(sum(toRemove), " species/height/diameter missing values removed from input."))
+  }
+  toRemove = (height_values==0) | (diameter_values==0)
+  if(sum(toRemove)>0) {
+    diameter_values = diameter_values[!toRemove]
+    height_values = height_values[!toRemove]
+    species_codes = species_codes[!toRemove]
+    message(paste0(sum(toRemove), " zero height/diameter values removed from input."))
+  }
+  sp_medfate <- translateIFNSpeciesCodes(species_codes, SpParams$IFNcodes)
+
+  if(erase_previous) {
+    SpParams$fHDmin <- NA
+    SpParams$fHDmax <- NA
+  }
+
+  ntree <- 0
+  nmis <- 0
+  for(i in 1:nrow(SpParams)) {
+    medfate_code = SpParams$SpIndex[i]
+    growth_form = SpParams$GrowthForm[i]
+    if(growth_form %in% c("Tree", "Tree/Shrub")) {
+      ntree <- ntree + 1
+      sel = (sp_medfate == medfate_code)
+      sel[is.na(sel)] = FALSE
+      if(sum(sel)>0) {
+        heights <- height_values[sel]
+        heights <- heights[!is.na(heights)]
+        diameters <- diameter_values[sel]
+        diameters <- diameters[!is.na(diameters)]
+        HD_values <- heights/diameters
+        SpParams$fHDmin[i] <- round(as.numeric(quantile(HD_values, probs=quantile_fHDmin, na.rm=FALSE)))
+        SpParams$fHDmax[i] <- round(as.numeric(quantile(HD_values, probs=quantile_fHDmax, na.rm=FALSE)))
+      } else {
+        nmis <- nmis +1
+      }
+    }
+  }
+  if(nmis>0) message(paste0(nmis,
+                            " missing fHDmin/fHDmax values (out of ",
+                            ntree,
+                            " tree species) after populating with input data.\n"))
+  return(SpParams)
+
+}
