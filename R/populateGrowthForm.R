@@ -54,9 +54,9 @@ populateGrowthForm<-function(SpParams,
       notfound <- notfound+1
     }
   }
-  message(paste0(" Tree: ", ntrees, " shrub: ", nshrubs, " tree/shrub: ", ntreeshrubs, " not found: ", notfound, "\n"))
-  if(sum(!tree_inSpParams)>0) message(paste0(" Tree input codes not in SpParams: ", paste0(tree_codes[!tree_inSpParams], collapse=","), "\n"))
-  if(sum(!shrub_inSpParams)>0) message(paste0(" Shrub input codes not in SpParams: ", paste0(shrub_codes[!shrub_inSpParams], collapse=","), "\n"))
+  message(paste0(" Tree: ", ntrees, " shrub: ", nshrubs, " tree/shrub: ", ntreeshrubs, " not found: ", notfound))
+  if(sum(!tree_inSpParams)>0) message(paste0(" Tree input codes not in SpParams: ", paste0(tree_codes[!tree_inSpParams], collapse=",")))
+  if(sum(!shrub_inSpParams)>0) message(paste0(" Shrub input codes not in SpParams: ", paste0(shrub_codes[!shrub_inSpParams], collapse=",")))
   if(fill_fromGenus) {
     for(i in 1:nrow(SpParams)) {
       if(is.na(SpParams$GrowthForm[i])) { # Finds species within the same genus and copy growth form if all equal
@@ -65,7 +65,7 @@ populateGrowthForm<-function(SpParams,
         if(length(unique(genGF))==1) {
           SpParams$GrowthForm[i] = genGF[1]
           message(paste0("Species '", SpParams$Name[i],"' assigned growth form '",
-                         SpParams$GrowthForm[i],"'\n"))
+                         SpParams$GrowthForm[i],"'"))
         }
       }
     }
