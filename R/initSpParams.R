@@ -32,6 +32,8 @@ initSpParams<-function(sp_codes, sp_names,
   sp_codes = as.character(sp_codes)
   sp_names = as.character(sp_names)
 
+  if(length(sp_codes) !=length(unique(sp_codes))) stop("Species codes must be unique!")
+
   if(!is.null(group_codes)) {
     in_groups = unlist(strsplit(group_codes, split="/"))
     sel = !(sp_codes %in% in_groups)
@@ -40,8 +42,13 @@ initSpParams<-function(sp_codes, sp_names,
     sp_names = sp_names[sel]
   }
   SpParams <- data.frame(Name = c(sp_names, group_names),
-                         IFNcodes = c(sp_codes, group_codes))
+                         IFNcodes = c(sp_codes, group_codes),
+                         Genus = NA,
+                         Family = NA,
+                         Order = NA,
+                         Group = NA)
   SpParams<- SpParams[order(SpParams$Name),]
+  row.names(SpParams)<-NULL
   SpParams$SpIndex = 0:(nrow(SpParams)-1)
   data("SpParamsMED",package = "medfate", envir = environment())
   cols = names(SpParamsMED)
@@ -69,6 +76,7 @@ initSpParams<-function(sp_codes, sp_names,
       if(length(gbif_id)>0) {
         cdf<-taxize::classification(gbif_id[1], db="gbif")[[1]]
         if(class(cdf)=="data.frame") {
+          if("genus" %in% cdf$rank) SpParams$Genus[i] = cdf$name[cdf$rank=="genus"]
           if("family" %in% cdf$rank) SpParams$Family[i] = cdf$name[cdf$rank=="family"]
           if("order" %in% cdf$rank) {
             SpParams$Order[i] = cdf$name[cdf$rank=="order"]
@@ -82,5 +90,7 @@ initSpParams<-function(sp_codes, sp_names,
       }
     }
   }
+
+  if(length(SpParams$Name) !=length(unique(SpParams$Name))) warning("Final species/group names should be unique!")
   return(SpParams)
 }

@@ -1,6 +1,6 @@
 Package: medfateutils
 Type: Package
-Title: Utility functions for medfate
+Title: Utility Functions for Package `medfate`
 Version: 0.1.1
 Date: 2021-06-15
 Authors@R: c(

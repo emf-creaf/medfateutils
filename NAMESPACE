@@ -5,6 +5,8 @@ export(estimateRootingDepthList)
 export(initSpParams)
 export(soilgridsParams)
 export(translateIFNSpeciesCodes)
+export(populateGrowthForm)
+export(populateHeightParams)
 
 import(methods)
 import(medfate)
