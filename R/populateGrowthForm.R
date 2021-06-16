@@ -1,8 +1,8 @@
-#' Populate species parameters
+#' Populate species parameters from inventory data
 #'
-#' Functions to populate species parameter values from source data
+#' Functions to populate species parameter values from forest inventory source data
 #'
-#' @name populateSpParams
+#' @name populateSpParamsFromInventory
 #'
 #' @param SpParams A data frame of species parameters to be populated
 #' @param tree_codes String vector of tree species codes
@@ -73,7 +73,7 @@ populateGrowthForm<-function(SpParams,
   return(SpParams)
 }
 
-#' @rdname populateSpParams
+#' @rdname populateSpParamsFromInventory
 #'
 #' @param species_codes A string vector of species codes
 #' @param height_values A numeric vector of plant heights (in cm)

@@ -1,0 +1,30 @@
+home:
+  links:
+  - text: Medfate Package
+    href: https://emf-creaf.github.io/medfate/index.html
+    - text: Reference book
+    href: https://emf-creaf.github.io/medfatebook/index.html
+
+reference:
+- title: Forest definition
+  desc:  Forest object definition from inventory data
+  contents:
+  - starts_with("IFN2forest")
+
+- title: Species parameters
+  desc:  Creation and population of species parameter data tables.
+  contents:
+  - translateIFNSpeciesCodes
+  - initSpParams
+  - starts_with("populate")
+
+- title: Soil parameters
+  desc:  Accession of soil parameter data
+  contents:
+  - starts_with("soilgrids")
+
+- title: Roots
+  desc:  Belowground structure
+  contents:
+  - starts_with("estimateRooting")
+
