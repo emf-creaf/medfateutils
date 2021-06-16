@@ -78,5 +78,5 @@ DGCN (2005). Tercer Inventario Forestal Nacional (1997-2007): Catalunya. Direcci
 \code{\link{forest}}, \code{\link{translateIFNSpeciesCodes}}
 }
 \author{
-Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+Miquel De \enc{Cáceres}{Caceres} Ainsa, EMF-CREAF
 }

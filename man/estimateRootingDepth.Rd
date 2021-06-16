@@ -71,8 +71,8 @@ l2 = estimateRootingDepthList(l1, soilpar, 300, 100, SpParamsMED)
 Cabon, A., Martinez-Vilalta, J., de Aragon, J.M., Poyatos, R., De Caceres, M., 2018. Applying the eco-hydrological equilibrium hypothesis to model root distribution in water-limited forests. Ecohydrology 11, e2015. https://doi.org/10.1002/eco.2015
 }
 \seealso{
-\code{\link{forest}}, \code{\link{translateIFNSpeciesCodes}}
+\code{\link[medfate]{forest}}, \code{\link{translateIFNSpeciesCodes}}
 }
 \author{
-Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+Miquel De \enc{Cáceres}{Caceres} Ainsa, EMF-CREAF
 }

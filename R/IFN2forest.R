@@ -75,7 +75,7 @@
 #'
 #' @name IFN2forest
 #' @encoding UTF-8
-#' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+#' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, EMF-CREAF
 #'
 #' @references DGCN (2005). Tercer Inventario Forestal Nacional (1997-2007): Catalunya. Dirección General de Conservación de la Naturaleza, Ministerio de Medio Ambiente, Madrid.
 #' @seealso \code{\link{forest}}, \code{\link{translateIFNSpeciesCodes}}
@@ -144,6 +144,7 @@ IFN2forest<-function(IFNtreeData, IFNshrubData, ID, SpParams,
 }
 
 #' @rdname IFN2forest
+#' @export
 IFN2forestlist<-function(IFNtreeData, IFNshrubData, SpParams,
                          IFNherbData=NULL,
                          setDefaults=TRUE,

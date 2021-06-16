@@ -15,10 +15,16 @@
 #' @export
 #'
 #' @encoding UTF-8
-#' @author  Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+#' @author  Miquel De \enc{Cáceres}{Caceres} Ainsa, EMF-CREAF
+#'
+#' @seealso \code{\link[medfate]{SpParamsMED}}
 #'
 #' @examples
-#'
+#' \dontrun{
+#'   sp_codes = c("76","84")
+#'   sp_names = c("Salvia rosmarinifolia", "Pinus contorta")
+#'   initSpParams(sp_codes, sp_names)
+#' }
 initSpParams<-function(sp_codes, sp_names,
                        group_codes = NULL, group_names = NULL,
                        fill_taxonomic = TRUE) {
@@ -37,7 +43,7 @@ initSpParams<-function(sp_codes, sp_names,
                          IFNcodes = c(sp_codes, group_codes))
   SpParams<- SpParams[order(SpParams$Name),]
   SpParams$SpIndex = 0:(nrow(SpParams)-1)
-  data("SpParamsMED",package = "medfate")
+  data("SpParamsMED",package = "medfate", envir = environment())
   cols = names(SpParamsMED)
   for(cn in cols) {
     if(!(cn %in% names(SpParams))) {

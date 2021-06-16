@@ -34,8 +34,15 @@ Creates an empty species parameter table for medfate, populating taxonomic infor
 Taxonomic information is retrieved using functions in package taxize and GBIF as data source.
 }
 \examples{
-
+\dontrun{
+  sp_codes = c("76","84")
+  sp_names = c("Salvia rosmarinifolia", "Pinus contorta")
+  initSpParams(sp_codes, sp_names)
+}
+}
+\seealso{
+\code{\link[medfate]{SpParamsMED}}
 }
 \author{
-Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+Miquel De \enc{Cáceres}{Caceres} Ainsa, EMF-CREAF
 }

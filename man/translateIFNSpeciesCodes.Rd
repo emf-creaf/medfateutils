@@ -22,5 +22,5 @@ Translate IFN species codes to medfate codes
 \code{\link{IFN2forest}}
 }
 \author{
-Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+Miquel De \enc{Cáceres}{Caceres} Ainsa, EMF-CREAF
 }

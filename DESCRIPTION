@@ -5,12 +5,13 @@ Version: 0.1.1
 Date: 2021-06-15
 Authors@R: c(
 	person('Miquel', 'De Cáceres', role=c('aut','cre'),
-	email='miquelcaceres@gmail.com'))
+	email='miquelcaceres@gmail.com'),
+	person('Víctor', 'Granda', role='aut'))
 Description: Utility functions to facilitate defining inputs (soil, species or vegetation parameters) for simulations with
   package medfate.
 License: GPL (>= 2)
 Depends: R (>= 3.4.0), medfate
-Imports: taxize
+Imports: taxize, httr, jsonlite, methods, sp
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1

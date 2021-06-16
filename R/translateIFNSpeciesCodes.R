@@ -10,7 +10,7 @@
 #' @export
 #'
 #' @encoding UTF-8
-#' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+#' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, EMF-CREAF
 #' @seealso \code{\link{IFN2forest}}
 #'
 translateIFNSpeciesCodes<-function(x, IFNcodes) {
