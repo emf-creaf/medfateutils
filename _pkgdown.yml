@@ -6,10 +6,11 @@ home:
     href: https://emf-creaf.github.io/medfatebook/index.html
 
 reference:
-- title: Forest definition
+- title: Vegetation parameters
   desc:  Forest object definition from inventory data
   contents:
   - starts_with("IFN2forest")
+  - starts_with("forest")
 
 - title: Species parameters
   desc:  Creation and population of species parameter data tables.

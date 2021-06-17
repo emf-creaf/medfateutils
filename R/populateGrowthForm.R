@@ -17,7 +17,6 @@
 #' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, EMF-CREAF
 #' @seealso \code{\link{initSpParams}}
 #'
-#' @examples
 populateGrowthForm<-function(SpParams,
                              tree_codes, shrub_codes = character(0),
                              erase_previous = FALSE,
