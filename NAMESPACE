@@ -11,6 +11,7 @@ export(populateTreeDiameterHeightParams)
 export(forest_mapTreeTable)
 export(forest_mapShrubTable)
 export(forest_mapWoodyTables)
+export(populateTreeAllometries)
 
 import(methods)
 import(medfate)
