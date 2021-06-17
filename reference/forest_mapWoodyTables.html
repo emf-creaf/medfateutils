@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Function reference • medfateutils</title>
+<title>Map forest plot data — forest_mapWoodyTables • medfateutils</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,8 @@
 
 
 
-<meta property="og:title" content="Function reference" />
+<meta property="og:title" content="Map forest plot data — forest_mapWoodyTables" />
+<meta property="og:description" content="Mapping functions to facilitate building forest objects from forest plot data" />
 
 
 
@@ -58,7 +59,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-reference-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -100,117 +101,71 @@
       </header>
 
 <div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Reference</h1>
+    <h1>Map forest plot data</h1>
+    
+    <div class="hidden name"><code>forest_mapWoodyTables.Rd</code></div>
     </div>
 
-    <table class="ref-index">
+    <div class="ref-description">
+    <p>Mapping functions to facilitate building forest objects from forest plot data</p>
+    </div>
 
-    <colgroup>
-      
-      <col class="alias" />
-      <col class="title" />
-    </colgroup>
+    <pre class="usage"><span class='fu'>forest_mapTreeTable</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>mapping</span>, <span class='va'>SpParams</span>, plot.size <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
 
-    <tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-vegetation-parameters" class="hasAnchor"><a href="#section-vegetation-parameters" class="anchor"></a>Vegetation parameters</h2>
-          <p class="section-desc"><p>Forest object definition from inventory data</p></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="IFN2forest.html">IFN2forest()</a></code> <code><a href="IFN2forest.html">IFN2forestlist()</a></code> </p>
-        </td>
-        <td><p>Extract forest from IFN data</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="forest_mapWoodyTables.html">forest_mapTreeTable()</a></code> <code><a href="forest_mapWoodyTables.html">forest_mapShrubTable()</a></code> <code><a href="forest_mapWoodyTables.html">forest_mapWoodyTables()</a></code> </p>
-        </td>
-        <td><p>Map forest plot data</p></td>
-      </tr>
-    </tbody><tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-species-parameters" class="hasAnchor"><a href="#section-species-parameters" class="anchor"></a>Species parameters</h2>
-          <p class="section-desc"><p>Creation and population of species parameter data tables.</p></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="translateIFNSpeciesCodes.html">translateIFNSpeciesCodes()</a></code> </p>
-        </td>
-        <td><p>Translate species codes</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="initSpParams.html">initSpParams()</a></code> </p>
-        </td>
-        <td><p>Initializes Species Parameter Table</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="populateSpParamsFromInventory.html">populateGrowthForm()</a></code> <code><a href="populateSpParamsFromInventory.html">populateHeightParams()</a></code> <code><a href="populateSpParamsFromInventory.html">populateTreeDiameterHeightParams()</a></code> </p>
-        </td>
-        <td><p>Populate species parameters from inventory data</p></td>
-      </tr>
-    </tbody><tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-soil-parameters" class="hasAnchor"><a href="#section-soil-parameters" class="anchor"></a>Soil parameters</h2>
-          <p class="section-desc"><p>Accession of soil parameter data</p></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="soilgridsParams.html">soilgridsParams()</a></code> </p>
-        </td>
-        <td><p>SoilGrids soil description fetcher</p></td>
-      </tr>
-    </tbody><tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-roots" class="hasAnchor"><a href="#section-roots" class="anchor"></a>Roots</h2>
-          <p class="section-desc"><p>Belowground structure</p></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="estimateRootingDepth.html">estimateRootingDepth()</a></code> <code><a href="estimateRootingDepth.html">estimateRootingDepthList()</a></code> </p>
-        </td>
-        <td><p>Estimate Rooting Depth Parameters</p></td>
-      </tr>
-    </tbody>
+<span class='fu'>forest_mapShrubTable</span><span class='op'>(</span><span class='va'>y</span>, <span class='va'>mapping</span>, <span class='va'>SpParams</span><span class='op'>)</span>
+
+<span class='fu'>forest_mapWoodyTables</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>y</span>, <span class='va'>mapping</span>, <span class='va'>SpParams</span>, plot.size <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
+
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>x</th>
+      <td><p>A data frame with tree records in rows and attributes in columns</p></td>
+    </tr>
+    <tr>
+      <th>mapping</th>
+      <td><p>A named character vector to specify mappings of columns in <code>x</code> or <code>y</code> into attributes of <code>treeData</code> and <code>shrubData</code> data frames. Accepted names (and the corresponding specifications for the columns in <code>x</code> and <code>y</code>) are:</p><ul>
+<li><p>"Species": Species code (should follow codes in <code>SpParams</code>).</p></li>
+<li><p>"Species.name": Species name. In this case, the species code will be drawn by matching names with species names in <code>SpParams</code>.</p></li>
+<li><p>"N": Tree density (in ind./ha).</p></li>
+<li><p>"plot.size": Plot size (in m2) to which each plot record refers to.</p></li>
+<li><p>"DBH": Diameter at breast height (in cm).</p></li>
+<li><p>"Height": Tree or shrub height (in cm).</p></li>
+<li><p>"Z50": Depth (in mm) corresponding to 50% of fine roots.</p></li>
+<li><p>"Z95": Depth (in mm) corresponding to 95% of fine roots.</p></li>
+</ul></td>
+    </tr>
+    <tr>
+      <th>SpParams</th>
+      <td><p>A data frame with species parameters (see <code>SpParamsMED</code>).</p></td>
+    </tr>
+    <tr>
+      <th>plot.size</th>
+      <td><p>The size of plot sampled area (in m2). Alternatively, 'plot.size'
+can a column in <code>x</code> and specified in <code>mapping</code> to indicate that trees
+have been measured in different subplots and, therefore, they represent different
+densities per hectare.</p></td>
+    </tr>
+    <tr>
+      <th>y</th>
+      <td><p>A data frame with shrub records in rows and attributes in columns</p></td>
+    </tr>
     </table>
-  </div>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>Functions <code>forest_mapTreeTable</code> and <code>forest_mapShrubTable</code> return a data frame with the structure of <code>treeData</code> and <code>shrubData</code> from <code>forest</code> objects. Function <code>forest_mapWoodyTable</code> returns directly a <code>forest</code> object.</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p><code><a href='https://rdrr.io/pkg/medfate/man/forest.html'>forest</a></code></p></div>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Miquel De Cáceres Ainsa, EMF-CREAF</p>
+
+  </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
       <h2 data-toc-skip>Contents</h2>
