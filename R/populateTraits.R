@@ -7,7 +7,8 @@
 #' @param trait_mapping A named string vector specifying which trait data column should used to populate each medfate param. Elements are data base columns and names are medfate params.
 #' @param taxon_column A string identifying the column in \code{trait_table} that identifies taxa (normally species). If \code{taxon_column = NULL} then taxon names are taken from row.names.
 #' @param scalar_functions A named list of scalar functions for traits needing transformation of units or scaling. Names are medfate params.
-#' @param erase_previous A boolean flag to indicate that values should be set to NA before populating with data
+#' @param replace_previous A boolean flag to indicate that non-missing previous values should be replaced with new data
+#' @param erase_previous A boolean flag to indicate that all previous values should be set to NA before populating with new data
 #'
 #' @return A modified data frame of medfate species parameters
 #' @export
@@ -19,6 +20,7 @@ populateTraits<-function(SpParams,
                          trait_table, trait_mapping,
                          taxon_column = NULL,
                          scalar_functions = NULL,
+                         replace_previous = FALSE,
                          erase_previous = FALSE) {
 
   trait_params <- names(trait_mapping)
@@ -45,66 +47,70 @@ populateTraits<-function(SpParams,
     norder <- 0
     ngroup <- 0
     for(i in 1:nrow(SpParams)) {
-      nm = SpParams$Name[i]
-      genus = SpParams$Genus[i]
-      family = SpParams$Family[i]
-      order = SpParams$Order[i]
-      group = SpParams$Group[i]
-      ## Find species
-      trait_row <- NA
-      found <- FALSE
-      if(nm %in% trait_taxa) { # Species level
-        trait_row <- which(trait_taxa==nm)
-        if(sum(!is.na(trait_table[trait_row, trait]))>0) {
-          found <- TRUE
-          nsp <- nsp + 1
+      #Should we replace current value (only if is NA or we are to replace values)
+      can_replace <- (is.na(SpParams[i,param]) || replace_previous)
+      if(can_replace) {
+        nm = SpParams$Name[i]
+        genus = SpParams$Genus[i]
+        family = SpParams$Family[i]
+        order = SpParams$Order[i]
+        group = SpParams$Group[i]
+        ## Find species
+        trait_row <- NA
+        found <- FALSE
+        if(nm %in% trait_taxa) { # Species level
+          trait_row <- which(trait_taxa==nm)
+          if(sum(!is.na(trait_table[trait_row, trait]))>0) {
+            found <- TRUE
+            nsp <- nsp + 1
+          }
         }
-      }
-      if((!found) && (genus %in% trait_taxa)) { #Genus level
-        trait_row <- which(trait_taxa==genus)
-        if(sum(!is.na(trait_table[trait_row, trait]))>0) {
-          found <- TRUE
-          ngen <- ngen + 1
+        if((!found) && (genus %in% trait_taxa)) { #Genus level
+          trait_row <- which(trait_taxa==genus)
+          if(sum(!is.na(trait_table[trait_row, trait]))>0) {
+            found <- TRUE
+            ngen <- ngen + 1
+          }
         }
-      }
-      if((!found) && (genus %in% df$Genus)) { # Try conspecifics
-        sel = (df$Genus==genus)
-        sel[is.na(sel)] = FALSE
-        trait_row <- which(sel)
-        if(sum(!is.na(trait_table[trait_row, trait]))>0) {
-          found <- TRUE
-          ncon <- ncon + 1
+        if((!found) && (genus %in% df$Genus)) { # Try conspecifics
+          sel = (df$Genus==genus)
+          sel[is.na(sel)] = FALSE
+          trait_row <- which(sel)
+          if(sum(!is.na(trait_table[trait_row, trait]))>0) {
+            found <- TRUE
+            ncon <- ncon + 1
+          }
         }
-      }
 
-      if((!found) && (family %in% trait_taxa)) { #Family level
-        trait_row <- which(trait_taxa==family)
-        if(sum(!is.na(trait_table[trait_row, trait]))>0) {
-          found <- TRUE
-          nfam <- nfam + 1
+        if((!found) && (family %in% trait_taxa)) { #Family level
+          trait_row <- which(trait_taxa==family)
+          if(sum(!is.na(trait_table[trait_row, trait]))>0) {
+            found <- TRUE
+            nfam <- nfam + 1
+          }
         }
-      }
-      if((!found) && (order %in% trait_taxa)) { #Order level
-        trait_row <- which(trait_taxa==order)
-        if(sum(!is.na(trait_table[trait_row, trait]))>0) {
-          found <- TRUE
-          norder <- norder + 1
+        if((!found) && (order %in% trait_taxa)) { #Order level
+          trait_row <- which(trait_taxa==order)
+          if(sum(!is.na(trait_table[trait_row, trait]))>0) {
+            found <- TRUE
+            norder <- norder + 1
+          }
         }
-      }
-      if((!found) && (group %in% trait_taxa)) { #Group level
-        trait_row <- which(trait_taxa==group)
-        if(sum(!is.na(trait_table[trait_row, trait]))>0) {
-          found <- TRUE
-          ngroup <- ngroup + 1
+        if((!found) && (group %in% trait_taxa)) { #Group level
+          trait_row <- which(trait_taxa==group)
+          if(sum(!is.na(trait_table[trait_row, trait]))>0) {
+            found <- TRUE
+            ngroup <- ngroup + 1
+          }
         }
-      }
-      if(sum(!is.na(trait_row))>0) {
-        val <- mean(trait_table[trait_row, trait], na.rm=TRUE)
-        if(!is.na(val)) {
-          if(param %in% names(scalar_functions)) {
-            SpParams[i, param] <- do.call(scalar_functions[[param]], list(val))
-          } else {
-            SpParams[i, param] <- val
+        if(sum(!is.na(trait_row))>0) {
+          val <- mean(trait_table[trait_row, trait], na.rm=TRUE)
+          if(!is.na(val)) {
+            if(param %in% names(scalar_functions)) {
+              SpParams[i, param] <- do.call(scalar_functions[[param]], list(val))
+            } else {
+              SpParams[i, param] <- val
+            }
           }
         }
       }

@@ -11,6 +11,7 @@ populateTraits(
   trait_mapping,
   taxon_column = NULL,
   scalar_functions = NULL,
+  replace_previous = FALSE,
   erase_previous = FALSE
 )
 }
@@ -25,7 +26,9 @@ populateTraits(
 
 \item{scalar_functions}{A named list of scalar functions for traits needing transformation of units or scaling. Names are medfate params.}
 
-\item{erase_previous}{A boolean flag to indicate that values should be set to NA before populating with data}
+\item{replace_previous}{A boolean flag to indicate that non-missing previous values should be replaced with new data}
+
+\item{erase_previous}{A boolean flag to indicate that all previous values should be set to NA before populating with new data}
 }
 \value{
 A modified data frame of medfate species parameters
