@@ -9,7 +9,8 @@ populateTraits(
   SpParams,
   trait_table,
   trait_mapping,
-  transformation_functions = NULL,
+  taxon_column = NULL,
+  scalar_functions = NULL,
   erase_previous = FALSE
 )
 }
@@ -20,7 +21,9 @@ populateTraits(
 
 \item{trait_mapping}{A named string vector specifying which trait data column should used to populate each medfate param. Elements are data base columns and names are medfate params.}
 
-\item{transformation_functions}{A named list of scalar functions for traits needing transformation of units or scaling. Names are medfate params.}
+\item{taxon_column}{A string identifying the column in \code{trait_table} that identifies taxa (normally species). If \code{taxon_column = NULL} then taxon names are taken from row.names.}
+
+\item{scalar_functions}{A named list of scalar functions for traits needing transformation of units or scaling. Names are medfate params.}
 
 \item{erase_previous}{A boolean flag to indicate that values should be set to NA before populating with data}
 }

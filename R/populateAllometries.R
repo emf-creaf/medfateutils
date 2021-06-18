@@ -48,23 +48,33 @@ populateTreeAllometries<-function(SpParams,
       ntree <- ntree + 1
       ## Find species
       allom_row <- NA
+      found <- FALSE
       if(nm %in% allom_names) { # Species level
         allom_row <- which(allom_names==nm)
         nsp <- nsp + 1
-      } else if(genus %in% allom_names) { #Genus level
+        found <- TRUE
+      }
+      if((!found) && (genus %in% allom_names)) { #Genus level in
         allom_row <- which(allom_names==genus)
+        found <- TRUE
         ngen <- ngen + 1
-      } else if(family %in% allom_names) { #Family level
+      }
+      if((!found) && (family %in% allom_names)) { #Family level
         allom_row <- which(allom_names==family)
         nfam <- nfam + 1
-      } else if(order %in% allom_names) { #Order level
+        found <- TRUE
+      }
+      if((!found) && (order %in% allom_names)) { #Order level
         allom_row <- which(allom_names==order)
         norder <- norder + 1
-      } else if(group %in% allom_names) { #Group level
+        found <- TRUE
+      }
+      if((!found) && (group %in% allom_names)) { #Group level
         allom_row <- which(allom_names==group)
+        found <- TRUE
         ngroup <- ngroup + 1
       }
-      if(!is.na(allom_row)) {
+      if(found) {
         SpParams[i, allom_vars] <- allom_table[allom_row, allom_vars]
       } else {
         nmis <- nmis +1
