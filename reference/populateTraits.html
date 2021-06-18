@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Populate species parameters from inventory data — populateSpParamsFromInventory • medfateutils</title>
+<title>Populate species parameters from trait data — populateTraits • medfateutils</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Populate species parameters from inventory data — populateSpParamsFromInventory" />
-<meta property="og:description" content="Functions to populate species parameter values from forest inventory source data" />
+<meta property="og:title" content="Populate species parameters from trait data — populateTraits" />
+<meta property="og:description" content="Generic function to fill medfate species trait parameters from a data table of species traits" />
 
 
 
@@ -103,39 +103,20 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Populate species parameters from inventory data</h1>
+    <h1>Populate species parameters from trait data</h1>
     
-    <div class="hidden name"><code>populateSpParamsFromInventory.Rd</code></div>
+    <div class="hidden name"><code>populateTraits.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Functions to populate species parameter values from forest inventory source data</p>
+    <p>Generic function to fill medfate species trait parameters from a data table of species traits</p>
     </div>
 
-    <pre class="usage"><span class='fu'>populateGrowthForm</span><span class='op'>(</span>
+    <pre class="usage"><span class='fu'>populateTraits</span><span class='op'>(</span>
   <span class='va'>SpParams</span>,
-  <span class='va'>tree_codes</span>,
-  shrub_codes <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span><span class='op'>(</span><span class='fl'>0</span><span class='op'>)</span>,
-  erase_previous <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  fill_fromGenus <span class='op'>=</span> <span class='cn'>FALSE</span>
-<span class='op'>)</span>
-
-<span class='fu'>populateHeightParams</span><span class='op'>(</span>
-  <span class='va'>SpParams</span>,
-  <span class='va'>species_codes</span>,
-  <span class='va'>height_values</span>,
-  quantile_Hmed <span class='op'>=</span> <span class='fl'>0.5</span>,
-  quantile_Hmax <span class='op'>=</span> <span class='fl'>0.99</span>,
-  erase_previous <span class='op'>=</span> <span class='cn'>FALSE</span>
-<span class='op'>)</span>
-
-<span class='fu'>populateTreeDiameterHeightParams</span><span class='op'>(</span>
-  <span class='va'>SpParams</span>,
-  <span class='va'>species_codes</span>,
-  <span class='va'>height_values</span>,
-  <span class='va'>diameter_values</span>,
-  quantile_fHDmin <span class='op'>=</span> <span class='fl'>0.05</span>,
-  quantile_fHDmax <span class='op'>=</span> <span class='fl'>0.95</span>,
+  <span class='va'>trait_table</span>,
+  <span class='va'>trait_mapping</span>,
+  transformation_functions <span class='op'>=</span> <span class='cn'>NULL</span>,
   erase_previous <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span></pre>
 
@@ -144,51 +125,23 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>SpParams</th>
-      <td><p>A data frame of medfate species parameters to be populated</p></td>
+      <td><p>A data frame of medfate species parameters to be populated.</p></td>
     </tr>
     <tr>
-      <th>tree_codes</th>
-      <td><p>String vector of tree species codes</p></td>
+      <th>trait_table</th>
+      <td><p>A data frame with species traits in columns and row.names corresponding to taxonomic entities.</p></td>
     </tr>
     <tr>
-      <th>shrub_codes</th>
-      <td><p>String vector of shrub species codes</p></td>
+      <th>trait_mapping</th>
+      <td><p>A named string vector specifying which trait data column should used to populate each medfate param. Elements are data base columns and names are medfate params.</p></td>
+    </tr>
+    <tr>
+      <th>transformation_functions</th>
+      <td><p>A named list of scalar functions for traits needing transformation of units or scaling. Names are medfate params.</p></td>
     </tr>
     <tr>
       <th>erase_previous</th>
       <td><p>A boolean flag to indicate that values should be set to NA before populating with data</p></td>
-    </tr>
-    <tr>
-      <th>fill_fromGenus</th>
-      <td><p>A boolean flag to indicate that genus adscription of species should be used to fill missing values</p></td>
-    </tr>
-    <tr>
-      <th>species_codes</th>
-      <td><p>A string vector of species codes</p></td>
-    </tr>
-    <tr>
-      <th>height_values</th>
-      <td><p>A numeric vector of plant heights (in cm)</p></td>
-    </tr>
-    <tr>
-      <th>quantile_Hmed</th>
-      <td><p>Quantile for Hmed</p></td>
-    </tr>
-    <tr>
-      <th>quantile_Hmax</th>
-      <td><p>Quantile for Hmax</p></td>
-    </tr>
-    <tr>
-      <th>diameter_values</th>
-      <td><p>A numeric vector of tree diameter at breast height (in cm)</p></td>
-    </tr>
-    <tr>
-      <th>quantile_fHDmin</th>
-      <td><p>Quantile for fHDmin</p></td>
-    </tr>
-    <tr>
-      <th>quantile_fHDmax</th>
-      <td><p>Quantile for fHDmax</p></td>
     </tr>
     </table>
 
