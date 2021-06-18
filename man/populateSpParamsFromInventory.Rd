@@ -36,7 +36,7 @@ populateTreeDiameterHeightParams(
 )
 }
 \arguments{
-\item{SpParams}{A data frame of species parameters to be populated}
+\item{SpParams}{A data frame of medfate species parameters to be populated}
 
 \item{tree_codes}{String vector of tree species codes}
 
@@ -61,7 +61,7 @@ populateTreeDiameterHeightParams(
 \item{quantile_fHDmax}{Quantile for fHDmax}
 }
 \value{
-A modified data frame of species parameters
+A modified data frame of medfate species parameters
 }
 \description{
 Functions to populate species parameter values from forest inventory source data

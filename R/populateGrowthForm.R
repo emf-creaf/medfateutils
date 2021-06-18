@@ -4,13 +4,13 @@
 #'
 #' @name populateSpParamsFromInventory
 #'
-#' @param SpParams A data frame of species parameters to be populated
+#' @param SpParams A data frame of medfate species parameters to be populated
 #' @param tree_codes String vector of tree species codes
 #' @param shrub_codes String vector of shrub species codes
 #' @param erase_previous A boolean flag to indicate that values should be set to NA before populating with data
 #' @param fill_fromGenus A boolean flag to indicate that genus adscription of species should be used to fill missing values
 #'
-#' @return A modified data frame of species parameters
+#' @return A modified data frame of medfate species parameters
 #' @export
 #'
 #' @encoding UTF-8

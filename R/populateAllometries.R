@@ -2,12 +2,12 @@
 #'
 #' Populates allometric coefficients for tree species from an input table, trying to use the taxonomic closest entity
 #'
-#' @param SpParams A data frame of species parameters to be populated
+#' @param SpParams A data frame of medfate species parameters to be populated
 #' @param allom_table A data frame of allometric parameters in columns and taxonomic entities (from species to group) as row names.
 #' @param allom_type A string with the type of allometry to be filled, either "foliarbiomass", "crownwidth" or "crownratio".
 #' @param erase_previous A boolean flag to indicate that values should be set to NA before populating with data
 #'
-#' @return A modified data frame of species parameters
+#' @return A modified data frame of medfate species parameters
 #' @export
 #'
 #' @encoding UTF-8

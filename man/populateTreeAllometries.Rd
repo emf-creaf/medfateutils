@@ -13,7 +13,7 @@ populateTreeAllometries(
 )
 }
 \arguments{
-\item{SpParams}{A data frame of species parameters to be populated}
+\item{SpParams}{A data frame of medfate species parameters to be populated}
 
 \item{allom_table}{A data frame of allometric parameters in columns and taxonomic entities (from species to group) as row names.}
 
@@ -22,7 +22,7 @@ populateTreeAllometries(
 \item{erase_previous}{A boolean flag to indicate that values should be set to NA before populating with data}
 }
 \value{
-A modified data frame of species parameters
+A modified data frame of medfate species parameters
 }
 \description{
 Populates allometric coefficients for tree species from an input table, trying to use the taxonomic closest entity
