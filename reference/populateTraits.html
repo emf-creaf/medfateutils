@@ -118,6 +118,7 @@
   <span class='va'>trait_mapping</span>,
   taxon_column <span class='op'>=</span> <span class='cn'>NULL</span>,
   scalar_functions <span class='op'>=</span> <span class='cn'>NULL</span>,
+  replace_previous <span class='op'>=</span> <span class='cn'>FALSE</span>,
   erase_previous <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span></pre>
 
@@ -145,8 +146,12 @@
       <td><p>A named list of scalar functions for traits needing transformation of units or scaling. Names are medfate params.</p></td>
     </tr>
     <tr>
+      <th>replace_previous</th>
+      <td><p>A boolean flag to indicate that non-missing previous values should be replaced with new data</p></td>
+    </tr>
+    <tr>
       <th>erase_previous</th>
-      <td><p>A boolean flag to indicate that values should be set to NA before populating with data</p></td>
+      <td><p>A boolean flag to indicate that all previous values should be set to NA before populating with new data</p></td>
     </tr>
     </table>
 
