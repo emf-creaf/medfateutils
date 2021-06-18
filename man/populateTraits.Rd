@@ -18,9 +18,9 @@ populateTraits(
 
 \item{trait_table}{A data frame with species traits in columns and row.names corresponding to taxonomic entities.}
 
-\item{trait_mapping}{A named list specifying which trait data column should used to populate each medfate param. Elements are data base columns and names are medfate params.}
+\item{trait_mapping}{A named string vector specifying which trait data column should used to populate each medfate param. Elements are data base columns and names are medfate params.}
 
-\item{transformation_functions}{A named list of scalar functions for traits needing transformation of units or scaling.}
+\item{transformation_functions}{A named list of scalar functions for traits needing transformation of units or scaling. Names are medfate params.}
 
 \item{erase_previous}{A boolean flag to indicate that values should be set to NA before populating with data}
 }
