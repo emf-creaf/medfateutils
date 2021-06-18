@@ -116,7 +116,8 @@
   <span class='va'>SpParams</span>,
   <span class='va'>trait_table</span>,
   <span class='va'>trait_mapping</span>,
-  transformation_functions <span class='op'>=</span> <span class='cn'>NULL</span>,
+  taxon_column <span class='op'>=</span> <span class='cn'>NULL</span>,
+  scalar_functions <span class='op'>=</span> <span class='cn'>NULL</span>,
   erase_previous <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span></pre>
 
@@ -136,7 +137,11 @@
       <td><p>A named string vector specifying which trait data column should used to populate each medfate param. Elements are data base columns and names are medfate params.</p></td>
     </tr>
     <tr>
-      <th>transformation_functions</th>
+      <th>taxon_column</th>
+      <td><p>A string identifying the column in <code>trait_table</code> that identifies taxa (normally species). If <code>taxon_column = NULL</code> then taxon names are taken from row.names.</p></td>
+    </tr>
+    <tr>
+      <th>scalar_functions</th>
       <td><p>A named list of scalar functions for traits needing transformation of units or scaling. Names are medfate params.</p></td>
     </tr>
     <tr>
