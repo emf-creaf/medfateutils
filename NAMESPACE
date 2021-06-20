@@ -16,6 +16,8 @@ export(forest_mapWoodyTables)
 
 import(methods)
 import(medfate)
+importFrom("magrittr","%>%")
+importFrom("tidyr","separate")
 importFrom("taxize", "classification", "get_gbifid_")
 importFrom("httr", "GET", "content")
 importFrom("sp", "spTransform")
