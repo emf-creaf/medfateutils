@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Function reference • medfateutils</title>
+<title>Example datasets — exampledata • medfateutils</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,8 @@
 
 
 
-<meta property="og:title" content="Function reference" />
+<meta property="og:title" content="Example datasets — exampledata" />
+<meta property="og:description" content="Example data to test" />
 
 
 
@@ -58,7 +59,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-reference-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -100,135 +101,45 @@
       </header>
 
 <div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Reference</h1>
+    <h1>Example datasets</h1>
+    
+    <div class="hidden name"><code>exampledata.Rd</code></div>
     </div>
 
-    <table class="ref-index">
+    <div class="ref-description">
+    <p>Example data to test</p>
+    </div>
 
-    <colgroup>
-      
-      <col class="alias" />
-      <col class="title" />
-    </colgroup>
 
-    <tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-vegetation-parameters" class="hasAnchor"><a href="#section-vegetation-parameters" class="anchor"></a>Vegetation parameters</h2>
-          <p class="section-desc"><p>Forest object definition from inventory data</p></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="IFN2forest.html">IFN2forest()</a></code> <code><a href="IFN2forest.html">IFN2forestlist()</a></code> </p>
-        </td>
-        <td><p>Extract forest from IFN data</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="forest_mapWoodyTables.html">forest_mapTreeTable()</a></code> <code><a href="forest_mapWoodyTables.html">forest_mapShrubTable()</a></code> <code><a href="forest_mapWoodyTables.html">forest_mapWoodyTables()</a></code> </p>
-        </td>
-        <td><p>Map forest plot data</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="exampledata.html">exampledata</a></code> </p>
-        </td>
-        <td><p>Example datasets</p></td>
-      </tr>
-    </tbody><tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-species-parameters" class="hasAnchor"><a href="#section-species-parameters" class="anchor"></a>Species parameters</h2>
-          <p class="section-desc"><p>Creation and population of species parameter data tables.</p></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="translateIFNSpeciesCodes.html">translateIFNSpeciesCodes()</a></code> </p>
-        </td>
-        <td><p>Translate species codes</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="initSpParams.html">initSpParams()</a></code> </p>
-        </td>
-        <td><p>Initializes Species Parameter Table</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="populateSpParamsFromInventory.html">populateGrowthForm()</a></code> <code><a href="populateSpParamsFromInventory.html">populateHeightParams()</a></code> <code><a href="populateSpParamsFromInventory.html">populateTreeDiameterHeightParams()</a></code> </p>
-        </td>
-        <td><p>Populate species parameters from inventory data</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="populateTraits.html">populateTraits()</a></code> </p>
-        </td>
-        <td><p>Populate species parameters from trait data</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="populateTreeAllometries.html">populateTreeAllometries()</a></code> </p>
-        </td>
-        <td><p>Populate tree species allometries</p></td>
-      </tr>
-    </tbody><tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-soil-parameters" class="hasAnchor"><a href="#section-soil-parameters" class="anchor"></a>Soil parameters</h2>
-          <p class="section-desc"><p>Accession of soil parameter data</p></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="soilgridsParams.html">soilgridsParams()</a></code> </p>
-        </td>
-        <td><p>SoilGrids soil description fetcher</p></td>
-      </tr>
-    </tbody><tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-root-parameters" class="hasAnchor"><a href="#section-root-parameters" class="anchor"></a>Root parameters</h2>
-          <p class="section-desc"><p>Belowground structure</p></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="estimateRootingDepth.html">estimateRootingDepth()</a></code> <code><a href="estimateRootingDepth.html">estimateRootingDepthList()</a></code> </p>
-        </td>
-        <td><p>Estimate Rooting Depth Parameters</p></td>
-      </tr>
-    </tbody>
-    </table>
+
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>The example data set includes two data items:</p>
+<ul>
+<li><p>exampleshrubdata - Data frame with shrub plot data (43 observations and 4 variables).
+       Rows are species records and columns are 'ID', 'Species', 'FCC' and 'H'.</p></li>
+<li><p>exampletreedata - Data frame with tree plot data (118 observations and 11 variables).</p><ul>
+<li><p>ID - Plot ID</p></li>
+<li><p>Type - Plot type</p></li>
+<li><p>Species - Species code</p></li>
+<li><p>N - Tree density (ind·m-2)</p></li>
+<li><p>DBH - Tree diameter at breast height (cm)</p></li>
+<li><p>H - Tree height (m)</p></li>
+<li><p>Angle - Angle (degrees from north) measured from the center of the plot</p></li>
+<li><p>Dist - Distance (m) from the center of the plot</p></li>
+<li><p>OIF2 - Tree code at the Second Spanish Forest Inventory</p></li>
+<li><p>OIF3 - Tree code at the Third Spanish Forest Inventory</p></li>
+<li><p>FC - Code for the equation describing volume</p></li>
+</ul></li>
+</ul>
+
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Toy datasets extracted from Spanish National Forest Inventory.</p>
+
   </div>
-
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
       <h2 data-toc-skip>Contents</h2>
