@@ -116,6 +116,7 @@
   <span class='va'>SpParams</span>,
   <span class='va'>trait_table</span>,
   <span class='va'>trait_mapping</span>,
+  character_traits <span class='op'>=</span> <span class='cn'>FALSE</span>,
   taxon_column <span class='op'>=</span> <span class='cn'>NULL</span>,
   scalar_functions <span class='op'>=</span> <span class='cn'>NULL</span>,
   replace_previous <span class='op'>=</span> <span class='cn'>FALSE</span>,
@@ -136,6 +137,10 @@
     <tr>
       <th>trait_mapping</th>
       <td><p>A named string vector specifying which trait data column should used to populate each medfate param. Elements are data base columns and names are medfate params.</p></td>
+    </tr>
+    <tr>
+      <th>character_traits</th>
+      <td><p>Boolean flag to treat traits as character-valued</p></td>
     </tr>
     <tr>
       <th>taxon_column</th>
