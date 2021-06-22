@@ -81,9 +81,9 @@ initSpParams<-function(sp_codes, sp_names,
           if("order" %in% cdf$rank) {
             SpParams$Order[i] = cdf$name[cdf$rank=="order"]
             if(SpParams$Order[i] %in% c("Ginkgoales", "Pinales", "Welwitschiales", "Ephedrales")) {
-              SpParams$Group = "Gymnosperm"
+              SpParams$Group[i] = "Gymnosperm"
             } else {
-              SpParams$Group = "Angiosperm"
+              SpParams$Group[i] = "Angiosperm"
             }
           }
         }

@@ -5,6 +5,7 @@
 #' @param SpParams A data frame of medfate species parameters to be populated.
 #' @param trait_table A data frame with species traits in columns and row.names corresponding to taxonomic entities.
 #' @param trait_mapping A named string vector specifying which trait data column should used to populate each medfate param. Elements are data base columns and names are medfate params.
+#' @param character_traits Boolean flag to treat traits as character-valued
 #' @param taxon_column A string identifying the column in \code{trait_table} that identifies taxa (normally species). If \code{taxon_column = NULL} then taxon names are taken from row.names.
 #' @param scalar_functions A named list of scalar functions for traits needing transformation of units or scaling. Names are medfate params.
 #' @param replace_previous A boolean flag to indicate that non-missing previous values should be replaced with new data
@@ -18,6 +19,7 @@
 #' @seealso \code{\link{initSpParams}}
 populateTraits<-function(SpParams,
                          trait_table, trait_mapping,
+                         character_traits = FALSE,
                          taxon_column = NULL,
                          scalar_functions = NULL,
                          replace_previous = FALSE,
@@ -31,9 +33,15 @@ populateTraits<-function(SpParams,
     if(!(taxon_column %in% names(trait_table))) stop(paste0("Column '",taxon_column, "' not found among columns in trait data table!"))
     trait_taxa <- trait_table[[taxon_column]]
   }
-  df <- data.frame(rn = trait_taxa) %>%
-    tidyr::separate("rn", c("Genus", "Species"), sep=" ")
 
+  s_taxa <- strsplit(trait_taxa," ")
+  df<-data.frame(Genus = unlist(lapply(s_taxa, function(x) x[1])),
+                 Species = unlist(lapply(s_taxa, function(x) {
+                   if(length(x)>1) x[2]
+                   else ""
+                  }))
+  )
+  trait_taxa <-paste(df$Genus, df$Species)
 
   if(erase_previous) SpParams[,trait_params] = NA
 
@@ -104,20 +112,26 @@ populateTraits<-function(SpParams,
           }
         }
         if(sum(!is.na(trait_row))>0) {
-          val <- mean(trait_table[trait_row, trait], na.rm=TRUE)
-          if(!is.na(val)) {
-            if(param %in% names(scalar_functions)) {
-              SpParams[i, param] <- do.call(scalar_functions[[param]], list(val))
-            } else {
-              SpParams[i, param] <- val
+          if(!character_traits) {
+            val <- mean(trait_table[trait_row, trait], na.rm=TRUE)
+            if(!is.na(val)) {
+              if(param %in% names(scalar_functions)) {
+                SpParams[i, param] <- do.call(scalar_functions[[param]], list(val))
+              } else {
+                SpParams[i, param] <- val
+              }
             }
+          } else { # Keep most frequent
+            tfr<-table(trait_table[trait_row, trait])
+            tfr<-tfr[order(tfr, decreasing=TRUE)]
+            SpParams[i, param] <- names(tfr)[1]
           }
         }
       }
     }
     message(paste0("Mapping [",trait_mapping[j]," -> ",trait_params[j],
-                   "] species: ", nsp, " genus: ", ngen, " conspecific: ", ncon,
-                   " family: ",nfam, " order:", norder," group: ", ngroup))
+                   "] species: ", nsp, " conspecific: ", ncon,
+                   " genus: ", ngen, " family: ",nfam, " order:", norder," group: ", ngroup))
     nmis <- sum(is.na(SpParams[[param]]))
     if(nmis>0) message(paste0(nmis,
                               " missing trait values (",

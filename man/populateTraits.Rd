@@ -9,6 +9,7 @@ populateTraits(
   SpParams,
   trait_table,
   trait_mapping,
+  character_traits = FALSE,
   taxon_column = NULL,
   scalar_functions = NULL,
   replace_previous = FALSE,
@@ -21,6 +22,8 @@ populateTraits(
 \item{trait_table}{A data frame with species traits in columns and row.names corresponding to taxonomic entities.}
 
 \item{trait_mapping}{A named string vector specifying which trait data column should used to populate each medfate param. Elements are data base columns and names are medfate params.}
+
+\item{character_traits}{Boolean flag to treat traits as character-valued}
 
 \item{taxon_column}{A string identifying the column in \code{trait_table} that identifies taxa (normally species). If \code{taxon_column = NULL} then taxon names are taken from row.names.}
 
