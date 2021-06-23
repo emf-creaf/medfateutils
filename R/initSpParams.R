@@ -44,17 +44,12 @@ initSpParams<-function(sp_codes, sp_names,
     sp_names = sp_names[sel]
   }
   SpParams <- data.frame(Name = c(sp_names, group_names),
-                         IFNcodes = c(sp_codes, group_codes),
-                         Genus = NA,
-                         Family = NA,
-                         Order = NA,
-                         Group = NA)
+                         IFNcodes = c(sp_codes, group_codes))
   SpParams<- SpParams[order(SpParams$Name),]
   row.names(SpParams)<-NULL
   SpParams$SpIndex = 0:(nrow(SpParams)-1)
-  data("SpParamsMED",package = "medfate", envir = environment())
-  cols = names(SpParamsMED)
-  for(cn in cols) {
+  paramDef = getSpParamsDefinition()
+  for(cn in paramDef$ParameterName) {
     if(!(cn %in% names(SpParams))) {
       SpParams[[cn]] = NA
     }
