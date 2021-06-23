@@ -7,6 +7,7 @@
 #' @param group_codes List of species group codes (strings where species of the same group are separated by "/", e.g. "code1/code2/code3")
 #' @param group_names Vector of group names of the same length as \code{group_codes}
 #' @param fill_taxonomic Boolean flag to indicate that taxonomic information should be filled (retrieved from GBIF using package 'taxize')
+#' @param verbose A boolean flag to indicate extra console output
 #'
 #' @details Taxonomic information is retrieved using functions in package taxize and GBIF as data source.
 #'
@@ -27,7 +28,8 @@
 #' }
 initSpParams<-function(sp_codes, sp_names,
                        group_codes = NULL, group_names = NULL,
-                       fill_taxonomic = TRUE) {
+                       fill_taxonomic = TRUE,
+                       verbose = FALSE) {
 
   sp_codes = as.character(sp_codes)
   sp_names = as.character(sp_names)
@@ -37,7 +39,7 @@ initSpParams<-function(sp_codes, sp_names,
   if(!is.null(group_codes)) {
     in_groups = unlist(strsplit(group_codes, split="/"))
     sel = !(sp_codes %in% in_groups)
-    cat(paste0(sum(!sel), " codes found in groups.\n"))
+    if(verbose) cat(paste0(sum(!sel), " codes found in groups.\n"))
     sp_codes = sp_codes[sel]
     sp_names = sp_names[sel]
   }
@@ -58,25 +60,23 @@ initSpParams<-function(sp_codes, sp_names,
     }
   }
   if(fill_taxonomic) {
+    if(verbose) cat(paste0("Retrieving taxonomic data: \n"))
+    if(verbose) pb = txtProgressBar(0, nrow(SpParams), style=3)
     for(i in 1:nrow(SpParams)) {
+      if(verbose) setTxtProgressBar(pb, i)
       s = strsplit(SpParams$Name[i]," ")[[1]]
-      id_df<-taxize::get_gbifid_(s[1])[[1]]
+      SpParams$Genus[i] = s[1] # Genus always first word
+      id_df<-taxize::get_gbifid_(s[1], messages = FALSE)[[1]]
       gbif_id<-numeric(0)
       if(nrow(id_df)>0) {
-        sel1 = id_df$kingdom=="Plantae" & id_df$status=="ACCEPTED" & id_df$matchtype=="EXACT"
+        sel1 = id_df$kingdom=="Plantae" & id_df$matchtype=="EXACT"
         if(sum(sel1)>0) {
           gbif_id<-id_df$usagekey[sel1]
-        } else {
-          sel2 = id_df$kingdom=="Plantae" & id_df$status=="SYNONYM" & id_df$matchtype=="EXACT"
-          if(sum(sel2)>0) { #Is not accepted
-            gbif_id<-id_df$acceptedusagekey[sel2][1]
-          }
         }
       }
       if(length(gbif_id)>0) {
         cdf<-taxize::classification(gbif_id[1], db="gbif")[[1]]
         if(class(cdf)=="data.frame") {
-          if("genus" %in% cdf$rank) SpParams$Genus[i] = cdf$name[cdf$rank=="genus"]
           if("family" %in% cdf$rank) SpParams$Family[i] = cdf$name[cdf$rank=="family"]
           if("order" %in% cdf$rank) {
             SpParams$Order[i] = cdf$name[cdf$rank=="order"]

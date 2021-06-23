@@ -10,6 +10,7 @@
 #' @param scalar_functions A named list of scalar functions for traits needing transformation of units or scaling. Names are medfate params.
 #' @param replace_previous A boolean flag to indicate that non-missing previous values should be replaced with new data
 #' @param erase_previous A boolean flag to indicate that all previous values should be set to NA before populating with new data
+#' @param verbose A boolean flag to indicate extra console output
 #'
 #' @return A modified data frame of medfate species parameters
 #' @export
@@ -23,7 +24,8 @@ populateTraits<-function(SpParams,
                          taxon_column = NULL,
                          scalar_functions = NULL,
                          replace_previous = FALSE,
-                         erase_previous = FALSE) {
+                         erase_previous = FALSE,
+                         verbose = FALSE) {
 
   trait_params <- names(trait_mapping)
   if(sum(names(trait_table) %in% trait_mapping)!=length(trait_params)) stop("Trait data table should contain all variables to be mapped!")
@@ -112,6 +114,7 @@ populateTraits<-function(SpParams,
           }
         }
         if(sum(!is.na(trait_row))>0) {
+          if(verbose) message(paste0("Parameter: ",param ," Taxon:", nm , " Rows: ",paste0(trait_row, collapse=","),"\n"))
           if(!character_traits) {
             val <- mean(trait_table[trait_row, trait], na.rm=TRUE)
             if(!is.na(val)) {
@@ -131,7 +134,7 @@ populateTraits<-function(SpParams,
     }
     message(paste0("Mapping [",trait_mapping[j]," -> ",trait_params[j],
                    "] species: ", nsp, " conspecific: ", ncon,
-                   " genus: ", ngen, " family: ",nfam, " order:", norder," group: ", ngroup))
+                   " genus: ", ngen, " family: ",nfam, " order: ", norder," group: ", ngroup))
     nmis <- sum(is.na(SpParams[[param]]))
     if(nmis>0) message(paste0(nmis,
                               " missing trait values (",

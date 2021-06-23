@@ -13,7 +13,8 @@ populateTraits(
   taxon_column = NULL,
   scalar_functions = NULL,
   replace_previous = FALSE,
-  erase_previous = FALSE
+  erase_previous = FALSE,
+  verbose = FALSE
 )
 }
 \arguments{
@@ -32,6 +33,8 @@ populateTraits(
 \item{replace_previous}{A boolean flag to indicate that non-missing previous values should be replaced with new data}
 
 \item{erase_previous}{A boolean flag to indicate that all previous values should be set to NA before populating with new data}
+
+\item{verbose}{A boolean flag to indicate extra console output}
 }
 \value{
 A modified data frame of medfate species parameters

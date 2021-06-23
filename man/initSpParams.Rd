@@ -10,7 +10,8 @@ initSpParams(
   sp_names,
   group_codes = NULL,
   group_names = NULL,
-  fill_taxonomic = TRUE
+  fill_taxonomic = TRUE,
+  verbose = FALSE
 )
 }
 \arguments{
@@ -23,6 +24,8 @@ initSpParams(
 \item{group_names}{Vector of group names of the same length as \code{group_codes}}
 
 \item{fill_taxonomic}{Boolean flag to indicate that taxonomic information should be filled (retrieved from GBIF using package 'taxize')}
+
+\item{verbose}{A boolean flag to indicate extra console output}
 }
 \value{
 A data frame with empty species parameter values suitable for medfate simulations
