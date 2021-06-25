@@ -115,9 +115,11 @@
     <pre class="usage"><span class='fu'>initSpParams</span><span class='op'>(</span>
   <span class='va'>sp_codes</span>,
   <span class='va'>sp_names</span>,
+  <span class='va'>SpParamsDefinition</span>,
   group_codes <span class='op'>=</span> <span class='cn'>NULL</span>,
   group_names <span class='op'>=</span> <span class='cn'>NULL</span>,
-  fill_taxonomic <span class='op'>=</span> <span class='cn'>TRUE</span>
+  fill_taxonomic <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  verbose <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -132,6 +134,10 @@
       <td><p>Vector of IFN species names</p></td>
     </tr>
     <tr>
+      <th>SpParamsDefinition</th>
+      <td><p>Data frame of species parameter definition from package 'medfate'</p></td>
+    </tr>
+    <tr>
       <th>group_codes</th>
       <td><p>List of species group codes (strings where species of the same group are separated by "/", e.g. "code1/code2/code3")</p></td>
     </tr>
@@ -142,6 +148,10 @@
     <tr>
       <th>fill_taxonomic</th>
       <td><p>Boolean flag to indicate that taxonomic information should be filled (retrieved from GBIF using package 'taxize')</p></td>
+    </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p>A boolean flag to indicate extra console output</p></td>
     </tr>
     </table>
 
