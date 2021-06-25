@@ -8,6 +8,7 @@
 initSpParams(
   sp_codes,
   sp_names,
+  SpParamsDefinition,
   group_codes = NULL,
   group_names = NULL,
   fill_taxonomic = TRUE,
@@ -18,6 +19,8 @@ initSpParams(
 \item{sp_codes}{Vector of IFN species codes}
 
 \item{sp_names}{Vector of IFN species names}
+
+\item{SpParamsDefinition}{Data frame of species parameter definition from package 'medfate'}
 
 \item{group_codes}{List of species group codes (strings where species of the same group are separated by "/", e.g. "code1/code2/code3")}
 

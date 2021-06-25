@@ -4,6 +4,7 @@
 #'
 #' @param sp_codes Vector of IFN species codes
 #' @param sp_names Vector of IFN species names
+#' @param SpParamsDefinition Data frame of species parameter definition from package 'medfate'
 #' @param group_codes List of species group codes (strings where species of the same group are separated by "/", e.g. "code1/code2/code3")
 #' @param group_names Vector of group names of the same length as \code{group_codes}
 #' @param fill_taxonomic Boolean flag to indicate that taxonomic information should be filled (retrieved from GBIF using package 'taxize')
@@ -26,7 +27,7 @@
 #'   sp_names = c("Salvia rosmarinifolia", "Pinus contorta")
 #'   initSpParams(sp_codes, sp_names)
 #' }
-initSpParams<-function(sp_codes, sp_names,
+initSpParams<-function(sp_codes, sp_names, SpParamsDefinition,
                        group_codes = NULL, group_names = NULL,
                        fill_taxonomic = TRUE,
                        verbose = FALSE) {
@@ -48,8 +49,7 @@ initSpParams<-function(sp_codes, sp_names,
   SpParams<- SpParams[order(SpParams$Name),]
   row.names(SpParams)<-NULL
   SpParams$SpIndex = 0:(nrow(SpParams)-1)
-  paramDef = getSpParamsDefinition()
-  for(cn in paramDef$ParameterName) {
+  for(cn in SpParamsDefinition$ParameterName) {
     if(!(cn %in% names(SpParams))) {
       SpParams[[cn]] = NA
     }
