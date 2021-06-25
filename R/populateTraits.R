@@ -7,6 +7,8 @@
 #' @param trait_mapping A named string vector specifying which trait data column should used to populate each medfate param. Elements are data base columns and names are medfate params.
 #' @param character_traits Boolean flag to treat traits as character-valued
 #' @param taxon_column A string identifying the column in \code{trait_table} that identifies taxa (normally species). If \code{taxon_column = NULL} then taxon names are taken from row.names.
+#' @param summary_function A function to summarize multiple values for the same taxonomic entity. By default, arithmetic averages are used, excluding missing values.
+#' @param summary_params A list of summary function params (by default \code{na.rm=TRUE}).
 #' @param scalar_functions A named list of scalar functions for traits needing transformation of units or scaling. Names are medfate params.
 #' @param replace_previous A boolean flag to indicate that non-missing previous values should be replaced with new data
 #' @param erase_previous A boolean flag to indicate that all previous values should be set to NA before populating with new data
@@ -22,6 +24,8 @@ populateTraits<-function(SpParams,
                          trait_table, trait_mapping,
                          character_traits = FALSE,
                          taxon_column = NULL,
+                         summary_function = "mean",
+                         summary_params = list(na.rm=TRUE),
                          scalar_functions = NULL,
                          replace_previous = FALSE,
                          erase_previous = FALSE,
@@ -116,7 +120,9 @@ populateTraits<-function(SpParams,
         if(sum(!is.na(trait_row))>0) {
           if(verbose) message(paste0("Parameter: ",param ," Taxon:", nm , " Rows: ",paste0(trait_row, collapse=","),"\n"))
           if(!character_traits) {
-            val <- mean(trait_table[trait_row, trait], na.rm=TRUE)
+            l = c(list("x"=as.numeric(trait_table[trait_row, trait])), summary_params)
+            val <- do.call(summary_function, l)
+              # val <- mean(trait_table[trait_row, trait], na.rm=TRUE)
             if(!is.na(val)) {
               if(param %in% names(scalar_functions)) {
                 SpParams[i, param] <- do.call(scalar_functions[[param]], list(val))

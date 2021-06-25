@@ -11,6 +11,8 @@ populateTraits(
   trait_mapping,
   character_traits = FALSE,
   taxon_column = NULL,
+  summary_function = "mean",
+  summary_params = list(na.rm = TRUE),
   scalar_functions = NULL,
   replace_previous = FALSE,
   erase_previous = FALSE,
@@ -27,6 +29,10 @@ populateTraits(
 \item{character_traits}{Boolean flag to treat traits as character-valued}
 
 \item{taxon_column}{A string identifying the column in \code{trait_table} that identifies taxa (normally species). If \code{taxon_column = NULL} then taxon names are taken from row.names.}
+
+\item{summary_function}{A function to summarize multiple values for the same taxonomic entity. By default, arithmetic averages are used, excluding missing values.}
+
+\item{summary_params}{A list of summary function params (by default \code{na.rm=TRUE}).}
 
 \item{scalar_functions}{A named list of scalar functions for traits needing transformation of units or scaling. Names are medfate params.}
 
