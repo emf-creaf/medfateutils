@@ -131,9 +131,13 @@ populateTraits<-function(SpParams,
               }
             }
           } else { # Keep most frequent
-            tfr<-table(trait_table[trait_row, trait])
-            tfr<-tfr[order(tfr, decreasing=TRUE)]
-            SpParams[i, param] <- names(tfr)[1]
+            vals <- trait_table[trait_row, trait]
+            vals <- vals[!is.na(vals)]
+            tfr<-table(vals)
+            if(length(tfr)>0) {
+              tfr<-tfr[order(tfr, decreasing=TRUE)]
+              SpParams[i, param] <- names(tfr)[1]
+            }
           }
         }
       }
