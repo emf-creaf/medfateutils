@@ -23,5 +23,10 @@ translateIFNSpeciesCodes<-function(x, IFNcodes) {
       repVect[ch] = (i-1) #Species indices start from 0 in medfate
     }
   }
-  return(repVect[as.numeric(x)])
+  # Translate codes by transforming input to numeric values.
+  # Non-numeric strings will result in NA codes
+  x_numeric = as.numeric(x)
+  result = rep(NA, length(x_numeric))
+  result[!is.na(x_numeric)] <-repVect[x_numeric[!is.na(x_numeric)]]
+  return(result)
 }
