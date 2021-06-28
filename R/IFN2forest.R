@@ -16,10 +16,10 @@
     f$treeData$Z50 = SpParams$Z50[f$treeData$Species+1]
     f$shrubData$Z95 = SpParams$Z95[f$shrubData$Species+1]
     f$shrubData$Z50 = SpParams$Z50[f$shrubData$Species+1]
-    f$treeData$Z50[is.na(f$treeData$Z50)] = 400
     f$treeData$Z95[is.na(f$treeData$Z95)] = 1000
-    f$shrubData$Z50[is.na(f$shrubData$Z50)] = 300
     f$shrubData$Z95[is.na(f$shrubData$Z95)] = 800
+    f$treeData$Z50[is.na(f$treeData$Z50)] = exp(log(f$treeData$Z95[is.na(f$treeData$Z50)])/1.3)
+    f$shrubData$Z50[is.na(f$shrubData$Z50)] = exp(log(f$shrubData$Z95[is.na(f$shrubData$Z50)])/1.3)
   }
   if(filterWrongRecords) {
     #Remove missing
