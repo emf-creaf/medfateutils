@@ -26,6 +26,7 @@ translateIFNSpeciesCodes<-function(x, IFNcodes) {
   # Translate codes by transforming input to numeric values.
   # Non-numeric strings will result in NA codes
   x_numeric = as.numeric(x)
+  x_numeric[x_numeric <= 0] = NA
   result = rep(NA, length(x_numeric))
   result[!is.na(x_numeric)] <-repVect[x_numeric[!is.na(x_numeric)]]
   return(result)
