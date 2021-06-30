@@ -12,10 +12,10 @@
   f$shrubData$Z50 =rep(NA, nrow(f$shrubData))
   f$shrubData$Z95 =rep(NA, nrow(f$shrubData))
   if(setDefaults) {
-    f$treeData$Z95 = SpParams$Z95[f$treeData$Species+1]
-    f$treeData$Z50 = SpParams$Z50[f$treeData$Species+1]
-    f$shrubData$Z95 = SpParams$Z95[f$shrubData$Species+1]
-    f$shrubData$Z50 = SpParams$Z50[f$shrubData$Species+1]
+    f$treeData$Z95 = species_parameter(f$treeData$Species, SpParams, "Z95")
+    f$treeData$Z50 = species_parameter(f$treeData$Species, SpParams, "Z50")
+    f$shrubData$Z95 = species_parameter(f$shrubData$Species, SpParams, "Z95")
+    f$shrubData$Z50 = species_parameter(f$shrubData$Species, SpParams, "Z50")
     f$treeData$Z95[is.na(f$treeData$Z95)] = 1000
     f$shrubData$Z95[is.na(f$shrubData$Z95)] = 800
     f$treeData$Z50[is.na(f$treeData$Z50)] = exp(log(f$treeData$Z95[is.na(f$treeData$Z50)])/1.3)
@@ -23,22 +23,22 @@
   }
   if(filterWrongRecords) {
     #Remove missing
-    f$treeData = f$treeData[!is.na(f$treeData$Height),]
-    f$treeData = f$treeData[!is.na(f$treeData$DBH),]
-    f$treeData = f$treeData[!is.na(f$treeData$N),]
-    f$shrubData = f$shrubData[!is.na(f$shrubData$Cover),]
-    f$shrubData = f$shrubData[!is.na(f$shrubData$Height),]
+    f$treeData = f$treeData[!is.na(f$treeData$Height),, drop=FALSE]
+    f$treeData = f$treeData[!is.na(f$treeData$DBH),, drop=FALSE]
+    f$treeData = f$treeData[!is.na(f$treeData$N),, drop=FALSE]
+    f$shrubData = f$shrubData[!is.na(f$shrubData$Cover),, drop=FALSE]
+    f$shrubData = f$shrubData[!is.na(f$shrubData$Height),, drop=FALSE]
     #Remove zero values
-    f$treeData = f$treeData[f$treeData$Height>0,]
-    f$treeData = f$treeData[f$treeData$DBH>0,]
-    f$treeData = f$treeData[f$treeData$N>0,]
-    f$shrubData = f$shrubData[f$shrubData$Cover>0,]
-    f$shrubData = f$shrubData[f$shrubData$Height>0,]
+    f$treeData = f$treeData[f$treeData$Height>0,, drop=FALSE]
+    f$treeData = f$treeData[f$treeData$DBH>0,, drop=FALSE]
+    f$treeData = f$treeData[f$treeData$N>0,, drop=FALSE]
+    f$shrubData = f$shrubData[f$shrubData$Cover>0,, drop=FALSE]
+    f$shrubData = f$shrubData[f$shrubData$Height>0,, drop=FALSE]
     #Remove wrong growthform
-    tgf = SpParams$GrowthForm[f$treeData$Species+1]
-    f$treeData = f$treeData[tgf!="Shrub",]
-    sgf = SpParams$GrowthForm[f$shrubData$Species+1]
-    f$shrubData = f$shrubData[sgf!="Tree",]
+    tgf = species_characterParameter(f$treeData$Species, SpParams, "GrowthForm")
+    f$treeData = f$treeData[tgf!="Shrub",, drop=FALSE]
+    sgf = species_characterParameter(f$shrubData$Species, SpParams, "GrowthForm")
+    f$shrubData = f$shrubData[sgf!="Tree",, drop=FALSE]
   }
 
   f$herbCover = NA
@@ -119,14 +119,18 @@ IFN2forest<-function(IFNtreeData, IFNshrubData, ID, SpParams,
   #Remove NA species
   if(sum(is.na(xid$SpeciesMF))>0) {
     if(verbose) {
-      cat(paste0("Tree data records with unrecognized IFN species codes: ",sum(is.na(xid$SpeciesMF)),"/", length(xid$SpeciesMF),"\n"))
+      cat(paste0("Tree data records with unrecognized IFN species codes: ",
+                 sum(is.na(xid$SpeciesMF)),"/", length(xid$SpeciesMF),
+                 " (",round(100*sum(is.na(xid$SpeciesMF))/length(xid$SpeciesMF),1),"%)\n"))
       print(table(xid$Species[is.na(xid$SpeciesMF)], useNA = "ifany"))
     }
     xid = xid[!is.na(xid$SpeciesMF),]
   }
   if(sum(is.na(yid$SpeciesMF))>0) {
     if(verbose) {
-      cat(paste0("Shrub data records with unrecognized IFN species codes: ",sum(is.na(yid$SpeciesMF)),"/", length(yid$SpeciesMF),"\n"))
+      cat(paste0("Shrub data records with unrecognized IFN species codes: ",
+                 sum(is.na(yid$SpeciesMF)),"/", length(yid$SpeciesMF),
+                 " (",round(100*sum(is.na(yid$SpeciesMF))/length(yid$SpeciesMF),1),"%)\n"))
       print(table(yid$Species[is.na(yid$SpeciesMF)], useNA = "ifany"))
     }
     yid = yid[!is.na(yid$SpeciesMF),]
@@ -179,14 +183,18 @@ IFN2forestlist<-function(IFNtreeData, IFNshrubData, SpParams,
   #Remove NA species
   if(sum(is.na(x$SpeciesMF))>0) {
     if(verbose) {
-      cat(paste0("Tree data records with unrecognized IFN species codes: ",sum(is.na(x$SpeciesMF)),"/", length(x$SpeciesMF),"\n"))
+      cat(paste0("Tree data records with unrecognized IFN species codes: ",
+                 sum(is.na(x$SpeciesMF)),"/", length(x$SpeciesMF),
+                 " (",round(100*sum(is.na(x$SpeciesMF))/length(x$SpeciesMF),1),"%)\n"))
       print(table(x$Species[is.na(x$SpeciesMF)], useNA = "ifany"))
     }
     x = x[!is.na(x$SpeciesMF),]
   }
   if(sum(is.na(y$SpeciesMF))>0) {
     if(verbose) {
-      cat(paste0("Shrub data records with unrecognized IFN species codes: ",sum(is.na(y$SpeciesMF)),"/", length(y$SpeciesMF),"\n"))
+      cat(paste0("Shrub data records with unrecognized IFN species codes: ",
+                 sum(is.na(y$SpeciesMF)),"/", length(y$SpeciesMF),
+                 " (",round(100*sum(is.na(y$SpeciesMF))/length(y$SpeciesMF),1),"%)\n"))
       print(table(y$Species[is.na(y$SpeciesMF)], useNA = "ifany"))
     }
     y = y[!is.na(y$SpeciesMF),]
