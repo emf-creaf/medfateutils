@@ -10,6 +10,7 @@
 #' @return A modified data frame of medfate species parameters
 #' @export
 #'
+#' @name populateAllometries
 #' @encoding UTF-8
 #' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, EMF-CREAF
 #' @seealso \code{\link{initSpParams}}
@@ -87,4 +88,72 @@ populateTreeAllometries<-function(SpParams,
                             ntree,
                             " tree species) after populating with input data.\n"))
   return(SpParams)
+}
+
+
+#' @rdname IFN2forest
+#'
+#' @param coef_mapping A named string vector specifying which data column should used to populate each medfate param. Elements are data base columns and names are medfate params.
+#' @param sp_params_allom A data table of species allometric coefficients (typically from package medfuels)
+#' @param group_params_allom A data table of group allometric coefficients (typically from package medfuels)
+#' @param species_groups A data table specifying raunkiaer forms for many species (typically from package medfuels)
+#'
+#' @export
+populateShrubAllometriesFromMedfuels<-function(SpParams,
+                                               coef_mapping,
+                                               sp_params_allom, group_params_allom,
+                                               species_groups) {
+  parnames = names(coef_mapping)
+  sp_allom = row.names(sp_params_allom)
+  gr_allom = row.names(group_params_allom)
+  gen_sp = paste(species_groups$Genus, species_groups$Species)
+  nshrub <- 0
+  nmis <- 0
+  for(i in 1:nrow(SpParams)) {
+    growth_form <- SpParams$GrowthForm[i]
+    if(growth_form %in% c("Shrub", "Tree/Shrub")) {
+      nshrub <- nshrub +1
+      nm <- SpParams$Name[i]
+      gen <- strsplit(nm," ")[[1]][1]
+      if(nm %in% sp_allom) { # If species-specific allometry available
+        sp_row<-which(sp_allom==nm)
+        if(length(sp_row)==1) {
+          for(j in 1:length(parnames)) {
+            SpParams[i, parnames[j]] = sp_params_allom[sp_row, coef_mapping[[j]]]
+          }
+        }
+      } else if (nm %in% gen_sp) { # If species is found in medfuels species table
+        form_raunkiaer <-  species_groups$`shrub type`[which(gen_sp==nm)[1]]
+        gr_row<-which(gr_allom==form_raunkiaer)
+        if(length(gr_row)==1) {
+          for(j in 1:length(parnames)) {
+            SpParams[i, parnames[j]]= group_params_allom[gr_row, coef_mapping[[j]]]
+          }
+        }
+      } else if (gen %in% species_groups$Genus) { # If genus occurs in medfuels table
+        forms_raunkiaer <-  species_groups$`shrub type`[which(species_groups$Genus==gen)]
+        # Find most-frequent  raunkiaer form
+        tfr<-table(forms_raunkiaer)
+        tfr<-tfr[order(tfr, decreasing=TRUE)]
+        gr_row<-which(gr_allom==names(tfr)[1])
+        if(length(gr_row)==1) {
+          for(j in 1:length(parnames)) {
+            SpParams[i, parnames[j]]= group_params_allom[gr_row, coef_mapping[[j]]]
+          }
+        }
+      } else {
+        nmis <- nmis + 1
+      }
+    }
+  }
+
+  for(j in 1:length(parnames)) {
+    nmis <- sum(is.na(SpParams[SpParams$GrowthForm %in% c("Shrub", "Tree/Shrub"),parnames[j]]))
+    if(nmis>0) message(paste0("'",parnames[j], "' has ", nmis,
+                              " missing trait values (",
+                              round(100*nmis/nshrub,1),
+                              " % of shrubs) after populating with input data.\n"))
+  }
+  return(SpParams)
+
 }
