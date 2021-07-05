@@ -4,6 +4,7 @@
 \name{populateAllometries}
 \alias{populateAllometries}
 \alias{populateTreeAllometries}
+\alias{populateShrubAllometriesFromMedfuels}
 \title{Populate tree species allometries}
 \usage{
 populateTreeAllometries(
@@ -11,6 +12,14 @@ populateTreeAllometries(
   allom_table,
   allom_type = "foliarbiomass",
   erase_previous = FALSE
+)
+
+populateShrubAllometriesFromMedfuels(
+  SpParams,
+  coef_mapping,
+  sp_params_allom,
+  group_params_allom,
+  species_groups
 )
 }
 \arguments{
@@ -21,6 +30,14 @@ populateTreeAllometries(
 \item{allom_type}{A string with the type of allometry to be filled, either "foliarbiomass", "crownwidth" or "crownratio".}
 
 \item{erase_previous}{A boolean flag to indicate that values should be set to NA before populating with data}
+
+\item{coef_mapping}{A named string vector specifying which data column should used to populate each medfate param. Elements are data base columns and names are medfate params.}
+
+\item{sp_params_allom}{A data table of species allometric coefficients (typically from package medfuels)}
+
+\item{group_params_allom}{A data table of group allometric coefficients (typically from package medfuels)}
+
+\item{species_groups}{A data table specifying raunkiaer forms for many species (typically from package medfuels)}
 }
 \value{
 A modified data frame of medfate species parameters
