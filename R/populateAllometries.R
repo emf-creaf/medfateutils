@@ -91,7 +91,7 @@ populateTreeAllometries<-function(SpParams,
 }
 
 
-#' @rdname IFN2forest
+#' @rdname populateAllometries
 #'
 #' @param coef_mapping A named string vector specifying which data column should used to populate each medfate param. Elements are data base columns and names are medfate params.
 #' @param sp_params_allom A data table of species allometric coefficients (typically from package medfuels)
