@@ -132,14 +132,6 @@
   setDefaults <span class='op'>=</span> <span class='cn'>TRUE</span>,
   filterWrongRecords <span class='op'>=</span> <span class='cn'>TRUE</span>,
   verbose <span class='op'>=</span> <span class='cn'>TRUE</span>
-<span class='op'>)</span>
-
-<span class='fu'>populateShrubAllometriesFromMedfuels</span><span class='op'>(</span>
-  <span class='va'>SpParams</span>,
-  <span class='va'>coef_mapping</span>,
-  <span class='va'>sp_params_allom</span>,
-  <span class='va'>group_params_allom</span>,
-  <span class='va'>species_groups</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -180,22 +172,6 @@
     <tr>
       <th>verbose</th>
       <td><p>A boolean flag to indicate console output.</p></td>
-    </tr>
-    <tr>
-      <th>coef_mapping</th>
-      <td><p>A named string vector specifying which data column should used to populate each medfate param. Elements are data base columns and names are medfate params.</p></td>
-    </tr>
-    <tr>
-      <th>sp_params_allom</th>
-      <td><p>A data table of species allometric coefficients (typically from package medfuels)</p></td>
-    </tr>
-    <tr>
-      <th>group_params_allom</th>
-      <td><p>A data table of group allometric coefficients (typically from package medfuels)</p></td>
-    </tr>
-    <tr>
-      <th>species_groups</th>
-      <td><p>A data table specifying raunkiaer forms for many species (typically from package medfuels)</p></td>
     </tr>
     </table>
 
