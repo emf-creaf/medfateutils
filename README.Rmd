@@ -27,3 +27,5 @@ devtools::install_github("emf-creaf/medfateutils")
 ## Usage
 
 The package is still under active development. 
+
+An example of extensive usage of the functions in **medfateutils** can be found in article '*Species parameterization for Spain*' from [medfate's website](https://emf-creaf.github.io/medfate/).
