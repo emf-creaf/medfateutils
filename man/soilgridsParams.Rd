@@ -33,7 +33,7 @@ are transformed to longitude/latitude within the function.
  \dontrun{
   library(sp)
   coords_sp <- SpatialPoints(cbind(long = -5.6333, lat = 42.6667),
-                                 CRS("+proj=longlat +datum=WGS84"))
+                                 CRS(SRS_string = "EPSG:4326"))
   foo <- soilgridsParams(coords_sp, widths = c(300, 700, 1000))
   foo_soil <- soil(foo)
   foo_soil
