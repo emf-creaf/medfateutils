@@ -23,7 +23,7 @@ as points, each one containing the mentioned list.
 \code{soilgridsParams} takes a vector of depths and returns a list of soil characteristics ready to use with \code{\link{soil}} function.
 }
 \details{
-This function connects with the SoilGrids REST API (https://rest.soilgrids.org)
+This function connects with the SoilGrids REST API (https://rest.isric.org)
 to retrieve the soil physical and chemical characteristics for a site (Hengl \emph{et al}. 2007), selected
 by its coordinates. Also, in case the depths are not the default ones in the SoilGrids API, the function uses
 averages the values of soil grid layers depending on the overlap between soil layer definitions.  Input coordinates

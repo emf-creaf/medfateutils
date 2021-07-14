@@ -6,7 +6,7 @@
 #' @param widths A numeric vector indicating the desired layer widths, in \emph{mm}. If \code{NULL} the default soil grids layer definition is returned.
 #' @param verbose A logical flag to include a progress bar while processing the output of the query to the SoilGrids REST API.
 #'
-#' @details This function connects with the SoilGrids REST API (https://rest.soilgrids.org)
+#' @details This function connects with the SoilGrids REST API (https://rest.isric.org)
 #' to retrieve the soil physical and chemical characteristics for a site (Hengl \emph{et al}. 2007), selected
 #' by its coordinates. Also, in case the depths are not the default ones in the SoilGrids API, the function uses
 #' averages the values of soil grid layers depending on the overlap between soil layer definitions.  Input coordinates
@@ -45,14 +45,14 @@ soilgridsParams <- function(points, widths = c(300, 700, 1000, 2000), verbose = 
 
   npoints = length(points)
 
-  url.base = "https://rest.soilgrids.org/soilgrids/v2.0/properties/query?"
+  url.base = "https://rest.isric.org/soilgrids/v2.0/properties/query?"
 
 
   props_str = "property=bdod&property=cfvo&property=clay&property=ocd&property=ocs&property=sand&property=silt&property=soc"
   depths_str = "depth=0-5cm&depth=0-30cm&depth=5-15cm&depth=15-30cm&depth=30-60cm&depth=60-100cm&depth=100-200cm"
 
   if(verbose) {
-    cat(paste0("Querying ", npoints," points to rest.soilgrids.org:\n"))
+    cat(paste0("Querying ", npoints," points to rest.isric.org:\n"))
     pb = txtProgressBar(0, npoints, style=3)
   }
   reslist = vector("list", npoints)
