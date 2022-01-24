@@ -15,6 +15,7 @@ IFN2forest(
   patchsize = 10000,
   setDefaults = TRUE,
   filterWrongRecords = TRUE,
+  keepNumOrden = TRUE,
   verbose = TRUE
 )
 
@@ -25,6 +26,7 @@ IFN2forestlist(
   IFNherbData = NULL,
   setDefaults = TRUE,
   filterWrongRecords = TRUE,
+  keepNumOrden = TRUE,
   verbose = TRUE
 )
 }
@@ -44,6 +46,8 @@ IFN2forestlist(
 \item{setDefaults}{Initializes default values for missing fields in IFN data.}
 
 \item{filterWrongRecords}{Filters wrong records (records with missing values, zero values or wrong growth forms)}
+
+\item{keepNumOrden}{Keeps num orden as additional column (OIF2, OIF3, ...)}
 
 \item{verbose}{A boolean flag to indicate console output.}
 }

@@ -1,8 +1,8 @@
 Package: medfateutils
 Type: Package
 Title: Utility Functions for Package `medfate`
-Version: 0.1.2
-Date: 2021-07-14
+Version: 0.1.3
+Date: 2022-01-22
 Authors@R: c(
 	person('Miquel', 'De Cáceres', role=c('aut','cre'),
 	email='miquelcaceres@gmail.com'),
@@ -14,4 +14,4 @@ Depends: R (>= 3.4.0), medfate
 Imports: taxize, httr, jsonlite, methods, sp, magrittr
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2

@@ -1,13 +1,19 @@
 
 .IFN2forest<-function(ID, xid, yid, SpParams,
                       zid = NULL,
-                      patchsize = 10000, setDefaults=TRUE, filterWrongRecords = TRUE) {
+                      patchsize = 10000, setDefaults=TRUE, filterWrongRecords = TRUE,
+                      keepNumOrden = TRUE) {
   f = list()
   f$ID = ID
   f$patchsize = patchsize
   f$treeData = data.frame(Species = xid$Species, N = as.numeric(xid$N), DBH = xid$DBH, Height = xid$H*100)
   f$treeData$Z50 = rep(NA, nrow(f$treeData))
   f$treeData$Z95 = rep(NA, nrow(f$treeData))
+  if(keepNumOrden) {
+    if("OIF2" %in% names(xid)) f$treeData$OIF2 = xid$OIF2
+    if("OIF3" %in% names(xid)) f$treeData$OIF3 = xid$OIF3
+    if("OIF4" %in% names(xid)) f$treeData$OIF4 = xid$OIF4
+  }
   f$shrubData = data.frame(Species = yid$Species, Cover = as.numeric(yid$FCC), Height = yid$H*100)
   f$shrubData$Z50 =rep(NA, nrow(f$shrubData))
   f$shrubData$Z95 =rep(NA, nrow(f$shrubData))
@@ -65,6 +71,7 @@
 #' @param patchsize The area of the forest stand, in square meters.
 #' @param setDefaults Initializes default values for missing fields in IFN data.
 #' @param filterWrongRecords Filters wrong records (records with missing values, zero values or wrong growth forms)
+#' @param keepNumOrden Keeps num orden as additional column (OIF2, OIF3, ...)
 #' @param verbose A boolean flag to indicate console output.
 #'
 #' @details IFN input data needs to be in a specific format, see package \code{IFNread}. Functions \code{IFN2forest} and \code{IFN2forestlist} call \code{\link{translateIFNSpeciesCodes}} internally.
@@ -97,7 +104,7 @@
 IFN2forest<-function(IFNtreeData, IFNshrubData, ID, SpParams,
                      IFNherbData = NULL,
                      patchsize = 10000, setDefaults=TRUE,
-                     filterWrongRecords = TRUE, verbose = TRUE) {
+                     filterWrongRecords = TRUE, keepNumOrden = TRUE, verbose = TRUE) {
 
   xid = IFNtreeData[IFNtreeData$ID==ID,]
   yid = IFNshrubData[IFNshrubData$ID==ID,]
@@ -144,7 +151,7 @@ IFN2forest<-function(IFNtreeData, IFNshrubData, ID, SpParams,
     zid = NULL
   }
   return(.IFN2forest(ID, xid,yid,SpParams,
-                     zid, patchsize, setDefaults))
+                     zid, patchsize, setDefaults, filterWrongRecords, keepNumOrden))
 }
 
 #' @rdname IFN2forest
@@ -152,7 +159,7 @@ IFN2forest<-function(IFNtreeData, IFNshrubData, ID, SpParams,
 IFN2forestlist<-function(IFNtreeData, IFNshrubData, SpParams,
                          IFNherbData=NULL,
                          setDefaults=TRUE,
-                         filterWrongRecords = TRUE, verbose = TRUE) {
+                         filterWrongRecords = TRUE, keepNumOrden = TRUE, verbose = TRUE) {
 
   if(sum(c("H","DBH","Species","ID") %in% names(IFNtreeData))<4) stop("Columns in IFNtreeData must include 'ID','Species','DBH' and 'H'")
   if(sum(c("H","FCC","Species","ID") %in% names(IFNshrubData))<4) stop("Columns in IFNtreeData must include 'ID','Species','FCC' and 'H'")
@@ -208,7 +215,7 @@ IFN2forestlist<-function(IFNtreeData, IFNshrubData, SpParams,
     ly = split(y, factor(y$ID, levels=IDs))
 
     forestlist = Map(function(x,y, id) {
-      .IFN2forest(id, x,y, SpParams=SpParams,setDefaults = setDefaults)
+      .IFN2forest(id, x,y, SpParams=SpParams,setDefaults = setDefaults, filterWrongRecords = filterWrongRecords, keepNumOrden = keepNumOrden)
     }, lx, ly, IDs)
   } else {
     z = IFNherbData[IFNherbData$ID %in% IDs, ]
@@ -216,7 +223,7 @@ IFN2forestlist<-function(IFNtreeData, IFNshrubData, SpParams,
     ly = split(y, factor(y$ID, levels=IDs))
     lz = split(z, factor(z$ID, levels=IDs))
     forestlist = Map(function(x,y, z, id) {
-      .IFN2forest(id, x,y, z, SpParams=SpParams,setDefaults = setDefaults)
+      .IFN2forest(id, x,y, z, SpParams=SpParams,setDefaults = setDefaults, filterWrongRecords = filterWrongRecords, keepNumOrden = keepNumOrden)
     }, lx, ly, lz, IDs)
   }
   if(verbose) cat("done.\n")
