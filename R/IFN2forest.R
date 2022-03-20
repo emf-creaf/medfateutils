@@ -162,7 +162,7 @@ IFN2forestlist<-function(IFNtreeData, IFNshrubData, SpParams,
                          filterWrongRecords = TRUE, keepNumOrden = TRUE, verbose = TRUE) {
 
   if(sum(c("H","DBH","Species","ID") %in% names(IFNtreeData))<4) stop("Columns in IFNtreeData must include 'ID','Species','DBH' and 'H'")
-  if(sum(c("H","FCC","Species","ID") %in% names(IFNshrubData))<4) stop("Columns in IFNtreeData must include 'ID','Species','FCC' and 'H'")
+  if(sum(c("H","FCC","Species","ID") %in% names(IFNshrubData))<4) stop("Columns in IFNshrubData must include 'ID','Species','FCC' and 'H'")
   IDs = as.character(sort(unique(c(IFNtreeData$ID, IFNshrubData$ID))))
 
   if(verbose) cat(paste0("Number of plots: ", length(IDs),"\n"))
