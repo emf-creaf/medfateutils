@@ -58,7 +58,31 @@ Function \code{IFN2forest} returns an object of class \code{\link{forest}}, wher
 Creates a \code{\link{forest}} object from Spanish Forest Inventory (IFN) data (DGCN 2005).
 }
 \details{
-IFN input data needs to be in a specific format, see package \code{IFNread}. Functions \code{IFN2forest} and \code{IFN2forestlist} call \code{\link{translateIFNSpeciesCodes}} internally.
+IFN input data needs to be in a specific format.
+\itemize{
+  \item{
+    For \code{IFNtreeData}, the following columns are required:
+    \itemize{
+      \item{ID: Plot ID string}
+      \item{Species: String of tree IFN species code (will be mapped to medfate code).}
+      \item{N: Numeric values of density (individuals per ha).}
+      \item{DBH: Numeric values of diameter at breast height (in cm).}
+      \item{H: Numeric values of tree height (in m)}
+    }
+  }
+  \item{
+    For \code{IFNshrubData}, the following columns are required:
+    \itemize{
+       \item{ID: Plot ID string.}
+       \item{Species: String of shrub IFN species code (will be mapped to medfate code).}
+       \item{FCC: Numeric values of shrub cover (\%).}
+       \item{H: Numeric values of shrub height (in m).}
+    }
+  }
+}
+
+Functions \code{IFN2forest} and \code{IFN2forestlist} call \code{\link{translateIFNSpeciesCodes}} internally
+to translate IFN codes into medfate codes.
 }
 \examples{
 data(SpParamsMED)
