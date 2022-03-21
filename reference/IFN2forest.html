@@ -101,7 +101,21 @@
     </div>
     <div id="details">
     <h2>Details</h2>
-    <p>IFN input data needs to be in a specific format, see package <code>IFNread</code>. Functions <code>IFN2forest</code> and <code>IFN2forestlist</code> call <code><a href="translateIFNSpeciesCodes.html">translateIFNSpeciesCodes</a></code> internally.</p>
+    <p>IFN input data needs to be in a specific format.</p><ul><li><p>For <code>IFNtreeData</code>, the following columns are required:
+    </p><ul><li><p>ID: Plot ID string</p></li>
+<li><p>Species: String of tree IFN species code (will be mapped to medfate code).</p></li>
+<li><p>N: Numeric values of density (individuals per ha).</p></li>
+<li><p>DBH: Numeric values of diameter at breast height (in cm).</p></li>
+<li><p>H: Numeric values of tree height (in m)</p></li>
+</ul></li>
+<li><p>For <code>IFNshrubData</code>, the following columns are required:
+    </p><ul><li><p>ID: Plot ID string.</p></li>
+<li><p>Species: String of shrub IFN species code (will be mapped to medfate code).</p></li>
+<li><p>FCC: Numeric values of shrub cover (%).</p></li>
+<li><p>H: Numeric values of shrub height (in m).</p></li>
+</ul></li>
+</ul><p>Functions <code>IFN2forest</code> and <code>IFN2forestlist</code> call <code><a href="translateIFNSpeciesCodes.html">translateIFNSpeciesCodes</a></code> internally
+to translate IFN codes into medfate codes.</p>
     </div>
     <div id="references">
     <h2>References</h2>
