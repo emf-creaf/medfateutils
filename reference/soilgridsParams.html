@@ -46,7 +46,7 @@
     </div>
 
     <div class="ref-description">
-    <p><code>soilgridsParams</code> takes a vector of depths and returns a list of soil characteristics ready to use with <code>soil</code> function.</p>
+    <p><code>soilgridsParams</code> takes a vector of depths and returns a list of soil characteristics ready to use with <code><a href="https://emf-creaf.github.io/medfate/reference/soil.html" class="external-link">soil</a></code> function.</p>
     </div>
 
     <div id="ref-usage">
@@ -65,7 +65,7 @@
     <div id="value">
     <h2>Value</h2>
     <p>If only one point is supplied, a data frame containing the soil characteristics ready to use with the
-<code>soil</code> function. If more than one point is supplied, the function returns a list with as many elements
+<code><a href="https://emf-creaf.github.io/medfate/reference/soil.html" class="external-link">soil</a></code> function. If more than one point is supplied, the function returns a list with as many elements
 as points, each one containing the mentioned list.</p>
     </div>
     <div id="details">
@@ -97,7 +97,7 @@ are transformed to longitude/latitude within the function.</p>
 <span class="r-in">  <span class="va">coords_sp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/sp/man/SpatialPoints.html" class="external-link">SpatialPoints</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span>long <span class="op">=</span> <span class="op">-</span><span class="fl">5.6333</span>, lat <span class="op">=</span> <span class="fl">42.6667</span><span class="op">)</span>,</span>
 <span class="r-in">                                 <span class="fu"><a href="https://rdrr.io/pkg/sp/man/CRS-class.html" class="external-link">CRS</a></span><span class="op">(</span>SRS_string <span class="op">=</span> <span class="st">"EPSG:4326"</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-in">  <span class="va">foo</span> <span class="op">&lt;-</span> <span class="fu">soilgridsParams</span><span class="op">(</span><span class="va">coords_sp</span>, widths <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">300</span>, <span class="fl">700</span>, <span class="fl">1000</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in">  <span class="va">foo_soil</span> <span class="op">&lt;-</span> <span class="fu">soil</span><span class="op">(</span><span class="va">foo</span><span class="op">)</span></span>
+<span class="r-in">  <span class="va">foo_soil</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://emf-creaf.github.io/medfate/reference/soil.html" class="external-link">soil</a></span><span class="op">(</span><span class="va">foo</span><span class="op">)</span></span>
 <span class="r-in">  <span class="va">foo_soil</span></span>
 <span class="r-in"> <span class="op">}</span></span>
 <span class="r-in"></span>

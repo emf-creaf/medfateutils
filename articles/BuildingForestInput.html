@@ -76,13 +76,16 @@ Cáceres</h4>
     
     
 <div class="section level2">
-<h2 id="preliminaries">Preliminaries<a class="anchor" aria-label="anchor" href="#preliminaries"></a>
+<h2 id="goals">Goals<a class="anchor" aria-label="anchor" href="#goals"></a>
 </h2>
-<p>Note the various macros within the <code>vignette</code> section of
-the metadata block above. These are required in order to instruct R how
-to build the vignette. Note that you should change the
-<code>title</code> field and the <code>\VignetteIndexEntry</code> to
-match the title of your vignette.</p>
+<p>In this vignette we show how to build an object of class
+<code>forest</code>, for its use in package medfate, from a table
+containing forest inventory data. The vignette illustrates some common
+issues that arise in the process, so that the user is aware of them when
+processing his/her own data.</p>
+<p>We begin by loading packages <strong>medfate</strong> and
+<strong>medfateutils</strong>. Since the former is a dependency of the
+latter, a single call to <code>library</code> is enough:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">medfateutils</span><span class="op">)</span>
 <span class="co">#&gt; Loading required package: medfate</span>
@@ -90,9 +93,21 @@ match the title of your vignette.</p>
 <span class="co">#&gt; Registered S3 method overwritten by 'ape':</span>
 <span class="co">#&gt;   method   from </span>
 <span class="co">#&gt;   plot.mst spdep</span></code></pre></div>
-<p>We begin by loading the tree data from this site:</p>
+</div>
+<div class="section level2">
+<h2 id="building-a-forest-input-poblet-oak-forest">Building a forest input Poblet oak forest<a class="anchor" aria-label="anchor" href="#building-a-forest-input-poblet-oak-forest"></a>
+</h2>
+<p>Package <code>medfateutils</code> includes a small dataset of tree
+data, corresponding to a dense holm oak forest in Poblet (Catalonia,
+Spain). As a result of the abandonment of previous coppicing
+exploitation, there is a high density of stems per individual.</p>
+<div class="section level3">
+<h3 id="tree-data-set">Tree data set<a class="anchor" aria-label="anchor" href="#tree-data-set"></a>
+</h3>
+<p>We begin by loading the tree data from Poblet:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"poblet_trees"</span><span class="op">)</span></code></pre></div>
+<p>and we inspect its content, for example using:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">poblet_trees</span><span class="op">)</span>
 <span class="co">#&gt;   Plot.Code Indv.Ref             Species Diameter.cm</span>
@@ -102,43 +117,73 @@ match the title of your vignette.</p>
 <span class="co">#&gt; 4  POBL_CTL        4       Arbutus unedo         7.5</span>
 <span class="co">#&gt; 5  POBL_CTL        5       Arbutus unedo         7.5</span>
 <span class="co">#&gt; 6  POBL_CTL        6       Arbutus unedo         7.5</span></code></pre></div>
+<p>The data frame includes tree data corresponding to three forest
+inventories:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">poblet_trees</span><span class="op">$</span><span class="va">Plot.Code</span><span class="op">)</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt;     POBL_CTL POBL_THI_AFT POBL_THI_BEF </span>
 <span class="co">#&gt;          267          189          261</span></code></pre></div>
-<p>Initialize empty forest object</p>
+<p><code>POBL_CTL</code> corresponds to an oak forest where no treatment
+was done (control), whereas <code>POBL_THI_BEF</code> and
+<code>POBL_THI_AFT</code> are two forest inventories conducted on the
+same forest plot, before and after a thinning intervention to reduce the
+number of stems.</p>
+</div>
+<div class="section level3">
+<h3 id="mapping-tree-data-from-the-control-forest">Mapping tree data from the control forest<a class="anchor" aria-label="anchor" href="#mapping-tree-data-from-the-control-forest"></a>
+</h3>
+<p>We initialize an empty forest object using function
+<code><a href="https://emf-creaf.github.io/medfate/reference/forest.html" class="external-link">emptyforest()</a></code> from package <strong>medfate</strong>:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">forest</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://emf-creaf.github.io/medfate/reference/forest.html" class="external-link">emptyforest</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<p>Define mapping</p>
+<code class="sourceCode R"><span class="va">forest_ctl</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://emf-creaf.github.io/medfate/reference/forest.html" class="external-link">emptyforest</a></span><span class="op">(</span><span class="st">"POBL_CTL"</span><span class="op">)</span>
+<span class="va">forest_ctl</span>
+<span class="co">#&gt; $ID</span>
+<span class="co">#&gt; [1] "POBL_CTL"</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $patchsize</span>
+<span class="co">#&gt; [1] 10000</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $treeData</span>
+<span class="co">#&gt; [1] Species DBH     Height  N       Z50     Z95    </span>
+<span class="co">#&gt; &lt;0 rows&gt; (or 0-length row.names)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $shrubData</span>
+<span class="co">#&gt; [1] Species Height  Cover   Z50     Z95    </span>
+<span class="co">#&gt; &lt;0 rows&gt; (or 0-length row.names)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $herbCover</span>
+<span class="co">#&gt; [1] 0</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $herbHeight</span>
+<span class="co">#&gt; [1] 0</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; attr(,"class")</span>
+<span class="co">#&gt; [1] "forest" "list"</span></code></pre></div>
+<p>Now we will fill data for element <code>treeData</code> in the list.
+For that, we need to define a mapping from column names in
+<code>poblet_trees</code> to variables in <code>treeData</code>. For
+that we use the following named list, i.e. a vector where element name
+are variable names in <code>treeData</code> and vector elements are
+column names of <code>poblet_trees</code>:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">mapping</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Species.name"</span> <span class="op">=</span> <span class="st">"Species"</span>, <span class="st">"DBH"</span> <span class="op">=</span> <span class="st">"Diameter.cm"</span><span class="op">)</span></code></pre></div>
+<p>We can now replace the empty <code>treeData</code> in
+<code>forest_ctl</code> using function
+<code><a href="../reference/forest_mapWoodyTables.html">forest_mapTreeTable()</a></code>:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">forest</span><span class="op">$</span><span class="va">treeData</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/forest_mapWoodyTables.html">forest_mapTreeTable</a></span><span class="op">(</span><span class="va">poblet_trees</span><span class="op">[</span><span class="va">poblet_trees</span><span class="op">$</span><span class="va">Plot.Code</span><span class="op">==</span><span class="st">"POBL_CTL"</span>,<span class="op">]</span>, 
-                    mapping <span class="op">=</span> <span class="va">mapping</span>, SpParams <span class="op">=</span> <span class="va">SpParamsMED</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">forest_ctl</span><span class="op">$</span><span class="va">treeData</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/forest_mapWoodyTables.html">forest_mapTreeTable</a></span><span class="op">(</span><span class="va">poblet_trees</span><span class="op">[</span><span class="va">poblet_trees</span><span class="op">$</span><span class="va">Plot.Code</span><span class="op">==</span><span class="st">"POBL_CTL"</span>,<span class="op">]</span>, 
+                                           mapping <span class="op">=</span> <span class="va">mapping</span>, SpParams <span class="op">=</span> <span class="va">SpParamsMED</span><span class="op">)</span></code></pre></div>
+<p>We can inspect the result using:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">forest</span>, <span class="va">SpParamsMED</span><span class="op">)</span>
-<span class="co">#&gt; Tree density (ind/ha): 267 </span>
-<span class="co">#&gt; Tree BA (m2/ha): 3.0179815 </span>
-<span class="co">#&gt; Cover (%) trees (open ground): 42.1205627  shrubs: 0 </span>
-<span class="co">#&gt; Shrub crown phytovolume (m3/m2): 0 </span>
-<span class="co">#&gt; LAI (m2/m2) total: 0.530447  trees: 0.530447  shrubs: 0 </span>
-<span class="co">#&gt; Live fine fuel (kg/m2) total: 0.1372838  trees: 0.1372838  shrubs: 0 </span>
-<span class="co">#&gt; PAR ground (%): NA  SWR ground (%): NA</span></code></pre></div>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">sampled_area</span> <span class="op">=</span> <span class="va">pi</span><span class="op">*</span><span class="fl">15</span><span class="op">^</span><span class="fl">2</span></code></pre></div>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">forest</span><span class="op">$</span><span class="va">treeData</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/forest_mapWoodyTables.html">forest_mapTreeTable</a></span><span class="op">(</span><span class="va">poblet_trees</span><span class="op">[</span><span class="va">poblet_trees</span><span class="op">$</span><span class="va">Plot.Code</span><span class="op">==</span><span class="st">"POBL_CTL"</span>,<span class="op">]</span>, 
-                    mapping <span class="op">=</span> <span class="va">mapping</span>, SpParams <span class="op">=</span> <span class="va">SpParamsMED</span>, plot.size <span class="op">=</span> <span class="va">sampled_area</span><span class="op">)</span></code></pre></div>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">forest</span><span class="op">$</span><span class="va">treeData</span><span class="op">)</span>
-<span class="co">#&gt;     Species            N          Height             DBH          Z50         </span>
-<span class="co">#&gt;  Min.   :  4.0   Min.   :14.15   Mode:logical   Min.   : 7.50   Mode:logical  </span>
-<span class="co">#&gt;  1st Qu.: 19.0   1st Qu.:14.15   NA's:267       1st Qu.: 9.00   NA's:267      </span>
-<span class="co">#&gt;  Median :168.0   Median :14.15                  Median :10.70                 </span>
-<span class="co">#&gt;  Mean   :105.3   Mean   :14.15                  Mean   :11.53                 </span>
-<span class="co">#&gt;  3rd Qu.:168.0   3rd Qu.:14.15                  3rd Qu.:13.30                 </span>
-<span class="co">#&gt;  Max.   :168.0   Max.   :14.15                  Max.   :26.00                 </span>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">forest_ctl</span><span class="op">$</span><span class="va">treeData</span><span class="op">)</span>
+<span class="co">#&gt;     Species            N      Height             DBH          Z50         </span>
+<span class="co">#&gt;  Min.   :  4.0   Min.   :1   Mode:logical   Min.   : 7.50   Mode:logical  </span>
+<span class="co">#&gt;  1st Qu.: 19.0   1st Qu.:1   NA's:267       1st Qu.: 9.00   NA's:267      </span>
+<span class="co">#&gt;  Median :168.0   Median :1                  Median :10.70                 </span>
+<span class="co">#&gt;  Mean   :105.3   Mean   :1                  Mean   :11.53                 </span>
+<span class="co">#&gt;  3rd Qu.:168.0   3rd Qu.:1                  3rd Qu.:13.30                 </span>
+<span class="co">#&gt;  Max.   :168.0   Max.   :1                  Max.   :26.00                 </span>
 <span class="co">#&gt;    Z95         </span>
 <span class="co">#&gt;  Mode:logical  </span>
 <span class="co">#&gt;  NA's:267      </span>
@@ -146,8 +191,36 @@ match the title of your vignette.</p>
 <span class="co">#&gt;                </span>
 <span class="co">#&gt;                </span>
 <span class="co">#&gt; </span></code></pre></div>
+<p>Some data are missing, but we will not worry about it now. One way to
+evaluate if everything went well is to display a summary of the
+<code>forest</code> object using the <code>summary</code> function
+defined for these object class in package <strong>medfate</strong>:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">forest_ctl</span>, <span class="va">SpParamsMED</span><span class="op">)</span>
+<span class="co">#&gt; Tree density (ind/ha): 267 </span>
+<span class="co">#&gt; Tree BA (m2/ha): 3.0179815 </span>
+<span class="co">#&gt; Cover (%) trees (open ground): 42.1205627  shrubs: 0 </span>
+<span class="co">#&gt; Shrub crown phytovolume (m3/m2): 0 </span>
+<span class="co">#&gt; LAI (m2/m2) total: 0.530447  trees: 0.530447  shrubs: 0 </span>
+<span class="co">#&gt; Live fine fuel (kg/m2) total: 0.1372838  trees: 0.1372838  shrubs: 0 </span>
+<span class="co">#&gt; PAR ground (%): NA  SWR ground (%): NA</span></code></pre></div>
+<p>The values of stand density and stand basal area are too low for such
+a dense forest, which indicates that something needs to be corrected. At
+this point, it is important to remember that medfate needs the density
+of trees to be specified as stems per hectare. We did our tree data
+mapping directly, without indicating the sampled area. We are told that
+the plots where done on a circular plot whose radius is 15 m. We then
+can calculate the sampled area as:</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">sampled_area</span> <span class="op">=</span> <span class="va">pi</span><span class="op">*</span><span class="fl">15</span><span class="op">^</span><span class="fl">2</span></code></pre></div>
+<p>and use this information to re-map th tree data:</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">forest_ctl</span><span class="op">$</span><span class="va">treeData</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/forest_mapWoodyTables.html">forest_mapTreeTable</a></span><span class="op">(</span><span class="va">poblet_trees</span><span class="op">[</span><span class="va">poblet_trees</span><span class="op">$</span><span class="va">Plot.Code</span><span class="op">==</span><span class="st">"POBL_CTL"</span>,<span class="op">]</span>, 
+                                           mapping <span class="op">=</span> <span class="va">mapping</span>, SpParams <span class="op">=</span> <span class="va">SpParamsMED</span>, 
+                                           plot.size <span class="op">=</span> <span class="va">sampled_area</span><span class="op">)</span></code></pre></div>
+<p>We run again the summary:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">forest</span>, <span class="va">SpParamsMED</span><span class="op">)</span>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">forest_ctl</span>, <span class="va">SpParamsMED</span><span class="op">)</span>
 <span class="co">#&gt; Tree density (ind/ha): 3777.27731604765 </span>
 <span class="co">#&gt; Tree BA (m2/ha): 42.6957047 </span>
 <span class="co">#&gt; Cover (%) trees (open ground): 100  shrubs: 0 </span>
@@ -162,12 +235,11 @@ match the title of your vignette.</p>
 <code class="sourceCode R"><span class="va">mapping</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Species.name"</span> <span class="op">=</span> <span class="st">"Species"</span>, <span class="st">"DBH"</span> <span class="op">=</span> <span class="st">"Diameter.cm"</span>,
             <span class="st">"Height"</span> <span class="op">=</span> <span class="st">"Height.cm"</span><span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">treeData</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/forest_mapWoodyTables.html">forest_mapTreeTable</a></span><span class="op">(</span><span class="va">poblet_trees</span><span class="op">[</span><span class="va">poblet_trees</span><span class="op">$</span><span class="va">Plot.Code</span><span class="op">==</span><span class="st">"POBL_CTL"</span>,<span class="op">]</span>, 
-                                mapping <span class="op">=</span> <span class="va">mapping</span>, SpParams <span class="op">=</span> <span class="va">SpParamsMED</span>, 
-                                plot.size <span class="op">=</span> <span class="va">sampled_area</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">forest_ctl</span><span class="op">$</span><span class="va">treeData</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/forest_mapWoodyTables.html">forest_mapTreeTable</a></span><span class="op">(</span><span class="va">poblet_trees</span><span class="op">[</span><span class="va">poblet_trees</span><span class="op">$</span><span class="va">Plot.Code</span><span class="op">==</span><span class="st">"POBL_CTL"</span>,<span class="op">]</span>, 
+                                           mapping <span class="op">=</span> <span class="va">mapping</span>, SpParams <span class="op">=</span> <span class="va">SpParamsMED</span>, 
+                                           plot.size <span class="op">=</span> <span class="va">sampled_area</span><span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">forest</span><span class="op">$</span><span class="va">treeData</span> <span class="op">&lt;-</span> <span class="va">treeData</span>
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">forest</span>, <span class="va">SpParamsMED</span><span class="op">)</span>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">forest_ctl</span>, <span class="va">SpParamsMED</span><span class="op">)</span>
 <span class="co">#&gt; Tree density (ind/ha): 3777.27731604765 </span>
 <span class="co">#&gt; Tree BA (m2/ha): 42.6957047 </span>
 <span class="co">#&gt; Cover (%) trees (open ground): 100  shrubs: 0 </span>
@@ -175,6 +247,10 @@ match the title of your vignette.</p>
 <span class="co">#&gt; LAI (m2/m2) total: 6.7141704  trees: 6.7141704  shrubs: 0 </span>
 <span class="co">#&gt; Live fine fuel (kg/m2) total: 1.7424533  trees: 1.7424533  shrubs: 0 </span>
 <span class="co">#&gt; PAR ground (%): 2.4902336  SWR ground (%): 6.4867878</span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="mapping-tree-data-from-the-managed-forest">Mapping tree data from the managed forest<a class="anchor" aria-label="anchor" href="#mapping-tree-data-from-the-managed-forest"></a>
+</h3>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">forest_thi_bef</span> <span class="op">=</span> <span class="fu"><a href="https://emf-creaf.github.io/medfate/reference/forest.html" class="external-link">emptyforest</a></span><span class="op">(</span><span class="op">)</span>
 <span class="va">forest_thi_bef</span><span class="op">$</span><span class="va">treeData</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/forest_mapWoodyTables.html">forest_mapTreeTable</a></span><span class="op">(</span><span class="va">poblet_trees</span><span class="op">[</span><span class="va">poblet_trees</span><span class="op">$</span><span class="va">Plot.Code</span><span class="op">==</span><span class="st">"POBL_THI_BEF"</span>,<span class="op">]</span>, 
@@ -228,223 +304,6 @@ match the title of your vignette.</p>
 <span class="co">#&gt; Live fine fuel (kg/m2) total: 1.3224411  trees: 1.3224411  shrubs: 0 </span>
 <span class="co">#&gt; PAR ground (%): 6.1061933  SWR ground (%): 12.6058106</span></code></pre></div>
 </div>
-<div class="section level2">
-<h2 id="styles">Styles<a class="anchor" aria-label="anchor" href="#styles"></a>
-</h2>
-<p>The <code>html_vignette</code> template includes a basic CSS theme.
-To override this theme you can specify your own CSS in the document
-metadata as follows:</p>
-<pre><code><span class="va">output</span><span class="op">:</span> 
-  <span class="fu">rmarkdown</span><span class="fu">::</span><span class="va"><a href="https://pkgs.rstudio.com/rmarkdown/reference/html_vignette.html" class="external-link">html_vignette</a></span><span class="op">:</span>
-    <span class="va">css</span><span class="op">:</span> <span class="va">mystyles.css</span></code></pre>
-</div>
-<div class="section level2">
-<h2 id="figures">Figures<a class="anchor" aria-label="anchor" href="#figures"></a>
-</h2>
-<p>The figure sizes have been customised so that you can easily put two
-images side-by-side.</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fl">10</span><span class="op">:</span><span class="fl">1</span><span class="op">)</span></code></pre></div>
-<p><img src="BuildingForestInput_files/figure-html/unnamed-chunk-24-1.png" width="700"><img src="BuildingForestInput_files/figure-html/unnamed-chunk-24-2.png" width="700"></p>
-<p>You can enable figure captions by <code>fig_caption: yes</code> in
-YAML:</p>
-<pre><code><span class="va">output</span><span class="op">:</span>
-  <span class="fu">rmarkdown</span><span class="fu">::</span><span class="va"><a href="https://pkgs.rstudio.com/rmarkdown/reference/html_vignette.html" class="external-link">html_vignette</a></span><span class="op">:</span>
-    <span class="va">fig_caption</span><span class="op">:</span> <span class="va">yes</span></code></pre>
-<p>Then you can use the chunk option
-<code>fig.cap = "Your figure caption."</code> in
-<strong>knitr</strong>.</p>
-</div>
-<div class="section level2">
-<h2 id="more-examples">More Examples<a class="anchor" aria-label="anchor" href="#more-examples"></a>
-</h2>
-<p>You can write math expressions, e.g. <span class="math inline">\(Y =
-X\beta + \epsilon\)</span>, footnotes<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>, and tables, e.g. using
-<code><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">knitr::kable()</a></code>.</p>
-<table style="width:100%;" class="table">
-<colgroup>
-<col width="25%">
-<col width="7%">
-<col width="5%">
-<col width="8%">
-<col width="5%">
-<col width="7%">
-<col width="8%">
-<col width="8%">
-<col width="4%">
-<col width="4%">
-<col width="7%">
-<col width="7%">
-</colgroup>
-<thead><tr class="header">
-<th align="left"></th>
-<th align="right">mpg</th>
-<th align="right">cyl</th>
-<th align="right">disp</th>
-<th align="right">hp</th>
-<th align="right">drat</th>
-<th align="right">wt</th>
-<th align="right">qsec</th>
-<th align="right">vs</th>
-<th align="right">am</th>
-<th align="right">gear</th>
-<th align="right">carb</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">Mazda RX4</td>
-<td align="right">21.0</td>
-<td align="right">6</td>
-<td align="right">160.0</td>
-<td align="right">110</td>
-<td align="right">3.90</td>
-<td align="right">2.620</td>
-<td align="right">16.46</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">4</td>
-<td align="right">4</td>
-</tr>
-<tr class="even">
-<td align="left">Mazda RX4 Wag</td>
-<td align="right">21.0</td>
-<td align="right">6</td>
-<td align="right">160.0</td>
-<td align="right">110</td>
-<td align="right">3.90</td>
-<td align="right">2.875</td>
-<td align="right">17.02</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">4</td>
-<td align="right">4</td>
-</tr>
-<tr class="odd">
-<td align="left">Datsun 710</td>
-<td align="right">22.8</td>
-<td align="right">4</td>
-<td align="right">108.0</td>
-<td align="right">93</td>
-<td align="right">3.85</td>
-<td align="right">2.320</td>
-<td align="right">18.61</td>
-<td align="right">1</td>
-<td align="right">1</td>
-<td align="right">4</td>
-<td align="right">1</td>
-</tr>
-<tr class="even">
-<td align="left">Hornet 4 Drive</td>
-<td align="right">21.4</td>
-<td align="right">6</td>
-<td align="right">258.0</td>
-<td align="right">110</td>
-<td align="right">3.08</td>
-<td align="right">3.215</td>
-<td align="right">19.44</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">3</td>
-<td align="right">1</td>
-</tr>
-<tr class="odd">
-<td align="left">Hornet Sportabout</td>
-<td align="right">18.7</td>
-<td align="right">8</td>
-<td align="right">360.0</td>
-<td align="right">175</td>
-<td align="right">3.15</td>
-<td align="right">3.440</td>
-<td align="right">17.02</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">3</td>
-<td align="right">2</td>
-</tr>
-<tr class="even">
-<td align="left">Valiant</td>
-<td align="right">18.1</td>
-<td align="right">6</td>
-<td align="right">225.0</td>
-<td align="right">105</td>
-<td align="right">2.76</td>
-<td align="right">3.460</td>
-<td align="right">20.22</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">3</td>
-<td align="right">1</td>
-</tr>
-<tr class="odd">
-<td align="left">Duster 360</td>
-<td align="right">14.3</td>
-<td align="right">8</td>
-<td align="right">360.0</td>
-<td align="right">245</td>
-<td align="right">3.21</td>
-<td align="right">3.570</td>
-<td align="right">15.84</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">3</td>
-<td align="right">4</td>
-</tr>
-<tr class="even">
-<td align="left">Merc 240D</td>
-<td align="right">24.4</td>
-<td align="right">4</td>
-<td align="right">146.7</td>
-<td align="right">62</td>
-<td align="right">3.69</td>
-<td align="right">3.190</td>
-<td align="right">20.00</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">4</td>
-<td align="right">2</td>
-</tr>
-<tr class="odd">
-<td align="left">Merc 230</td>
-<td align="right">22.8</td>
-<td align="right">4</td>
-<td align="right">140.8</td>
-<td align="right">95</td>
-<td align="right">3.92</td>
-<td align="right">3.150</td>
-<td align="right">22.90</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">4</td>
-<td align="right">2</td>
-</tr>
-<tr class="even">
-<td align="left">Merc 280</td>
-<td align="right">19.2</td>
-<td align="right">6</td>
-<td align="right">167.6</td>
-<td align="right">123</td>
-<td align="right">3.92</td>
-<td align="right">3.440</td>
-<td align="right">18.30</td>
-<td align="right">1</td>
-<td align="right">0</td>
-<td align="right">4</td>
-<td align="right">4</td>
-</tr>
-</tbody>
-</table>
-<p>Also a quote using <code>&gt;</code>:</p>
-<blockquote>
-<p>“He who gives up [code] safety for [code] speed deserves neither.”
-(<a href="https://twitter.com/hadleywickham/status/504368538874703872" class="external-link">via</a>)</p>
-</blockquote>
-</div>
-<div class="footnotes footnotes-end-of-document">
-<hr>
-<ol>
-<li id="fn1"><p>A footnote here.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
-</ol>
 </div>
   </div>
 
