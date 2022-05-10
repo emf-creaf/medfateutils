@@ -66,7 +66,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Cáceres</h4>
             
-            <h4 data-toc-skip class="date">2022-05-09</h4>
+            <h4 data-toc-skip class="date">2022-05-10</h4>
       
       
       <div class="hidden name"><code>BuildingForestInput.Rmd</code></div>
@@ -102,7 +102,7 @@ data, corresponding to a dense holm oak forest in Poblet (Catalonia,
 Spain). As a result of the abandonment of previous coppicing
 exploitation, there is a high density of stems per individual.</p>
 <div class="section level3">
-<h3 id="tree-data-set">Tree data set<a class="anchor" aria-label="anchor" href="#tree-data-set"></a>
+<h3 id="poblet-tree-data-set">Poblet tree data set<a class="anchor" aria-label="anchor" href="#poblet-tree-data-set"></a>
 </h3>
 <p>We begin by loading the tree data from Poblet:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
@@ -160,17 +160,19 @@ number of stems.</p>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; attr(,"class")</span>
 <span class="co">#&gt; [1] "forest" "list"</span></code></pre></div>
-<p>Now we will fill data for element <code>treeData</code> in the list.
-For that, we need to define a mapping from column names in
-<code>poblet_trees</code> to variables in <code>treeData</code>. For
-that we use the following named list, i.e. a vector where element name
-are variable names in <code>treeData</code> and vector elements are
-column names of <code>poblet_trees</code>:</p>
+<p>Now we will fill in data for element <code>treeData</code> in the
+<code>forest</code> object. For that, we need to define a mapping from
+column names in <code>poblet_trees</code> to variables in
+<code>treeData</code>. The mapping can be defined using a <strong>named
+string vector</strong>, i.e. a vector where element names are variable
+names in <code>treeData</code> and vector elements are strings of the
+variable names in <code>poblet_trees</code>:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">mapping</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Species.name"</span> <span class="op">=</span> <span class="st">"Species"</span>, <span class="st">"DBH"</span> <span class="op">=</span> <span class="st">"Diameter.cm"</span><span class="op">)</span></code></pre></div>
 <p>We can now replace the empty <code>treeData</code> in
 <code>forest_ctl</code> using function
-<code><a href="../reference/forest_mapWoodyTables.html">forest_mapTreeTable()</a></code>:</p>
+<code><a href="../reference/forest_mapWoodyTables.html">forest_mapTreeTable()</a></code> from
+<strong>medfateutils</strong>:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">forest_ctl</span><span class="op">$</span><span class="va">treeData</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/forest_mapWoodyTables.html">forest_mapTreeTable</a></span><span class="op">(</span><span class="va">poblet_trees</span><span class="op">[</span><span class="va">poblet_trees</span><span class="op">$</span><span class="va">Plot.Code</span><span class="op">==</span><span class="st">"POBL_CTL"</span>,<span class="op">]</span>, 
                                            mapping <span class="op">=</span> <span class="va">mapping</span>, SpParams <span class="op">=</span> <span class="va">SpParamsMED</span><span class="op">)</span></code></pre></div>
@@ -192,9 +194,9 @@ column names of <code>poblet_trees</code>:</p>
 <span class="co">#&gt;                </span>
 <span class="co">#&gt; </span></code></pre></div>
 <p>Some data are missing, but we will not worry about it now. One way to
-evaluate if everything went well is to display a summary of the
-<code>forest</code> object using the <code>summary</code> function
-defined for these object class in package <strong>medfate</strong>:</p>
+evaluate if the tree data is correctly specified is to display a summary
+of the <code>forest</code> object using the <code>summary</code>
+function defined in <strong>medfate</strong> for this object class:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">forest_ctl</span>, <span class="va">SpParamsMED</span><span class="op">)</span>
 <span class="co">#&gt; Tree density (ind/ha): 267 </span>
@@ -206,14 +208,16 @@ defined for these object class in package <strong>medfate</strong>:</p>
 <span class="co">#&gt; PAR ground (%): NA  SWR ground (%): NA</span></code></pre></div>
 <p>The values of stand density and stand basal area are too low for such
 a dense forest, which indicates that something needs to be corrected. At
-this point, it is important to remember that medfate needs the density
-of trees to be specified as stems per hectare. We did our tree data
-mapping directly, without indicating the sampled area. We are told that
-the plots where done on a circular plot whose radius is 15 m. We then
-can calculate the sampled area as:</p>
+this point, it is important to remember that <code>forest</code> objects
+need the density of trees to be specified as <em>stems per hectare</em>.
+We conducted our tree data mapping without indicating the area of the
+sampled plot. We are told that forest stand sampling was done using a
+circular plot whose radius was 15 m. We can calculate the sampled area
+using:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sampled_area</span> <span class="op">=</span> <span class="va">pi</span><span class="op">*</span><span class="fl">15</span><span class="op">^</span><span class="fl">2</span></code></pre></div>
-<p>and use this information to re-map th tree data:</p>
+<p>and use this information to map the tree data again, where we specify
+parameter <code>plot.size</code>:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">forest_ctl</span><span class="op">$</span><span class="va">treeData</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/forest_mapWoodyTables.html">forest_mapTreeTable</a></span><span class="op">(</span><span class="va">poblet_trees</span><span class="op">[</span><span class="va">poblet_trees</span><span class="op">$</span><span class="va">Plot.Code</span><span class="op">==</span><span class="st">"POBL_CTL"</span>,<span class="op">]</span>, 
                                            mapping <span class="op">=</span> <span class="va">mapping</span>, SpParams <span class="op">=</span> <span class="va">SpParamsMED</span>, 
@@ -228,16 +232,30 @@ can calculate the sampled area as:</p>
 <span class="co">#&gt; LAI (m2/m2) total: 6.7141704  trees: 6.7141704  shrubs: 0 </span>
 <span class="co">#&gt; Live fine fuel (kg/m2) total: 1.7424533  trees: 1.7424533  shrubs: 0 </span>
 <span class="co">#&gt; PAR ground (%): NA  SWR ground (%): NA</span></code></pre></div>
+<p>which results in a much higher basal area and density, as should be
+expected for a dense oak forest resulting from an abandoned old
+coppice.</p>
+<p>Another issue that we see is the percentage of PAR and SWR that
+reaches the ground, which have missing values. This indicates that
+medfate cannot calculate the light extinction profile, in our case
+because tree heights are missing. Thus, we should somehow estimate tree
+heights, for example using an allometric relationship:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">poblet_trees</span><span class="op">$</span><span class="va">Height.cm</span> <span class="op">=</span> <span class="fl">100</span> <span class="op">*</span> <span class="fl">1.806</span><span class="op">*</span><span class="va">poblet_trees</span><span class="op">$</span><span class="va">Diameter.cm</span><span class="op">^</span><span class="fl">0.518</span></code></pre></div>
-<p>Define mapping</p>
+<code class="sourceCode R"><span class="va">poblet_trees</span><span class="op">$</span><span class="va">Height.cm</span> <span class="op">=</span> <span class="fl">100</span> <span class="op">*</span> <span class="fl">1.806</span><span class="op">*</span><span class="va">poblet_trees</span><span class="op">$</span><span class="va">Diameter.cm</span><span class="op">^</span><span class="fl">0.518</span>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">poblet_trees</span><span class="op">$</span><span class="va">Height.cm</span><span class="op">)</span>
+<span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
+<span class="co">#&gt;   512.9   566.9   628.3   638.0   692.7   976.5</span></code></pre></div>
+<p>So trees are between 5 and 10 m height. Once tree heights are
+defined, we can include them in our mapping:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">mapping</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Species.name"</span> <span class="op">=</span> <span class="st">"Species"</span>, <span class="st">"DBH"</span> <span class="op">=</span> <span class="st">"Diameter.cm"</span>,
             <span class="st">"Height"</span> <span class="op">=</span> <span class="st">"Height.cm"</span><span class="op">)</span></code></pre></div>
+<p>and rerun the tree data mapping:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">forest_ctl</span><span class="op">$</span><span class="va">treeData</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/forest_mapWoodyTables.html">forest_mapTreeTable</a></span><span class="op">(</span><span class="va">poblet_trees</span><span class="op">[</span><span class="va">poblet_trees</span><span class="op">$</span><span class="va">Plot.Code</span><span class="op">==</span><span class="st">"POBL_CTL"</span>,<span class="op">]</span>, 
                                            mapping <span class="op">=</span> <span class="va">mapping</span>, SpParams <span class="op">=</span> <span class="va">SpParamsMED</span>, 
                                            plot.size <span class="op">=</span> <span class="va">sampled_area</span><span class="op">)</span></code></pre></div>
+<p>Now the summary of the control forest stand looks like:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">forest_ctl</span>, <span class="va">SpParamsMED</span><span class="op">)</span>
 <span class="co">#&gt; Tree density (ind/ha): 3777.27731604765 </span>
@@ -247,37 +265,62 @@ can calculate the sampled area as:</p>
 <span class="co">#&gt; LAI (m2/m2) total: 6.7141704  trees: 6.7141704  shrubs: 0 </span>
 <span class="co">#&gt; Live fine fuel (kg/m2) total: 1.7424533  trees: 1.7424533  shrubs: 0 </span>
 <span class="co">#&gt; PAR ground (%): 2.4902336  SWR ground (%): 6.4867878</span></code></pre></div>
+<p>The fraction of PAR/SWR reaching the ground is low, as would be
+expected for a dense forest.</p>
 </div>
 <div class="section level3">
 <h3 id="mapping-tree-data-from-the-managed-forest">Mapping tree data from the managed forest<a class="anchor" aria-label="anchor" href="#mapping-tree-data-from-the-managed-forest"></a>
 </h3>
+<p>Here we can repeat our mapping for the managed forest plot, which has
+two codes corresponding to before and after the thinning intervention.
+Let us first address the pre-thinning state:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">forest_thi_bef</span> <span class="op">=</span> <span class="fu"><a href="https://emf-creaf.github.io/medfate/reference/forest.html" class="external-link">emptyforest</a></span><span class="op">(</span><span class="op">)</span>
 <span class="va">forest_thi_bef</span><span class="op">$</span><span class="va">treeData</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/forest_mapWoodyTables.html">forest_mapTreeTable</a></span><span class="op">(</span><span class="va">poblet_trees</span><span class="op">[</span><span class="va">poblet_trees</span><span class="op">$</span><span class="va">Plot.Code</span><span class="op">==</span><span class="st">"POBL_THI_BEF"</span>,<span class="op">]</span>, 
                                 mapping <span class="op">=</span> <span class="va">mapping</span>, SpParams <span class="op">=</span> <span class="va">SpParamsMED</span>, 
                                 plot.size <span class="op">=</span> <span class="va">sampled_area</span><span class="op">)</span>
 
-<span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">forest_thi_bef</span>, <span class="va">SpParamsMED</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; Error in plant_cover(x, SpParams) : Species code not found in SpParams</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">forest_thi_bef</span><span class="op">$</span><span class="va">treeData</span><span class="op">)</span>
+<span class="co">#&gt;     Species            N             Height           DBH          Z50         </span>
+<span class="co">#&gt;  Min.   :  4.0   Min.   :14.15   Min.   :512.9   Min.   : 7.50   Mode:logical  </span>
+<span class="co">#&gt;  1st Qu.: 19.0   1st Qu.:14.15   1st Qu.:563.7   1st Qu.: 9.00   NA's:261      </span>
+<span class="co">#&gt;  Median :168.0   Median :14.15   Median :628.3   Median :11.10                 </span>
+<span class="co">#&gt;  Mean   :114.5   Mean   :14.15   Mean   :635.5   Mean   :11.51                 </span>
+<span class="co">#&gt;  3rd Qu.:168.0   3rd Qu.:14.15   3rd Qu.:681.9   3rd Qu.:13.00                 </span>
+<span class="co">#&gt;  Max.   :168.0   Max.   :14.15   Max.   :944.9   Max.   :24.40                 </span>
+<span class="co">#&gt;  NA's   :2                                                                     </span>
+<span class="co">#&gt;    Z95         </span>
+<span class="co">#&gt;  Mode:logical  </span>
+<span class="co">#&gt;  NA's:261      </span>
+<span class="co">#&gt;                </span>
+<span class="co">#&gt;                </span>
+<span class="co">#&gt;                </span>
+<span class="co">#&gt;                </span>
+<span class="co">#&gt; </span></code></pre></div>
+<p>Note that the <code>Species</code> variable contains two missing
+values. This will normally happen when some species cannot be
+identified. We can verify if this happens for other parts of the Poblet
+tree data:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">forest_thi_bef</span><span class="op">$</span><span class="va">treeData</span><span class="op">$</span><span class="va">Species</span><span class="op">)</span>
-<span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's </span>
-<span class="co">#&gt;     4.0    19.0   168.0   114.5   168.0   168.0       2</span></code></pre></div>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="op">!</span><span class="op">(</span><span class="va">poblet_trees</span><span class="op">$</span><span class="va">Species</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">SpParamsMED</span><span class="op">$</span><span class="va">Name</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; [1] 4</span></code></pre></div>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<p>If we display species counts we can identify which species is not
+being parsed:</p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">poblet_trees</span><span class="op">$</span><span class="va">Species</span><span class="op">)</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Acer monspessulanum       Arbutus unedo Phillyrea latifolia     Quercus humilis </span>
 <span class="co">#&gt;                   2                 265                   6                   4 </span>
 <span class="co">#&gt;        Quercus ilex </span>
 <span class="co">#&gt;                 440</span></code></pre></div>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<p>In this case, the name used for the downy oak (<em>Quercus
+humilis</em>) is a synonym and needs to be replaced by^ its accepted
+name (<em>Quercus pubescens</em>), which we can do:</p>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">poblet_trees</span><span class="op">$</span><span class="va">Species</span><span class="op">[</span><span class="va">poblet_trees</span><span class="op">$</span><span class="va">Species</span><span class="op">==</span><span class="st">"Quercus humilis"</span><span class="op">]</span> <span class="op">=</span> <span class="st">"Quercus pubescens"</span></code></pre></div>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">forest_thi_bef</span> <span class="op">=</span> <span class="fu"><a href="https://emf-creaf.github.io/medfate/reference/forest.html" class="external-link">emptyforest</a></span><span class="op">(</span><span class="op">)</span>
-<span class="va">forest_thi_bef</span><span class="op">$</span><span class="va">treeData</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/forest_mapWoodyTables.html">forest_mapTreeTable</a></span><span class="op">(</span><span class="va">poblet_trees</span><span class="op">[</span><span class="va">poblet_trees</span><span class="op">$</span><span class="va">Plot.Code</span><span class="op">==</span><span class="st">"POBL_THI_BEF"</span>,<span class="op">]</span>, 
+<p>Now we repeat our mapping:</p>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">forest_thi_bef</span><span class="op">$</span><span class="va">treeData</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/forest_mapWoodyTables.html">forest_mapTreeTable</a></span><span class="op">(</span><span class="va">poblet_trees</span><span class="op">[</span><span class="va">poblet_trees</span><span class="op">$</span><span class="va">Plot.Code</span><span class="op">==</span><span class="st">"POBL_THI_BEF"</span>,<span class="op">]</span>, 
                                 mapping <span class="op">=</span> <span class="va">mapping</span>, SpParams <span class="op">=</span> <span class="va">SpParamsMED</span>, 
                                 plot.size <span class="op">=</span> <span class="va">sampled_area</span><span class="op">)</span>
 
@@ -289,7 +332,10 @@ can calculate the sampled area as:</p>
 <span class="co">#&gt; LAI (m2/m2) total: 6.5530107  trees: 6.5530107  shrubs: 0 </span>
 <span class="co">#&gt; Live fine fuel (kg/m2) total: 1.6994566  trees: 1.6994566  shrubs: 0 </span>
 <span class="co">#&gt; PAR ground (%): 2.7210404  SWR ground (%): 6.9269881</span></code></pre></div>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<p>Like the control plot, these statistics indicate a dense oak forest.
+We can repeat the same operations with the forest plot after the
+thinning intervention:</p>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">forest_thi_aft</span> <span class="op">=</span> <span class="fu"><a href="https://emf-creaf.github.io/medfate/reference/forest.html" class="external-link">emptyforest</a></span><span class="op">(</span><span class="op">)</span>
 <span class="va">forest_thi_aft</span><span class="op">$</span><span class="va">treeData</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/forest_mapWoodyTables.html">forest_mapTreeTable</a></span><span class="op">(</span><span class="va">poblet_trees</span><span class="op">[</span><span class="va">poblet_trees</span><span class="op">$</span><span class="va">Plot.Code</span><span class="op">==</span><span class="st">"POBL_THI_AFT"</span>,<span class="op">]</span>, 
                                 mapping <span class="op">=</span> <span class="va">mapping</span>, SpParams <span class="op">=</span> <span class="va">SpParamsMED</span>, 
@@ -303,6 +349,9 @@ can calculate the sampled area as:</p>
 <span class="co">#&gt; LAI (m2/m2) total: 5.0833939  trees: 5.0833939  shrubs: 0 </span>
 <span class="co">#&gt; Live fine fuel (kg/m2) total: 1.3224411  trees: 1.3224411  shrubs: 0 </span>
 <span class="co">#&gt; PAR ground (%): 6.1061933  SWR ground (%): 12.6058106</span></code></pre></div>
+<p>Note the decrease in tree density and basal area, and the increase in
+light reaching the ground, despite the estimated leaf area index is
+still high.</p>
 </div>
 </div>
   </div>
