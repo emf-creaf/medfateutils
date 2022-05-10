@@ -18,7 +18,7 @@ The latest stable versions GitHub as follows (required package
 `devtools` should be installed/updated first):
 
 ``` r
-devtools::install_github("emf-creaf/medfateutils")
+remotes::install_github("emf-creaf/medfateutils")
 ```
 
 ## Usage

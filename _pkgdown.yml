@@ -5,6 +5,7 @@ home:
   - text: Reference book
     href: https://emf-creaf.github.io/medfatebook/index.html
 
+
 reference:
 - title: Vegetation parameters
   desc:  Forest object definition from inventory data

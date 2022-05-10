@@ -21,7 +21,7 @@ Package **medfateutils** is designed to facilitate creating inputs for package [
 The latest stable versions GitHub as follows (required package `devtools` should be installed/updated first):
 
 ```{r installation, eval = FALSE}
-devtools::install_github("emf-creaf/medfateutils")
+remotes::install_github("emf-creaf/medfateutils")
 ```
 
 ## Usage
