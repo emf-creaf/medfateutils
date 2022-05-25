@@ -8,6 +8,16 @@
 #' @export
 #'
 #' @examples
+#'
+#'  \dontrun{
+#'   library(sp)
+#'   coords_sp <- SpatialPoints(cbind(long = -5.6333, lat = 42.6667),
+#'                                  CRS(SRS_string = "EPSG:4326"))
+#'   foo <- soilgridsParams(coords_sp, widths = c(300, 700, 1000, 2000))
+#'   foo
+#'   foo_mod <- modifySoilParams(foo, 900, 20) # 90 cm depth, 20 % rocks in the surface
+#'   foo_mod
+#'  }
 modifySoilParams<-function(soildata, soildepth, surfacerock = NULL) {
   rock_from_surface<-function(surfacerock, depth) {
     coef = 1+3^(depth/1000)
@@ -54,7 +64,7 @@ modifySoilParams<-function(soildata, soildepth, surfacerock = NULL) {
     for(i in 1:length(soildata)) {
       if(inherits(soildata[[i]], "data.frame")) {
         if(!is.null(surfacerock)) soildata[[i]] = modifySoilOne(soildata[[i]], soildepth[i], surfacerock[i])
-        else soildata[[i]] = modifySoilOne(soildata[[i]], soildepth[i])
+        else soildata[[i]] = modifySoilOne(soildata[[i]], soildepth[i], NULL)
       } else {
         stop("Wrong class for soil data. Has to be a data.frame or a list of data.frame objects")
       }

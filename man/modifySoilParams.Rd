@@ -19,3 +19,15 @@ A data frame of modified physical parameters or a list of modified data frames
 \description{
 Modifies soil properties estimated from SoilGrids
 }
+\examples{
+
+ \dontrun{
+  library(sp)
+  coords_sp <- SpatialPoints(cbind(long = -5.6333, lat = 42.6667),
+                                 CRS(SRS_string = "EPSG:4326"))
+  foo <- soilgridsParams(coords_sp, widths = c(300, 700, 1000, 2000))
+  foo
+  foo_mod <- modifySoilParams(foo, 900, 20) # 90 cm depth, 20 \% rocks in the surface
+  foo_mod
+ }
+}
