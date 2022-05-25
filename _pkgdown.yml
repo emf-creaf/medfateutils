@@ -22,9 +22,10 @@ reference:
   - starts_with("populate")
 
 - title: Soil parameters
-  desc:  Accession of soil parameter data
+  desc:  Access to and modification of soil parameter data
   contents:
   - starts_with("soilgrids")
+  - starts_with("modifySoil")
 
 - title: Root parameters
   desc:  Belowground structure
