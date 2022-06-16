@@ -54,16 +54,37 @@
     <h2>Arguments</h2>
     <dl><dt>soildata</dt>
 <dd><p>A data frame of soil physical parameters or a list of data frames</p></dd>
+
+
 <dt>soildepth</dt>
 <dd><p>An estimate of soil depth (in mm) or a vector of soil depths if `soildata` is a list</p></dd>
+
+
 <dt>surfacerock</dt>
 <dd><p>An estimate of surface rock content (in percent) or a vector of such values if `soildata` is a list</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A data frame of modified physical parameters or a list of modified data frames</p>
+    
+
+<p>A data frame of modified physical parameters or a list of modified data frames</p>
     </div>
 
+    <div id="ref-examples">
+    <h2>Examples</h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
+<span class="r-in"> <span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
+<span class="r-in">  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/edzer/sp/" class="external-link">sp</a></span><span class="op">)</span></span>
+<span class="r-in">  <span class="va">coords_sp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/sp/man/SpatialPoints.html" class="external-link">SpatialPoints</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span>long <span class="op">=</span> <span class="op">-</span><span class="fl">5.6333</span>, lat <span class="op">=</span> <span class="fl">42.6667</span><span class="op">)</span>,</span>
+<span class="r-in">                                 <span class="fu"><a href="https://rdrr.io/pkg/sp/man/CRS-class.html" class="external-link">CRS</a></span><span class="op">(</span>SRS_string <span class="op">=</span> <span class="st">"EPSG:4326"</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in">  <span class="va">foo</span> <span class="op">&lt;-</span> <span class="fu"><a href="soilgridsParams.html">soilgridsParams</a></span><span class="op">(</span><span class="va">coords_sp</span>, widths <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">300</span>, <span class="fl">700</span>, <span class="fl">1000</span>, <span class="fl">2000</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in">  <span class="va">foo</span></span>
+<span class="r-in">  <span class="va">foo_mod</span> <span class="op">&lt;-</span> <span class="fu">modifySoilParams</span><span class="op">(</span><span class="va">foo</span>, <span class="fl">900</span>, <span class="fl">20</span><span class="op">)</span> <span class="co"># 90 cm depth, 20 % rocks in the surface</span></span>
+<span class="r-in">  <span class="va">foo_mod</span></span>
+<span class="r-in"> <span class="op">}</span></span>
+</code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>
@@ -76,7 +97,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
       </footer></div>

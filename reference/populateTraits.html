@@ -66,30 +66,53 @@
     <h2>Arguments</h2>
     <dl><dt>SpParams</dt>
 <dd><p>A data frame of medfate species parameters to be populated.</p></dd>
+
+
 <dt>trait_table</dt>
 <dd><p>A data frame with species traits in columns and row.names corresponding to taxonomic entities.</p></dd>
+
+
 <dt>trait_mapping</dt>
 <dd><p>A named string vector specifying which trait data column should used to populate each medfate param. Elements are data base columns and names are medfate params.</p></dd>
+
+
 <dt>character_traits</dt>
 <dd><p>Boolean flag to treat traits as character-valued</p></dd>
+
+
 <dt>taxon_column</dt>
 <dd><p>A string identifying the column in <code>trait_table</code> that identifies taxa (normally species). If <code>taxon_column = NULL</code> then taxon names are taken from row.names.</p></dd>
+
+
 <dt>summary_function</dt>
 <dd><p>A function to summarize multiple values for the same taxonomic entity. By default, arithmetic averages are used, excluding missing values.</p></dd>
+
+
 <dt>summary_params</dt>
 <dd><p>A list of summary function params (by default <code>na.rm=TRUE</code>).</p></dd>
+
+
 <dt>scalar_functions</dt>
 <dd><p>A named list of scalar functions for traits needing transformation of units or scaling. Names are medfate params.</p></dd>
+
+
 <dt>replace_previous</dt>
 <dd><p>A boolean flag to indicate that non-missing previous values should be replaced with new data</p></dd>
+
+
 <dt>erase_previous</dt>
 <dd><p>A boolean flag to indicate that all previous values should be set to NA before populating with new data</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p>A boolean flag to indicate extra console output</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A modified data frame of medfate species parameters</p>
+    
+
+<p>A modified data frame of medfate species parameters</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
@@ -112,7 +135,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
       </footer></div>

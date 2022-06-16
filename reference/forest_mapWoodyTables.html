@@ -49,7 +49,7 @@
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">forest_mapTreeTable</span><span class="op">(</span><span class="va">x</span>, <span class="va">mapping</span>, <span class="va">SpParams</span>, plot.size <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span>
 
-<span class="fu">forest_mapShrubTable</span><span class="op">(</span><span class="va">y</span>, <span class="va">mapping</span>, <span class="va">SpParams</span><span class="op">)</span>
+<span class="fu">forest_mapShrubTable</span><span class="op">(</span><span class="va">y</span>, <span class="va">mapping</span>, <span class="va">SpParams</span>, plot.size <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span>
 
 <span class="fu">forest_mapWoodyTables</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="va">mapping</span>, <span class="va">SpParams</span>, plot.size <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></code></pre></div>
     </div>
@@ -58,29 +58,43 @@
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p>A data frame with tree records in rows and attributes in columns</p></dd>
+
+
 <dt>mapping</dt>
 <dd><p>A named character vector to specify mappings of columns in <code>x</code> or <code>y</code> into attributes of <code>treeData</code> and <code>shrubData</code> data frames. Accepted names (and the corresponding specifications for the columns in <code>x</code> and <code>y</code>) are:</p><ul><li><p>"Species": Species code (should follow codes in <code>SpParams</code>).</p></li>
 <li><p>"Species.name": Species name. In this case, the species code will be drawn by matching names with species names in <code>SpParams</code>.</p></li>
 <li><p>"N": Tree density (in ind./ha).</p></li>
+<li><p>"Cover": Shrub cover (in %).</p></li>
+<li><p>"D1": Shrub largest crown diameter (in cm).</p></li>
+<li><p>"D2": Shrub crown diameter orthogonal to the largest one (in cm).</p></li>
 <li><p>"plot.size": Plot size (in m2) to which each plot record refers to.</p></li>
 <li><p>"DBH": Diameter at breast height (in cm).</p></li>
 <li><p>"Height": Tree or shrub height (in cm).</p></li>
 <li><p>"Z50": Depth (in mm) corresponding to 50% of fine roots.</p></li>
 <li><p>"Z95": Depth (in mm) corresponding to 95% of fine roots.</p></li>
 </ul></dd>
+
+
 <dt>SpParams</dt>
-<dd><p>A data frame with species parameters (see <code>SpParamsMED</code>).</p></dd>
+<dd><p>A data frame with species parameters (see <code>SpParamsMED</code>) from which valid species names are drawn.</p></dd>
+
+
 <dt>plot.size</dt>
 <dd><p>The size of plot sampled area (in m2). Alternatively, 'plot.size'
-can a column in <code>x</code> and specified in <code>mapping</code> to indicate that trees
+can be a column in <code>x</code> or <code>y</code> and specified in <code>mapping</code> to indicate that trees/shrubs
 have been measured in different subplots and, therefore, they represent different
-densities per hectare.</p></dd>
+densities per hectare or cover values.</p></dd>
+
+
 <dt>y</dt>
 <dd><p>A data frame with shrub records in rows and attributes in columns</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>Functions <code>forest_mapTreeTable</code> and <code>forest_mapShrubTable</code> return a data frame with the structure of <code>treeData</code> and <code>shrubData</code> from <code>forest</code> objects. Function <code>forest_mapWoodyTable</code> returns directly a <code>forest</code> object.</p>
+    
+
+<p>Functions <code>forest_mapTreeTable</code> and <code>forest_mapShrubTable</code> return a data frame with the structure of <code>treeData</code> and <code>shrubData</code> from <code>forest</code> objects. Function <code>forest_mapWoodyTable</code> returns directly a <code>forest</code> object.</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
@@ -91,6 +105,323 @@ densities per hectare.</p></dd>
     <p>Miquel De Cáceres Ainsa, EMF-CREAF</p>
     </div>
 
+    <div id="ref-examples">
+    <h2>Examples</h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
+<span class="r-in"><span class="co"># Load species parameters</span></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SpParamsMED</span><span class="op">)</span></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="co"># (1) Mapping tree data</span></span>
+<span class="r-in"><span class="co"># Load Poblet tree data</span></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">poblet_trees</span><span class="op">)</span></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="co"># Subset control plot</span></span>
+<span class="r-in"><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">poblet_trees</span>, <span class="va">Plot.Code</span><span class="op">==</span><span class="st">"POBL_CTL"</span><span class="op">)</span></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="co"># Estimate sampled area (15-m radius plot)</span></span>
+<span class="r-in"><span class="va">sampled_area</span> <span class="op">&lt;-</span> <span class="va">pi</span><span class="op">*</span><span class="fl">15</span><span class="op">^</span><span class="fl">2</span></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="co"># Define mapping</span></span>
+<span class="r-in"><span class="va">mapping_x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Species.name"</span> <span class="op">=</span> <span class="st">"Species"</span>, <span class="st">"DBH"</span> <span class="op">=</span> <span class="st">"Diameter.cm"</span><span class="op">)</span></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="co"># Map tree data for plot 'POBL_CTL'</span></span>
+<span class="r-in"><span class="fu">forest_mapTreeTable</span><span class="op">(</span><span class="va">x</span>,</span>
+<span class="r-in">                    mapping <span class="op">=</span> <span class="va">mapping_x</span>, SpParams <span class="op">=</span> <span class="va">SpParamsMED</span>,</span>
+<span class="r-in">                    plot.size <span class="op">=</span> <span class="va">sampled_area</span><span class="op">)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     Species        N Height  DBH Z50 Z95</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1         4 14.14711     NA  7.6  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2        19 14.14711     NA  7.5  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3        19 14.14711     NA  7.5  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4        19 14.14711     NA  7.5  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5        19 14.14711     NA  7.5  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6        19 14.14711     NA  7.5  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7        19 14.14711     NA  7.5  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8        19 14.14711     NA  7.7  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9        19 14.14711     NA  7.8  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10       19 14.14711     NA  7.8  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11       19 14.14711     NA  7.8  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12       19 14.14711     NA  7.8  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13       19 14.14711     NA  7.8  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14       19 14.14711     NA  7.9  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15       19 14.14711     NA  8.0  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16       19 14.14711     NA  8.0  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17       19 14.14711     NA  8.0  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18       19 14.14711     NA  8.0  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19       19 14.14711     NA  8.1  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20       19 14.14711     NA  8.2  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21       19 14.14711     NA  8.2  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22       19 14.14711     NA  8.2  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23       19 14.14711     NA  8.3  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24       19 14.14711     NA  8.3  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25       19 14.14711     NA  8.4  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26       19 14.14711     NA  8.4  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27       19 14.14711     NA  8.5  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28       19 14.14711     NA  8.5  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29       19 14.14711     NA  8.5  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30       19 14.14711     NA  8.5  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 31       19 14.14711     NA  8.5  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 32       19 14.14711     NA  8.6  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 33       19 14.14711     NA  8.6  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 34       19 14.14711     NA  8.7  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 35       19 14.14711     NA  8.7  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 36       19 14.14711     NA  8.8  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 37       19 14.14711     NA  8.8  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 38       19 14.14711     NA  8.9  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 39       19 14.14711     NA  9.0  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 40       19 14.14711     NA  9.0  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 41       19 14.14711     NA  9.0  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 42       19 14.14711     NA  9.0  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 43       19 14.14711     NA  9.0  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 44       19 14.14711     NA  9.1  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 45       19 14.14711     NA  9.2  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 46       19 14.14711     NA  9.3  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 47       19 14.14711     NA  9.4  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 48       19 14.14711     NA  9.4  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 49       19 14.14711     NA  9.4  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 50       19 14.14711     NA  9.4  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 51       19 14.14711     NA  9.5  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 52       19 14.14711     NA  9.5  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 53       19 14.14711     NA  9.5  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 54       19 14.14711     NA  9.5  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 55       19 14.14711     NA  9.5  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 56       19 14.14711     NA  9.6  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 57       19 14.14711     NA  9.7  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 58       19 14.14711     NA  9.7  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 59       19 14.14711     NA  9.8  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 60       19 14.14711     NA  9.8  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 61       19 14.14711     NA  9.8  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 62       19 14.14711     NA  9.8  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 63       19 14.14711     NA 10.0  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 64       19 14.14711     NA 10.0  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 65       19 14.14711     NA 10.0  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 66       19 14.14711     NA 10.1  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 67       19 14.14711     NA 10.1  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 68       19 14.14711     NA 10.1  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 69       19 14.14711     NA 10.2  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 70       19 14.14711     NA 10.2  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 71       19 14.14711     NA 10.4  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 72       19 14.14711     NA 10.5  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 73       19 14.14711     NA 10.8  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 74       19 14.14711     NA 10.8  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 75       19 14.14711     NA 10.8  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 76       19 14.14711     NA 10.9  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 77       19 14.14711     NA 11.0  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 78       19 14.14711     NA 11.0  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 79       19 14.14711     NA 11.0  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 80       19 14.14711     NA 11.0  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 81       19 14.14711     NA 11.1  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 82       19 14.14711     NA 11.2  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 83       19 14.14711     NA 11.4  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 84       19 14.14711     NA 11.4  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 85       19 14.14711     NA 11.5  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 86       19 14.14711     NA 11.7  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 87       19 14.14711     NA 11.7  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 88       19 14.14711     NA 11.8  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 89       19 14.14711     NA 12.0  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 90       19 14.14711     NA 12.2  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 91       19 14.14711     NA 12.2  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 92       19 14.14711     NA 12.3  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 93       19 14.14711     NA 12.5  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 94       19 14.14711     NA 12.5  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 95       19 14.14711     NA 12.5  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 96       19 14.14711     NA 12.6  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 97       19 14.14711     NA 12.8  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 98       19 14.14711     NA 13.0  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 99       19 14.14711     NA 13.0  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 100      19 14.14711     NA 13.3  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 101      19 14.14711     NA 13.3  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 102      19 14.14711     NA 13.3  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 103      19 14.14711     NA 13.6  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 104      19 14.14711     NA 13.8  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 105      19 14.14711     NA 13.9  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 106      19 14.14711     NA 13.9  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 107      19 14.14711     NA 14.0  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 108      19 14.14711     NA 14.4  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 109      19 14.14711     NA 14.4  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 110      19 14.14711     NA 15.2  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 111      19 14.14711     NA 17.2  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 112      19 14.14711     NA 18.9  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 113     142 14.14711     NA 11.1  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 114     168 14.14711     NA  7.6  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 115     168 14.14711     NA  7.6  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 116     168 14.14711     NA  7.7  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 117     168 14.14711     NA  7.7  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 118     168 14.14711     NA  7.7  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 119     168 14.14711     NA  7.7  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 120     168 14.14711     NA  7.8  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 121     168 14.14711     NA  7.8  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 122     168 14.14711     NA  7.9  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 123     168 14.14711     NA  8.0  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 124     168 14.14711     NA  8.1  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 125     168 14.14711     NA  8.1  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 126     168 14.14711     NA  8.2  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 127     168 14.14711     NA  8.3  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 128     168 14.14711     NA  8.3  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 129     168 14.14711     NA  8.4  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 130     168 14.14711     NA  8.4  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 131     168 14.14711     NA  8.5  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 132     168 14.14711     NA  8.7  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 133     168 14.14711     NA  8.8  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 134     168 14.14711     NA  8.8  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 135     168 14.14711     NA  8.8  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 136     168 14.14711     NA  8.9  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 137     168 14.14711     NA  9.0  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 138     168 14.14711     NA  9.0  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 139     168 14.14711     NA  9.0  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 140     168 14.14711     NA  9.1  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 141     168 14.14711     NA  9.3  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 142     168 14.14711     NA  9.3  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 143     168 14.14711     NA  9.3  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 144     168 14.14711     NA  9.3  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 145     168 14.14711     NA  9.3  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 146     168 14.14711     NA  9.3  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 147     168 14.14711     NA  9.4  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 148     168 14.14711     NA  9.4  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 149     168 14.14711     NA  9.5  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 150     168 14.14711     NA  9.5  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 151     168 14.14711     NA  9.5  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 152     168 14.14711     NA  9.6  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 153     168 14.14711     NA  9.7  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 154     168 14.14711     NA  9.7  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 155     168 14.14711     NA  9.8  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 156     168 14.14711     NA  9.8  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 157     168 14.14711     NA 10.0  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 158     168 14.14711     NA 10.0  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 159     168 14.14711     NA 10.0  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 160     168 14.14711     NA 10.0  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 161     168 14.14711     NA 10.1  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 162     168 14.14711     NA 10.1  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 163     168 14.14711     NA 10.2  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 164     168 14.14711     NA 10.2  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 165     168 14.14711     NA 10.2  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 166     168 14.14711     NA 10.2  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 167     168 14.14711     NA 10.3  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 168     168 14.14711     NA 10.3  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 169     168 14.14711     NA 10.3  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 170     168 14.14711     NA 10.4  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 171     168 14.14711     NA 10.4  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 172     168 14.14711     NA 10.5  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 173     168 14.14711     NA 10.5  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 174     168 14.14711     NA 10.7  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 175     168 14.14711     NA 10.7  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 176     168 14.14711     NA 10.7  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 177     168 14.14711     NA 10.8  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 178     168 14.14711     NA 10.9  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 179     168 14.14711     NA 11.0  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 180     168 14.14711     NA 11.0  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 181     168 14.14711     NA 11.2  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 182     168 14.14711     NA 11.2  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 183     168 14.14711     NA 11.3  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 184     168 14.14711     NA 11.4  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 185     168 14.14711     NA 11.5  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 186     168 14.14711     NA 11.5  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 187     168 14.14711     NA 11.5  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 188     168 14.14711     NA 11.7  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 189     168 14.14711     NA 11.7  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 190     168 14.14711     NA 11.7  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 191     168 14.14711     NA 12.0  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 192     168 14.14711     NA 12.0  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 193     168 14.14711     NA 12.0  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 194     168 14.14711     NA 12.0  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 195     168 14.14711     NA 12.0  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 196     168 14.14711     NA 12.2  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 197     168 14.14711     NA 12.2  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 198     168 14.14711     NA 12.3  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 199     168 14.14711     NA 12.5  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 200     168 14.14711     NA 12.5  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 201     168 14.14711     NA 12.6  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 202     168 14.14711     NA 12.6  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 203     168 14.14711     NA 12.7  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 204     168 14.14711     NA 12.7  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 205     168 14.14711     NA 12.8  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 206     168 14.14711     NA 12.9  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 207     168 14.14711     NA 13.0  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 208     168 14.14711     NA 13.1  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 209     168 14.14711     NA 13.1  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 210     168 14.14711     NA 13.2  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 211     168 14.14711     NA 13.2  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 212     168 14.14711     NA 13.3  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 213     168 14.14711     NA 13.4  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 214     168 14.14711     NA 13.5  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 215     168 14.14711     NA 13.5  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 216     168 14.14711     NA 13.5  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 217     168 14.14711     NA 13.5  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 218     168 14.14711     NA 13.8  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 219     168 14.14711     NA 13.8  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 220     168 14.14711     NA 14.0  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 221     168 14.14711     NA 14.0  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 222     168 14.14711     NA 14.1  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 223     168 14.14711     NA 14.1  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 224     168 14.14711     NA 14.2  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 225     168 14.14711     NA 14.4  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 226     168 14.14711     NA 14.6  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 227     168 14.14711     NA 14.8  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 228     168 14.14711     NA 14.8  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 229     168 14.14711     NA 14.8  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 230     168 14.14711     NA 14.9  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 231     168 14.14711     NA 15.0  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 232     168 14.14711     NA 15.0  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 233     168 14.14711     NA 15.0  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 234     168 14.14711     NA 15.1  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 235     168 14.14711     NA 15.2  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 236     168 14.14711     NA 15.4  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 237     168 14.14711     NA 15.5  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 238     168 14.14711     NA 15.5  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 239     168 14.14711     NA 15.7  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 240     168 14.14711     NA 15.8  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 241     168 14.14711     NA 16.2  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 242     168 14.14711     NA 16.4  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 243     168 14.14711     NA 16.4  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 244     168 14.14711     NA 16.5  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 245     168 14.14711     NA 16.5  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 246     168 14.14711     NA 16.5  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 247     168 14.14711     NA 16.5  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 248     168 14.14711     NA 16.5  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 249     168 14.14711     NA 16.9  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 250     168 14.14711     NA 17.0  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 251     168 14.14711     NA 17.2  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 252     168 14.14711     NA 17.2  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 253     168 14.14711     NA 17.3  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 254     168 14.14711     NA 17.3  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 255     168 14.14711     NA 17.5  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 256     168 14.14711     NA 17.5  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 257     168 14.14711     NA 18.3  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 258     168 14.14711     NA 18.3  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 259     168 14.14711     NA 18.7  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 260     168 14.14711     NA 18.9  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 261     168 14.14711     NA 20.0  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 262     168 14.14711     NA 20.4  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 263     168 14.14711     NA 20.7  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 264     168 14.14711     NA 22.2  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 265     168 14.14711     NA 22.4  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 266     168 14.14711     NA 25.4  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 267     168 14.14711     NA 26.0  NA  NA</span>
+<span class="r-in"></span>
+<span class="r-in"><span class="co"># (2) Mapping shrub individual data</span></span>
+<span class="r-in"><span class="co">#</span></span>
+<span class="r-in"><span class="co"># Create the individual shrub data frame</span></span>
+<span class="r-in"><span class="va">species</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Erica arborea"</span>,<span class="st">"Cistus albidus"</span>, <span class="st">"Erica arborea"</span>, <span class="st">"Cistus albidus"</span>, <span class="st">"Cistus albidus"</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">H</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">200</span>,<span class="fl">50</span>,<span class="fl">100</span>,<span class="fl">40</span>,<span class="fl">30</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">D1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">140</span>,<span class="fl">40</span>,<span class="fl">100</span>, <span class="fl">35</span>,<span class="fl">30</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">D2</span> <span class="op">&lt;-</span> <span class="va">D1</span></span>
+<span class="r-in"><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="va">species</span>, <span class="va">H</span>, <span class="va">D1</span>, <span class="va">D2</span><span class="op">)</span></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="co"># Define mapping (D1 and D2 map to variables with the same name)</span></span>
+<span class="r-in"><span class="va">mapping_y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Species.name"</span><span class="op">=</span> <span class="st">"species"</span>, <span class="st">"Height"</span> <span class="op">=</span><span class="st">"H"</span>, <span class="st">"D1"</span>, <span class="st">"D2"</span><span class="op">)</span></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="co"># Map individual shrub data to cover data (here each individual becomes a cohort)</span></span>
+<span class="r-in"><span class="co"># assuming that the sampled area was 4 m2</span></span>
+<span class="r-in"><span class="fu">forest_mapShrubTable</span><span class="op">(</span><span class="va">y</span>,</span>
+<span class="r-in">                     mapping <span class="op">=</span> <span class="va">mapping_y</span>, SpParams <span class="op">=</span> <span class="va">SpParamsMED</span>,</span>
+<span class="r-in">                     plot.size <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Species Height     Cover Z50 Z95</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1      83    200 38.484510  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2      40     50  3.141593  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3      83    100 19.634954  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4      40     40  2.405282  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5      40     30  1.767146  NA  NA</span>
+</code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>
@@ -103,7 +434,7 @@ densities per hectare.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
       </footer></div>

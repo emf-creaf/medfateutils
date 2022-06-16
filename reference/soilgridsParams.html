@@ -54,14 +54,21 @@
     <h2>Arguments</h2>
     <dl><dt>points</dt>
 <dd><p>An object of class (or subclass) <code>SpatialPoints</code> with a valid CRS definition.</p></dd>
+
+
 <dt>widths</dt>
 <dd><p>A numeric vector indicating the desired layer widths, in <em>mm</em>. If <code>NULL</code> the default soil grids layer definition is returned.</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p>A logical flag to include a progress bar while processing the output of the query to the SoilGrids REST API.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>If only one point is supplied, a data frame containing the soil characteristics ready to use with the
+    
+
+<p>If only one point is supplied, a data frame containing the soil characteristics ready to use with the
 <code>soil</code> function. If more than one point is supplied, the function returns a list with as many elements
 as points, each one containing the mentioned list.</p>
     </div>
@@ -112,7 +119,7 @@ are transformed to longitude/latitude within the function.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
       </footer></div>
