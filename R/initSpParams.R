@@ -71,7 +71,7 @@ initSpParams<-function(sp_codes, sp_names, SpParamsDefinition,
       }
       if(length(gbif_id)>0) {
         cdf<-taxize::classification(gbif_id[1], db="gbif")[[1]]
-        if(class(cdf)=="data.frame") {
+        if(inherits(cdf,"data.frame")) {
           if("family" %in% cdf$rank) SpParams$Family[i] = cdf$name[cdf$rank=="family"]
           if("order" %in% cdf$rank) {
             SpParams$Order[i] = cdf$name[cdf$rank=="order"]
