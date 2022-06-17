@@ -114,16 +114,16 @@
 #'
 #' @examples
 #' data(SpParamsMED)
-#' data(exampletreedata)
-#' data(exampleshrubdata)
+#' data(example_treedata_ifn)
+#' data(example_shrubdata_ifn)
 #'
 #' # Builds an object 'forest' corresponding to one specific forest plot
-#' f = IFN2forest(exampletreedata, exampleshrubdata,
+#' f = IFN2forest(example_treedata_ifn, example_shrubdata_ifn,
 #'                ID = "81065", SpParams = SpParamsMED)
 #' print(f)
 #'
 #' # Builds a list whose elements are 'forest' objects
-#' l = IFN2forestlist(exampletreedata, exampleshrubdata, SpParamsMED)
+#' l = IFN2forestlist(example_treedata_ifn, example_shrubdata_ifn, SpParamsMED)
 #' names(l)
 #' l[[1]]
 IFN2forest<-function(IFNtreeData, IFNshrubData, ID, SpParams,

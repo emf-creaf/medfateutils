@@ -1,8 +1,8 @@
 Package: medfateutils
 Type: Package
 Title: Utility Functions for Package `medfate`
-Version: 0.1.3
-Date: 2022-06-16
+Version: 0.1.4
+Date: 2022-06-17
 Authors@R: c(
 	person('Miquel', 'De Cáceres', role=c('aut','cre'),
 	email='miquelcaceres@gmail.com'),

@@ -23,11 +23,11 @@
 #'
 #' @examples
 #' data(SpParamsMED)
-#' data(exampletreedata)
-#' data(exampleshrubdata)
+#' data(example_treedata_ifn)
+#' data(example_shrubdata_ifn)
 #'
 #' # Builds an object 'forest' corresponding to one specific forest plot
-#' f1 = IFN2forest(exampletreedata, exampleshrubdata,
+#' f1 = IFN2forest(example_treedata_ifn, example_shrubdata_ifn,
 #'                 ID = "81065", SpParams = SpParamsMED)
 #' print(f1)
 #'
@@ -35,7 +35,7 @@
 #' f2 = estimateRootingDepth(f1, soilpar, 300, 100, SpParamsMED)
 #' print(f2)
 #'
-#' l1 = IFN2forestlist(exampletreedata, exampleshrubdata, SpParamsMED)
+#' l1 = IFN2forestlist(example_treedata_ifn, example_shrubdata_ifn, SpParamsMED)
 #' l2 = estimateRootingDepthList(l1, soilpar, 300, 100, SpParamsMED)
 #' @name estimateRootingDepth
 estimateRootingDepth<-function(forest, soil, PET_summer, P_summer, SpParams,
