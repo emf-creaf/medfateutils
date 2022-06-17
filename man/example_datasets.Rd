@@ -7,15 +7,26 @@
 \alias{example_treedata_ifn}
 \alias{poblet_trees}
 \title{Example datasets}
+\source{
+\itemize{
+  \item{Datasets \code{example_shrubdata_ifn} and \code{example_treedata_ifn} were extracted from the Third Spanish National Forest Inventory.}
+  \item{Dataset \code{poblet_trees} corresponds to field data sampled by the Catalan Forest Ownership Center (Centre de la Propietat Forestal; CPF).}
+ }
+}
 \description{
-Example data to test
+Example data to illustrate the creation of forest objects
 }
 \details{
-The example data set includes two data items:
+Three example datasets are included:
 
 \itemize{
  \item example_shrubdata_ifn - Data frame with shrub plot data (43 observations and 4 variables).
-       Rows are species records and columns are 'ID', 'Species', 'FCC' and 'H'.
+   \itemize{
+     \item ID - Plot ID
+     \item Species - Species code
+     \item FCC - Shrub cove (\%)
+     \item H - Shrub height (m)
+   }
  \item example_treedata_ifn - Data frame with tree plot data (118 observations and 11 variables).
    \itemize{
      \item ID - Plot ID
@@ -30,7 +41,7 @@ The example data set includes two data items:
      \item OIF3 - Tree code at the Third Spanish Forest Inventory
      \item FC - Code for the equation describing volume
    }
- \item poblet_trees - Data frame with example tree plot data from Poblet (Catalonia).
+ \item poblet_trees - Data frame with example tree plot data from Poblet, Catalonia (717 observations and 4 variables).
    \itemize{
      \item Plot.Code - Plot ID
      \item Indv.Ref - Tree individual (integer)
@@ -38,8 +49,5 @@ The example data set includes two data items:
      \item Diameter.cm - Tree diameter at breast height (cm)
    }
 }
-}
-\author{
-Toy datasets extracted from Spanish National Forest Inventory.
 }
 \keyword{data}
