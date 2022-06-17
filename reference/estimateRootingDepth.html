@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfateutils</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.4</span>
       </span>
     </div>
 
@@ -126,11 +126,11 @@
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SpParamsMED</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampletreedata</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleshrubdata</span><span class="op">)</span></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">example_treedata_ifn</span><span class="op">)</span></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">example_shrubdata_ifn</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Builds an object 'forest' corresponding to one specific forest plot</span></span>
-<span class="r-in"><span class="va">f1</span> <span class="op">=</span> <span class="fu"><a href="IFN2forest.html">IFN2forest</a></span><span class="op">(</span><span class="va">exampletreedata</span>, <span class="va">exampleshrubdata</span>,</span>
+<span class="r-in"><span class="va">f1</span> <span class="op">=</span> <span class="fu"><a href="IFN2forest.html">IFN2forest</a></span><span class="op">(</span><span class="va">example_treedata_ifn</span>, <span class="va">example_shrubdata_ifn</span>,</span>
 <span class="r-in">                ID <span class="op">=</span> <span class="st">"81065"</span>, SpParams <span class="op">=</span> <span class="va">SpParamsMED</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Filtered records in tree data: 11</span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">f1</span><span class="op">)</span></span>
@@ -231,7 +231,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "forest" "list"  </span>
 <span class="r-in"></span>
-<span class="r-in"><span class="va">l1</span> <span class="op">=</span> <span class="fu"><a href="IFN2forest.html">IFN2forestlist</a></span><span class="op">(</span><span class="va">exampletreedata</span>, <span class="va">exampleshrubdata</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">l1</span> <span class="op">=</span> <span class="fu"><a href="IFN2forest.html">IFN2forestlist</a></span><span class="op">(</span><span class="va">example_treedata_ifn</span>, <span class="va">example_shrubdata_ifn</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Number of plots: 5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Filtered records in tree data: 20</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Translating species codes...</span>
