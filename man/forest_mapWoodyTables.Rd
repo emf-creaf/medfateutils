@@ -6,16 +6,35 @@
 \alias{forest_mapShrubTable}
 \title{Map forest plot data}
 \usage{
-forest_mapTreeTable(x, mapping, SpParams, plot.size = NULL)
+forest_mapTreeTable(x, mapping_x, SpParams, plot_size_x = NULL)
 
-forest_mapShrubTable(y, mapping, SpParams, plot.size = NULL)
+forest_mapShrubTable(y, mapping_y, SpParams, plot_size_y = NULL)
 
-forest_mapWoodyTables(x, y, mapping, SpParams, plot.size = NULL)
+forest_mapWoodyTables(
+  x,
+  y,
+  mapping_x,
+  mapping_y,
+  SpParams,
+  plot_size_x = NULL,
+  plot_size_y = NULL
+)
 }
 \arguments{
-\item{x}{A data frame with tree records in rows and attributes in columns}
+\item{x}{A data frame with tree records in rows and attributes in columns. Tree records can correspond to individual trees or groups of trees with an associated density.}
 
-\item{mapping}{A named character vector to specify mappings of columns in \code{x} or \code{y} into attributes of \code{treeData} and \code{shrubData} data frames. Accepted names (and the corresponding specifications for the columns in \code{x} and \code{y}) are:
+\item{mapping_x}{A named character vector to specify mappings of columns in \code{x} into attributes of \code{treeData} data frames. Accepted names (and the corresponding specifications for the columns in \code{x} are:}
+
+\item{SpParams}{A data frame with species parameters (see \code{\link{SpParamsMED}}) from which valid species names are drawn.}
+
+\item{plot_size_x}{The size of tree plot sampled area (in m2). Alternatively, 'plot_size_x'
+can be a column in \code{x} and specified in \code{mapping_x} to indicate that trees
+have been measured in different subplots and, therefore, they represent different
+densities per hectare.}
+
+\item{y}{A data frame with shrub records in rows and attributes in columns. Records can correspond to individual shrubs (with crown dimensions and height) or groups of shrubs with an associated cover estimate.}
+
+\item{mapping_y}{A named character vector to specify mappings of columns in \code{y} into attributes of \code{shrubData} data frames. Accepted names (and the corresponding specifications for the columns in \code{y}) are:
 \itemize{
 \item{"Species": Species code (should follow codes in \code{SpParams}).}
 \item{"Species.name": Species name. In this case, the species code will be drawn by matching names with species names in \code{SpParams}.}
@@ -23,21 +42,17 @@ forest_mapWoodyTables(x, y, mapping, SpParams, plot.size = NULL)
 \item{"Cover": Shrub cover (in \%).}
 \item{"D1": Shrub largest crown diameter (in cm).}
 \item{"D2": Shrub crown diameter orthogonal to the largest one (in cm).}
-\item{"plot.size": Plot size (in m2) to which each plot record refers to.}
+\item{"plot.size": Plot size (in m2) to which each record refers to. This is used to calculate tree density (stems per hectare) when not supplied or shrub cover when shrub data is given at the individual level.}
 \item{"DBH": Diameter at breast height (in cm).}
 \item{"Height": Tree or shrub height (in cm).}
 \item{"Z50": Depth (in mm) corresponding to 50\% of fine roots.}
 \item{"Z95": Depth (in mm) corresponding to 95\% of fine roots.}
 }}
 
-\item{SpParams}{A data frame with species parameters (see \code{\link{SpParamsMED}}) from which valid species names are drawn.}
-
-\item{plot.size}{The size of plot sampled area (in m2). Alternatively, 'plot.size'
-can be a column in \code{x} or \code{y} and specified in \code{mapping} to indicate that trees/shrubs
+\item{plot_size_y}{The size of shrub plot sampled area (in m2). Alternatively, 'plot_size_y'
+can be a column in \code{y} and specified in \code{mapping_y} to indicate that shrubs
 have been measured in different subplots and, therefore, they represent different
-densities per hectare or cover values.}
-
-\item{y}{A data frame with shrub records in rows and attributes in columns}
+cover values.}
 }
 \value{
 Functions \code{forest_mapTreeTable} and \code{forest_mapShrubTable} return a data frame with the structure of \code{treeData} and \code{shrubData} from \code{\link{forest}} objects. Function \code{forest_mapWoodyTable} returns directly a \code{\link{forest}} object.
@@ -49,6 +64,9 @@ Mapping functions to facilitate building forest objects from forest plot data
 
 # Load species parameters
 data(SpParamsMED)
+
+# Create an empty forest object
+f <- emptyforest()
 
 # (1) Mapping tree data
 # Load Poblet tree data
@@ -64,9 +82,9 @@ sampled_area <- pi*15^2
 mapping_x <- c("Species.name" = "Species", "DBH" = "Diameter.cm")
 
 # Map tree data for plot 'POBL_CTL'
-forest_mapTreeTable(x,
-                    mapping = mapping_x, SpParams = SpParamsMED,
-                    plot.size = sampled_area)
+f$treeData <- forest_mapTreeTable(x,
+                    mapping_x = mapping_x, SpParams = SpParamsMED,
+                    plot_size_x = sampled_area)
 
 # (2) Mapping shrub individual data
 #
@@ -82,9 +100,19 @@ mapping_y <- c("Species.name"= "species", "Height" ="H", "D1", "D2")
 
 # Map individual shrub data to cover data (here each individual becomes a cohort)
 # assuming that the sampled area was 4 m2
-forest_mapShrubTable(y,
-                     mapping = mapping_y, SpParams = SpParamsMED,
-                     plot.size = 4)
+f$shrubData <- forest_mapShrubTable(y,
+                     mapping_y = mapping_y, SpParams = SpParamsMED,
+                     plot_size_y = 4)
+
+# (3) Print forest attributes
+summary(f, SpParamsMED)
+
+# (4) Forest initialization in a single step
+f <- forest_mapWoodyTables(x, y,
+                           mapping_x = mapping_x, mapping_y = mapping_y,
+                           SpParams = SpParamsMED,
+                           plot_size_x = sampled_area, plot_size_y = 4)
+summary(f, SpParamsMED)
 }
 \seealso{
 \code{\link[medfate]{forest}}
