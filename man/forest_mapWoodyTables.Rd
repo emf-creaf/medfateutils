@@ -11,10 +11,10 @@ forest_mapTreeTable(x, mapping_x, SpParams, plot_size_x = NULL)
 forest_mapShrubTable(y, mapping_y, SpParams, plot_size_y = NULL)
 
 forest_mapWoodyTables(
-  x,
-  y,
-  mapping_x,
-  mapping_y,
+  x = NULL,
+  y = NULL,
+  mapping_x = NULL,
+  mapping_y = NULL,
   SpParams,
   plot_size_x = NULL,
   plot_size_y = NULL

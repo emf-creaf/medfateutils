@@ -195,9 +195,15 @@ forest_mapShrubTable<-function(y, mapping_y, SpParams, plot_size_y = NULL) {
 }
 
 #' @rdname forest_mapWoodyTables
-forest_mapWoodyTables<-function(x, y, mapping_x, mapping_y, SpParams, plot_size_x=NULL, plot_size_y = NULL) {
+forest_mapWoodyTables<-function(x = NULL, y = NULL, mapping_x = NULL, mapping_y = NULL, SpParams, plot_size_x=NULL, plot_size_y = NULL) {
   f = emptyforest()
-  f$treeData = forest_mapTreeTable(x, mapping_x = mapping_x,  SpParams=SpParams, plot_size_x = plot_size_x)
-  f$shrubData = forest_mapShrubTable(y, mapping_y = mapping_y,  SpParams=SpParams, plot_size_y = plot_size_y)
+  if(!is.null(x)) {
+    if(is.null(mapping_x)) stop("You need to specify a mapping for 'x'")
+    f$treeData = forest_mapTreeTable(x, mapping_x = mapping_x,  SpParams=SpParams, plot_size_x = plot_size_x)
+  }
+  if(!is.null(y)) {
+    if(is.null(mapping_y)) stop("You need to specify a mapping for 'y'")
+    f$shrubData = forest_mapShrubTable(y, mapping_y = mapping_y,  SpParams=SpParams, plot_size_y = plot_size_y)
+  }
   return(f)
 }
