@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfateutils</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.5</span>
       </span>
     </div>
 
@@ -47,23 +47,23 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">estimateRootingDepth</span><span class="op">(</span>
-  <span class="va">forest</span>,
-  <span class="va">soil</span>,
-  <span class="va">PET_summer</span>,
-  <span class="va">P_summer</span>,
-  <span class="va">SpParams</span>,
-  fillMissing <span class="op">=</span> <span class="cn">FALSE</span>
-<span class="op">)</span>
-
-<span class="fu">estimateRootingDepthList</span><span class="op">(</span>
-  <span class="va">forestlist</span>,
-  <span class="va">soillist</span>,
-  <span class="va">PET_summer</span>,
-  <span class="va">P_summer</span>,
-  <span class="va">SpParams</span>,
-  fillMissing <span class="op">=</span> <span class="cn">FALSE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">estimateRootingDepth</span><span class="op">(</span></span>
+<span>  <span class="va">forest</span>,</span>
+<span>  <span class="va">soil</span>,</span>
+<span>  <span class="va">PET_summer</span>,</span>
+<span>  <span class="va">P_summer</span>,</span>
+<span>  <span class="va">SpParams</span>,</span>
+<span>  fillMissing <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">estimateRootingDepthList</span><span class="op">(</span></span>
+<span>  <span class="va">forestlist</span>,</span>
+<span>  <span class="va">soillist</span>,</span>
+<span>  <span class="va">PET_summer</span>,</span>
+<span>  <span class="va">P_summer</span>,</span>
+<span>  <span class="va">SpParams</span>,</span>
+<span>  fillMissing <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -125,15 +125,15 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SpParamsMED</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">example_treedata_ifn</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">example_shrubdata_ifn</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Builds an object 'forest' corresponding to one specific forest plot</span></span>
-<span class="r-in"><span class="va">f1</span> <span class="op">=</span> <span class="fu"><a href="IFN2forest.html">IFN2forest</a></span><span class="op">(</span><span class="va">example_treedata_ifn</span>, <span class="va">example_shrubdata_ifn</span>,</span>
-<span class="r-in">                ID <span class="op">=</span> <span class="st">"81065"</span>, SpParams <span class="op">=</span> <span class="va">SpParamsMED</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SpParamsMED</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">example_treedata_ifn</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">example_shrubdata_ifn</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Builds an object 'forest' corresponding to one specific forest plot</span></span></span>
+<span class="r-in"><span><span class="va">f1</span> <span class="op">=</span> <span class="fu"><a href="IFN2forest.html">IFN2forest</a></span><span class="op">(</span><span class="va">example_treedata_ifn</span>, <span class="va">example_shrubdata_ifn</span>,</span></span>
+<span class="r-in"><span>                ID <span class="op">=</span> <span class="st">"81065"</span>, SpParams <span class="op">=</span> <span class="va">SpParamsMED</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Filtered records in tree data: 11</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">f1</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">f1</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $ID</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "81065"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -180,10 +180,10 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "forest" "list"  </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">soilpar</span> <span class="op">=</span> <span class="fu">defaultSoilParams</span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">f2</span> <span class="op">=</span> <span class="fu">estimateRootingDepth</span><span class="op">(</span><span class="va">f1</span>, <span class="va">soilpar</span>, <span class="fl">300</span>, <span class="fl">100</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">f2</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">soilpar</span> <span class="op">=</span> <span class="fu">defaultSoilParams</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">f2</span> <span class="op">=</span> <span class="fu">estimateRootingDepth</span><span class="op">(</span><span class="va">f1</span>, <span class="va">soilpar</span>, <span class="fl">300</span>, <span class="fl">100</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">f2</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $ID</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "81065"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -230,14 +230,14 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "forest" "list"  </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">l1</span> <span class="op">=</span> <span class="fu"><a href="IFN2forest.html">IFN2forestlist</a></span><span class="op">(</span><span class="va">example_treedata_ifn</span>, <span class="va">example_shrubdata_ifn</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">l1</span> <span class="op">=</span> <span class="fu"><a href="IFN2forest.html">IFN2forestlist</a></span><span class="op">(</span><span class="va">example_treedata_ifn</span>, <span class="va">example_shrubdata_ifn</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Number of plots: 5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Filtered records in tree data: 20</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Translating species codes...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Extracting IFN data...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> done.</span>
-<span class="r-in"><span class="va">l2</span> <span class="op">=</span> <span class="fu">estimateRootingDepthList</span><span class="op">(</span><span class="va">l1</span>, <span class="va">soilpar</span>, <span class="fl">300</span>, <span class="fl">100</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="va">l2</span> <span class="op">=</span> <span class="fu">estimateRootingDepthList</span><span class="op">(</span><span class="va">l1</span>, <span class="va">soilpar</span>, <span class="fl">300</span>, <span class="fl">100</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -252,7 +252,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

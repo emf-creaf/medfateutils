@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfateutils</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.5</span>
       </span>
     </div>
 
@@ -47,29 +47,29 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">IFN2forest</span><span class="op">(</span>
-  <span class="va">IFNtreeData</span>,
-  <span class="va">IFNshrubData</span>,
-  <span class="va">ID</span>,
-  <span class="va">SpParams</span>,
-  IFNherbData <span class="op">=</span> <span class="cn">NULL</span>,
-  patchsize <span class="op">=</span> <span class="fl">10000</span>,
-  setDefaults <span class="op">=</span> <span class="cn">TRUE</span>,
-  filterWrongRecords <span class="op">=</span> <span class="cn">TRUE</span>,
-  keepNumOrden <span class="op">=</span> <span class="cn">TRUE</span>,
-  verbose <span class="op">=</span> <span class="cn">TRUE</span>
-<span class="op">)</span>
-
-<span class="fu">IFN2forestlist</span><span class="op">(</span>
-  <span class="va">IFNtreeData</span>,
-  <span class="va">IFNshrubData</span>,
-  <span class="va">SpParams</span>,
-  IFNherbData <span class="op">=</span> <span class="cn">NULL</span>,
-  setDefaults <span class="op">=</span> <span class="cn">TRUE</span>,
-  filterWrongRecords <span class="op">=</span> <span class="cn">TRUE</span>,
-  keepNumOrden <span class="op">=</span> <span class="cn">TRUE</span>,
-  verbose <span class="op">=</span> <span class="cn">TRUE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">IFN2forest</span><span class="op">(</span></span>
+<span>  <span class="va">IFNtreeData</span>,</span>
+<span>  <span class="va">IFNshrubData</span>,</span>
+<span>  <span class="va">ID</span>,</span>
+<span>  <span class="va">SpParams</span>,</span>
+<span>  IFNherbData <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  patchsize <span class="op">=</span> <span class="fl">10000</span>,</span>
+<span>  setDefaults <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  filterWrongRecords <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  keepNumOrden <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">IFN2forestlist</span><span class="op">(</span></span>
+<span>  <span class="va">IFNtreeData</span>,</span>
+<span>  <span class="va">IFNshrubData</span>,</span>
+<span>  <span class="va">SpParams</span>,</span>
+<span>  IFNherbData <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  setDefaults <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  filterWrongRecords <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  keepNumOrden <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -153,15 +153,15 @@ to translate IFN codes into medfate codes.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SpParamsMED</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">example_treedata_ifn</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">example_shrubdata_ifn</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Builds an object 'forest' corresponding to one specific forest plot</span></span>
-<span class="r-in"><span class="va">f</span> <span class="op">=</span> <span class="fu">IFN2forest</span><span class="op">(</span><span class="va">example_treedata_ifn</span>, <span class="va">example_shrubdata_ifn</span>,</span>
-<span class="r-in">               ID <span class="op">=</span> <span class="st">"81065"</span>, SpParams <span class="op">=</span> <span class="va">SpParamsMED</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SpParamsMED</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">example_treedata_ifn</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">example_shrubdata_ifn</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Builds an object 'forest' corresponding to one specific forest plot</span></span></span>
+<span class="r-in"><span><span class="va">f</span> <span class="op">=</span> <span class="fu">IFN2forest</span><span class="op">(</span><span class="va">example_treedata_ifn</span>, <span class="va">example_shrubdata_ifn</span>,</span></span>
+<span class="r-in"><span>               ID <span class="op">=</span> <span class="st">"81065"</span>, SpParams <span class="op">=</span> <span class="va">SpParamsMED</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Filtered records in tree data: 11</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">f</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">f</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $ID</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "81065"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -208,17 +208,17 @@ to translate IFN codes into medfate codes.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "forest" "list"  </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Builds a list whose elements are 'forest' objects</span></span>
-<span class="r-in"><span class="va">l</span> <span class="op">=</span> <span class="fu">IFN2forestlist</span><span class="op">(</span><span class="va">example_treedata_ifn</span>, <span class="va">example_shrubdata_ifn</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Builds a list whose elements are 'forest' objects</span></span></span>
+<span class="r-in"><span><span class="va">l</span> <span class="op">=</span> <span class="fu">IFN2forestlist</span><span class="op">(</span><span class="va">example_treedata_ifn</span>, <span class="va">example_shrubdata_ifn</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Number of plots: 5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Filtered records in tree data: 20</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Translating species codes...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Extracting IFN data...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> done.</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">l</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">l</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "81065" "81066" "81067" "81068" "81069"</span>
-<span class="r-in"><span class="va">l</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
+<span class="r-in"><span><span class="va">l</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $ID</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "81065"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -279,7 +279,7 @@ to translate IFN codes into medfate codes.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>
