@@ -25,6 +25,7 @@ reference:
   desc:  Access to and modification of soil parameter data
   contents:
   - starts_with("soilgrids")
+  - starts_with("redefineSoil")
   - starts_with("modifySoil")
 
 - title: Root parameters
