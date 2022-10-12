@@ -47,7 +47,9 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">modifySoilParams</span><span class="op">(</span><span class="va">soildata</span>, <span class="va">soildepth</span>, surfacerock <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">modifySoilDepth</span><span class="op">(</span><span class="va">soildata</span>, <span class="va">soildepth</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">modifySoilRockContent</span><span class="op">(</span><span class="va">soildata</span>, <span class="va">surfacerock</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -78,11 +80,14 @@
 <span class="r-in"><span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/edzer/sp/" class="external-link">sp</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="va">coords_sp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/sp/man/SpatialPoints.html" class="external-link">SpatialPoints</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span>long <span class="op">=</span> <span class="op">-</span><span class="fl">5.6333</span>, lat <span class="op">=</span> <span class="fl">42.6667</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>                                 <span class="fu"><a href="https://rdrr.io/pkg/sp/man/CRS-class.html" class="external-link">CRS</a></span><span class="op">(</span>SRS_string <span class="op">=</span> <span class="st">"EPSG:4326"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span>  <span class="va">foo</span> <span class="op">&lt;-</span> <span class="fu"><a href="soilgridsParams.html">soilgridsParams</a></span><span class="op">(</span><span class="va">coords_sp</span>, widths <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">300</span>, <span class="fl">700</span>, <span class="fl">1000</span>, <span class="fl">2000</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span>  <span class="va">foo</span></span></span>
-<span class="r-in"><span>  <span class="va">foo_mod</span> <span class="op">&lt;-</span> <span class="fu">modifySoilParams</span><span class="op">(</span><span class="va">foo</span>, <span class="fl">900</span>, <span class="fl">20</span><span class="op">)</span> <span class="co"># 90 cm depth, 20 % rocks in the surface</span></span></span>
-<span class="r-in"><span>  <span class="va">foo_mod</span></span></span>
+<span class="r-in"><span>  <span class="va">foo_1</span> <span class="op">&lt;-</span> <span class="fu"><a href="soilgridsParams.html">soilgridsParams</a></span><span class="op">(</span><span class="va">coords_sp</span>, widths <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">300</span>, <span class="fl">700</span>, <span class="fl">1000</span>, <span class="fl">2000</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">foo_1</span></span></span>
+<span class="r-in"><span>  <span class="va">foo_2</span> <span class="op">&lt;-</span> <span class="fu">modifySoilDepth</span><span class="op">(</span><span class="va">foo_1</span>, <span class="fl">900</span><span class="op">)</span> <span class="co"># 90 cm depth</span></span></span>
+<span class="r-in"><span>  <span class="va">foo_2</span></span></span>
+<span class="r-in"><span>  <span class="va">foo_3</span> <span class="op">&lt;-</span> <span class="fu">modifySoilRockContent</span><span class="op">(</span><span class="va">foo_2</span>, <span class="fl">20</span><span class="op">)</span> <span class="co"># 20 % rocks in the surface</span></span></span>
+<span class="r-in"><span>  <span class="va">foo_3</span></span></span>
 <span class="r-in"><span> <span class="op">}</span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
