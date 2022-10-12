@@ -2,9 +2,13 @@
 % Please edit documentation in R/modifySoilParams.R
 \name{modifySoilParams}
 \alias{modifySoilParams}
+\alias{modifySoilDepth}
+\alias{modifySoilRockContent}
 \title{Modifies soil properties estimated from SoilGrids}
 \usage{
-modifySoilParams(soildata, soildepth, surfacerock = NULL)
+modifySoilDepth(soildata, soildepth)
+
+modifySoilRockContent(soildata, surfacerock)
 }
 \arguments{
 \item{soildata}{A data frame of soil physical parameters or a list of data frames}
@@ -25,9 +29,12 @@ Modifies soil properties estimated from SoilGrids
   library(sp)
   coords_sp <- SpatialPoints(cbind(long = -5.6333, lat = 42.6667),
                                  CRS(SRS_string = "EPSG:4326"))
-  foo <- soilgridsParams(coords_sp, widths = c(300, 700, 1000, 2000))
-  foo
-  foo_mod <- modifySoilParams(foo, 900, 20) # 90 cm depth, 20 \% rocks in the surface
-  foo_mod
+  foo_1 <- soilgridsParams(coords_sp, widths = c(300, 700, 1000, 2000))
+  foo_1
+  foo_2 <- modifySoilDepth(foo_1, 900) # 90 cm depth
+  foo_2
+  foo_3 <- modifySoilRockContent(foo_2, 20) # 20 \% rocks in the surface
+  foo_3
  }
+
 }
