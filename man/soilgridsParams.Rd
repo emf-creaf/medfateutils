@@ -5,10 +5,10 @@
 \alias{soilgridsParams}
 \title{SoilGrids soil description fetcher}
 \usage{
-soilgridsParams(points, widths = c(300, 700, 1000, 2000), verbose = FALSE)
+soilgridsParams(x, widths = c(300, 700, 1000, 2000), verbose = FALSE)
 }
 \arguments{
-\item{points}{An object of class (or subclass) \code{SpatialPoints} with a valid CRS definition.}
+\item{x}{An object of class (or subclass) \code{sf} or \code{sfc} with a valid CRS definition.}
 
 \item{widths}{A numeric vector indicating the desired layer widths, in \emph{mm}. If \code{NULL} the default soil grids layer definition is returned.}
 
@@ -31,10 +31,9 @@ are transformed to longitude/latitude within the function.
 }
 \examples{
  \dontrun{
-  library(sp)
-  coords_sp <- SpatialPoints(cbind(long = -5.6333, lat = 42.6667),
-                                 CRS(SRS_string = "EPSG:4326"))
-  foo <- soilgridsParams(coords_sp, widths = c(300, 700, 1000))
+  library(sf)
+  coords_sf <- st_sfc(st_point(c(-5.6333, 42.6667)), crs = 4326)
+  foo <- soilgridsParams(coords_sf, widths = c(300, 700, 1000))
   foo_soil <- soil(foo)
   foo_soil
  }

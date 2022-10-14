@@ -6,6 +6,7 @@
 - Names changed for IFN example datasets
 - Update of function 'forest_mapShrubTable'
 - Function split 'modifySoilDepth' and 'modifySoilRockContent'
+- Changed dependency from package 'sp' to 'sf'
 
 # Version 0.1.3
 - Keep num orden from IFN data

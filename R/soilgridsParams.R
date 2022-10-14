@@ -2,7 +2,7 @@
 #'
 #' \code{soilgridsParams} takes a vector of depths and returns a list of soil characteristics ready to use with \code{\link{soil}} function.
 #'
-#' @param points An object of class (or subclass) \code{SpatialPoints} with a valid CRS definition.
+#' @param x An object of class (or subclass) \code{sf} or \code{sfc} with a valid CRS definition.
 #' @param widths A numeric vector indicating the desired layer widths, in \emph{mm}. If \code{NULL} the default soil grids layer definition is returned.
 #' @param verbose A logical flag to include a progress bar while processing the output of the query to the SoilGrids REST API.
 #'
@@ -29,21 +29,19 @@
 #'
 #' @examples
 #'  \dontrun{
-#'   library(sp)
-#'   coords_sp <- SpatialPoints(cbind(long = -5.6333, lat = 42.6667),
-#'                                  CRS(SRS_string = "EPSG:4326"))
-#'   foo <- soilgridsParams(coords_sp, widths = c(300, 700, 1000))
+#'   library(sf)
+#'   coords_sf <- st_sfc(st_point(c(-5.6333, 42.6667)), crs = 4326)
+#'   foo <- soilgridsParams(coords_sf, widths = c(300, 700, 1000))
 #'   foo_soil <- soil(foo)
 #'   foo_soil
 #'  }
 #'
-soilgridsParams <- function(points, widths = c(300, 700, 1000, 2000), verbose = FALSE) {
-  if(!inherits(points, "SpatialPoints")) stop("Object 'points' has to be a SpatialPoints.")
-  coords_df = sp::spTransform(as(points,"SpatialPoints"), sp::CRS(SRS_string = "EPSG:4326")) # Transform to long lat
+soilgridsParams <- function(x, widths = c(300, 700, 1000, 2000), verbose = FALSE) {
+  if((!inherits(x, "sfc")) && (!inherits(x, "sf")))  stop("Object 'x' has to be of class 'sf' or 'sfc'")
+  x_lonlat <- sf::st_transform(sf::st_geometry(x), 4326)
+  coords <- sf::st_coordinates(x_lonlat)
 
-
-
-  npoints = length(points)
+  npoints = nrow(coords)
 
   url.base = "https://rest.isric.org/soilgrids/v2.0/properties/query?"
 
@@ -62,7 +60,7 @@ soilgridsParams <- function(points, widths = c(300, 700, 1000, 2000), verbose = 
       resSG = data.frame(matrix(nrow = 6, ncol = 6))
       names(resSG) = c("widths", "clay", "sand", "om", "bd", "rfc")
       resSG$widths = c(50,100,150,300,400,1000)
-      coord_str = paste0("lon=",coords_df@coords[i,1],"&lat=", coords_df@coords[i,2])
+      coord_str = paste0("lon=",coords[i,1],"&lat=", coords[i,2])
       dest = paste(coord_str, props_str, depths_str,"value=mean",sep="&")
       url1 = paste0(url.base, dest)
       path1 <- httr::GET(url1, httr::add_headers("accept"= "application/json"))
