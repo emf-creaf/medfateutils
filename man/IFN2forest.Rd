@@ -12,7 +12,6 @@ IFN2forest(
   ID,
   SpParams,
   IFNherbData = NULL,
-  patchsize = 10000,
   setDefaults = TRUE,
   filterWrongRecords = TRUE,
   keepNumOrden = TRUE,
@@ -40,8 +39,6 @@ IFN2forestlist(
 \item{SpParams}{A data frame with species parameters (see \code{\link{SpParamsMED}}).}
 
 \item{IFNherbData}{A data frame with cover and mean height of the herb layer.}
-
-\item{patchsize}{The area of the forest stand, in square meters.}
 
 \item{setDefaults}{Initializes default values for missing fields in IFN data.}
 
@@ -96,7 +93,11 @@ print(f)
 
 # Builds a list whose elements are 'forest' objects
 l = IFN2forestlist(example_treedata_ifn, example_shrubdata_ifn, SpParamsMED)
+
+# Plot codes are in list names
 names(l)
+
+# First forest object
 l[[1]]
 }
 \references{

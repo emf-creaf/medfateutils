@@ -1,11 +1,9 @@
 
-.IFN2forest<-function(ID, xid, yid, SpParams,
+.IFN2forest<-function(xid, yid, SpParams,
                       zid = NULL,
-                      patchsize = 10000, setDefaults=TRUE, filterWrongRecords = TRUE,
+                      setDefaults=TRUE, filterWrongRecords = TRUE,
                       keepNumOrden = TRUE) {
   f = list()
-  f$ID = ID
-  f$patchsize = patchsize
   f$treeData = data.frame(Species = xid$Species, N = as.numeric(xid$N), DBH = xid$DBH, Height = xid$H*100)
   f$treeData$Z50 = rep(NA, nrow(f$treeData))
   f$treeData$Z95 = rep(NA, nrow(f$treeData))
@@ -68,7 +66,6 @@
 #' @param ID A string with the ID of the plot to be extracted.
 #' @param SpParams A data frame with species parameters (see \code{\link{SpParamsMED}}).
 #' @param IFNherbData A data frame with cover and mean height of the herb layer.
-#' @param patchsize The area of the forest stand, in square meters.
 #' @param setDefaults Initializes default values for missing fields in IFN data.
 #' @param filterWrongRecords Filters wrong records (records with missing values, zero values or wrong growth forms)
 #' @param keepNumOrden Keeps num orden as additional column (OIF2, OIF3, ...)
@@ -124,11 +121,15 @@
 #'
 #' # Builds a list whose elements are 'forest' objects
 #' l = IFN2forestlist(example_treedata_ifn, example_shrubdata_ifn, SpParamsMED)
+#'
+#' # Plot codes are in list names
 #' names(l)
+#'
+#' # First forest object
 #' l[[1]]
 IFN2forest<-function(IFNtreeData, IFNshrubData, ID, SpParams,
                      IFNherbData = NULL,
-                     patchsize = 10000, setDefaults=TRUE,
+                     setDefaults=TRUE,
                      filterWrongRecords = TRUE, keepNumOrden = TRUE, verbose = TRUE) {
 
   xid = IFNtreeData[IFNtreeData$ID==ID,]
@@ -175,8 +176,8 @@ IFN2forest<-function(IFNtreeData, IFNshrubData, ID, SpParams,
   } else {
     zid = NULL
   }
-  return(.IFN2forest(ID, xid,yid,SpParams,
-                     zid, patchsize, setDefaults, filterWrongRecords, keepNumOrden))
+  return(.IFN2forest(xid,yid,SpParams,
+                     zid, setDefaults, filterWrongRecords, keepNumOrden))
 }
 
 #' @rdname IFN2forest
@@ -240,7 +241,7 @@ IFN2forestlist<-function(IFNtreeData, IFNshrubData, SpParams,
     ly = split(y, factor(y$ID, levels=IDs))
 
     forestlist = Map(function(x,y, id) {
-      .IFN2forest(id, x,y, SpParams=SpParams,setDefaults = setDefaults, filterWrongRecords = filterWrongRecords, keepNumOrden = keepNumOrden)
+      .IFN2forest(x,y, SpParams=SpParams, setDefaults = setDefaults, filterWrongRecords = filterWrongRecords, keepNumOrden = keepNumOrden)
     }, lx, ly, IDs)
   } else {
     z = IFNherbData[IFNherbData$ID %in% IDs, ]
@@ -248,7 +249,7 @@ IFN2forestlist<-function(IFNtreeData, IFNshrubData, SpParams,
     ly = split(y, factor(y$ID, levels=IDs))
     lz = split(z, factor(z$ID, levels=IDs))
     forestlist = Map(function(x,y, z, id) {
-      .IFN2forest(id, x,y, z, SpParams=SpParams,setDefaults = setDefaults, filterWrongRecords = filterWrongRecords, keepNumOrden = keepNumOrden)
+      .IFN2forest(x,y, z, SpParams=SpParams,setDefaults = setDefaults, filterWrongRecords = filterWrongRecords, keepNumOrden = keepNumOrden)
     }, lx, ly, lz, IDs)
   }
   if(verbose) cat("done.\n")

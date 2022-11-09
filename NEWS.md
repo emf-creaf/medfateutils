@@ -2,6 +2,9 @@
  NEWS for R Package "medfateutils"
 -----------------------------------
 
+# Version 0.1.5
+- Compliance with medfate ver. 2.8.2
+
 # Version 0.1.4
 - Names changed for IFN example datasets
 - Update of function 'forest_mapShrubTable'
