@@ -131,12 +131,18 @@ forest_mapTreeTable<-function(x, mapping_x, SpParams, plot_size_x = NULL) {
     treeData$N = treeData$N*(10000/plot_size_x)
   }
   if("Species.name" %in% names(mapping_x)) {
+    non_recognized = character(0)
     Species.name = x[[mapping_x[["Species.name"]]]]
     for(i in 1:n) {
       indices = which(SpParams$Name==Species.name[i])
       if(length(indices)>0) {
         treeData$Species[i] = SpParams$SpIndex[indices]
+      } else {
+        non_recognized = unique(c(non_recognized, Species.name[i]))
       }
+    }
+    if(length(non_recognized)>0) {
+      warning(paste0("Taxon names that were not matched: ", paste0(non_recognized, collapse=","),"."))
     }
   }
   return(treeData)
@@ -183,12 +189,18 @@ forest_mapShrubTable<-function(y, mapping_y, SpParams, plot_size_y = NULL) {
     shrubData$Species = y[[mapping_y[["Species"]]]]
   }
   if("Species.name" %in% names(mapping_y)) {
+    non_recognized = character(0)
     Species.name = y[[mapping_y[["Species.name"]]]]
     for(i in 1:n) {
       indices = which(SpParams$Name==Species.name[i])
       if(length(indices)>0) {
         shrubData$Species[i] = SpParams$SpIndex[indices]
+      } else {
+        non_recognized = unique(c(non_recognized, Species.name[i]))
       }
+    }
+    if(length(non_recognized)>0) {
+      warning(paste0("Taxon names that were not matched: ", paste0(non_recognized, collapse=",")))
     }
   }
   return(shrubData)
