@@ -25,16 +25,14 @@ Modifies soil properties estimated from SoilGrids
 }
 \examples{
 
- \dontrun{
-  library(sp)
-  coords_sp <- SpatialPoints(cbind(long = -5.6333, lat = 42.6667),
-                                 CRS(SRS_string = "EPSG:4326"))
-  foo_1 <- soilgridsParams(coords_sp, widths = c(300, 700, 1000, 2000))
-  foo_1
-  foo_2 <- modifySoilDepth(foo_1, 900) # 90 cm depth
-  foo_2
-  foo_3 <- modifySoilRockContent(foo_2, 20) # 20 \% rocks in the surface
-  foo_3
- }
-
+\dontrun{
+library(sf)
+coords_sf <- st_sfc(st_point(c(-5.6333, 42.6667)), crs = 4326)
+foo_1 <- soilgridsParams(coords_sf, widths = c(300, 700, 1000, 2000))
+foo_1
+foo_2 <- modifySoilDepth(foo_1, 900) # 90 cm depth
+foo_2
+foo_3 <- modifySoilRockContent(foo_2, 20) # 20 \% rocks in the surface
+foo_3
+}
 }
