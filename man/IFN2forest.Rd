@@ -7,8 +7,8 @@
 \title{Extract forest from IFN data}
 \usage{
 IFN2forest(
-  IFNtreeData,
-  IFNshrubData,
+  pies_mayores,
+  matorral,
   ID,
   SpParams,
   IFNherbData = NULL,
@@ -19,8 +19,8 @@ IFN2forest(
 )
 
 IFN2forestlist(
-  IFNtreeData,
-  IFNshrubData,
+  pies_mayores,
+  matorral,
   SpParams,
   IFNherbData = NULL,
   setDefaults = TRUE,
@@ -30,9 +30,9 @@ IFN2forestlist(
 )
 }
 \arguments{
-\item{IFNtreeData}{A data frame with measured tree data.}
+\item{pies_mayores}{A data frame with measured tree data (PCPiesMayores).}
 
-\item{IFNshrubData}{A data frame with measured shrub data.}
+\item{matorral}{A data frame with measured shrub data (PCMatorral).}
 
 \item{ID}{A string with the ID of the plot to be extracted.}
 
@@ -44,7 +44,7 @@ IFN2forestlist(
 
 \item{filterWrongRecords}{Filters wrong records (records with missing values, zero values or wrong growth forms)}
 
-\item{keepNumOrden}{Keeps num orden as additional column (OIF2, OIF3, ...)}
+\item{keepNumOrden}{Keeps num orden as additional column (OrdenIfn2, OrdenIfn3, ...)}
 
 \item{verbose}{A boolean flag to indicate console output.}
 }
@@ -58,22 +58,22 @@ Creates a \code{\link{forest}} object from Spanish Forest Inventory (IFN) data (
 IFN input data needs to be in a specific format.
 \itemize{
   \item{
-    For \code{IFNtreeData}, the following columns are required:
+    For \code{pies_mayores}, the following columns are required:
     \itemize{
       \item{ID: Plot ID string}
-      \item{Species: String of tree IFN species code (will be mapped to medfate code).}
-      \item{N: Numeric values of density (individuals per ha).}
-      \item{DBH: Numeric values of diameter at breast height (in cm).}
-      \item{H: Numeric values of tree height (in m)}
+      \item{Especie: String of tree IFN species code (will be mapped to medfate code).}
+      \item{Dn1: Diameter at breast height (in mm), first measurement.}
+      \item{Dn2: Diameter at breast height (in mm), second measurement.}
+      \item{Ht: Total tree height (in m)}
     }
   }
   \item{
-    For \code{IFNshrubData}, the following columns are required:
+    For \code{matorral}, the following columns are required:
     \itemize{
        \item{ID: Plot ID string.}
-       \item{Species: String of shrub IFN species code (will be mapped to medfate code).}
-       \item{FCC: Numeric values of shrub cover (\%).}
-       \item{H: Numeric values of shrub height (in m).}
+       \item{Especie: String of shrub IFN species code (will be mapped to medfate code).}
+       \item{Fcc: Numeric values of shrub cover (in \%).}
+       \item{Hm: Average shrub height (in dm).}
     }
   }
 }
@@ -83,16 +83,16 @@ to translate IFN codes into medfate codes.
 }
 \examples{
 data(SpParamsMED)
-data(example_treedata_ifn)
-data(example_shrubdata_ifn)
+data(piesMayoresIFN2)
+data(matorralIFN2)
 
 # Builds an object 'forest' corresponding to one specific forest plot
-f = IFN2forest(example_treedata_ifn, example_shrubdata_ifn,
-               ID = "81065", SpParams = SpParamsMED)
+f = IFN2forest(piesMayoresIFN2, matorralIFN2,
+               ID = "081065", SpParams = SpParamsMED)
 print(f)
 
 # Builds a list whose elements are 'forest' objects
-l = IFN2forestlist(example_treedata_ifn, example_shrubdata_ifn, SpParamsMED)
+l = IFN2forestlist(piesMayoresIFN2, matorralIFN2, SpParamsMED)
 
 # Plot codes are in list names
 names(l)

@@ -1,3 +1,25 @@
+IFN_path <- "~/OneDrive/EMFDatasets/ForestInventories/IFN/"
+
+# Read IFN2 data
+piesMayoresIFN2 <- tibble::as_tibble(read.table(file=paste0(IFN_path, "Products/IFN2/piesMayoresDataIFN2_Catalunya.csv"),
+                                                sep="\t", header=TRUE, colClasses = c("character", "character",
+                                                                                      "character", "character", "character",
+                                                                                      "numeric", "numeric", "numeric", "numeric")))
+piesMenoresIFN2 <- tibble::as_tibble(read.table(file=paste0(IFN_path, "Products/IFN2/piesMenoresDataIFN2_Catalunya.csv"),
+                                                sep="\t", header=TRUE, colClasses = c("character", "character", "character",
+                                                                                      "character", "integer", "integer")))
+matorralIFN2 <- tibble::as_tibble(read.table(file=paste0(IFN_path, "Products/IFN2/shrubDataIFN2_Catalunya.csv"),
+                                             sep="\t", header=TRUE, colClasses = c("character", "character", "character",
+
+                                                                                                                                                                      "character", "numeric", "numeric")))
+IDs = c("081065", "081066", "081067", "081068", "081069")
+piesMayoresIFN2 <- piesMayoresIFN2[piesMayoresIFN2$ID %in% IDs,]
+piesMenoresIFN2 <- piesMenoresIFN2[piesMenoresIFN2$ID %in% IDs,]
+matorralIFN2 <- matorralIFN2[matorralIFN2$ID %in% IDs,]
+usethis::use_data(piesMayoresIFN2, overwrite = T)
+usethis::use_data(piesMenoresIFN2, overwrite = T)
+usethis::use_data(matorralIFN2, overwrite = T)
+
 # Read shrub data
 shrubDataIFN3 = readRDS(file="~/OneDrive/Datasets/IFN/Products/IFN3/Rdata/shrubDataIFN3_Catalunya.rds")
 treeDataIFN3 = readRDS(file="~/OneDrive/Datasets/IFN/Products/IFN3/Rdata/treeDataIFN3_Catalunya.rds")
