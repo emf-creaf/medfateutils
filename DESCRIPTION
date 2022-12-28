@@ -11,7 +11,7 @@ Description: Utility functions to facilitate defining inputs (soil, species or v
   package medfate.
 License: GPL (>= 2)
 Depends: R (>= 3.4.0), medfate (>= 2.8.2)
-Imports: taxize, httr, jsonlite, methods, sf, magrittr
+Imports: taxize, httr, jsonlite, methods, sf, magrittr, dplyr
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.2.3

@@ -22,21 +22,21 @@
 #' @seealso \code{\link[medfate]{forest}}, \code{\link{translateIFNSpeciesCodes}}
 #'
 #' @examples
-#' data(SpParamsMED)
-#' data(example_treedata_ifn)
-#' data(example_shrubdata_ifn)
+#' # Builds from IFN3 data a list whose elements are 'forest' objects
+#' data(piesMayoresIFN3)
+#' data(regeneraIFN3)
+#' data(matorralIFN3)
+#' l1 <- IFN2forest(piesMayoresIFN3, SpParamsMED,
+#'                matorral = matorralIFN3, regenera = regeneraIFN3)
 #'
-#' # Builds an object 'forest' corresponding to one specific forest plot
-#' f1 = IFN2forest(example_treedata_ifn, example_shrubdata_ifn,
-#'                 ID = "81065", SpParams = SpParamsMED)
-#' print(f1)
+#' # Estimate rooting depth
+#' soilpar <- defaultSoilParams()
+#' l2 <- estimateRootingDepthList(l1, soilpar, 300, 100, SpParamsMED)
 #'
-#' soilpar = defaultSoilParams()
-#' f2 = estimateRootingDepth(f1, soilpar, 300, 100, SpParamsMED)
-#' print(f2)
+#' # Compare tree rooting depths
+#' print(l1[[1]]$treeData)
+#' print(l2[[1]]$treeData)
 #'
-#' l1 = IFN2forestlist(example_treedata_ifn, example_shrubdata_ifn, SpParamsMED)
-#' l2 = estimateRootingDepthList(l1, soilpar, 300, 100, SpParamsMED)
 #' @name estimateRootingDepth
 estimateRootingDepth<-function(forest, soil, PET_summer, P_summer, SpParams,
                                fillMissing = FALSE) {
