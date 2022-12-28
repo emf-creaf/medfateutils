@@ -3,26 +3,15 @@
 \encoding{UTF-8}
 \name{IFN2forest}
 \alias{IFN2forest}
-\alias{IFN2forestlist}
 \title{Extract forest from IFN data}
 \usage{
 IFN2forest(
   pies_mayores,
-  matorral,
-  ID,
   SpParams,
-  IFNherbData = NULL,
-  setDefaults = TRUE,
-  filterWrongRecords = TRUE,
-  keepNumOrden = TRUE,
-  verbose = TRUE
-)
-
-IFN2forestlist(
-  pies_mayores,
-  matorral,
-  SpParams,
-  IFNherbData = NULL,
+  pies_menores = NULL,
+  regenera = NULL,
+  matorral = NULL,
+  herb_data = NULL,
   setDefaults = TRUE,
   filterWrongRecords = TRUE,
   keepNumOrden = TRUE,
@@ -32,30 +21,34 @@ IFN2forestlist(
 \arguments{
 \item{pies_mayores}{A data frame with measured tree data (PCPiesMayores).}
 
-\item{matorral}{A data frame with measured shrub data (PCMatorral).}
-
-\item{ID}{A string with the ID of the plot to be extracted.}
-
 \item{SpParams}{A data frame with species parameters (see \code{\link{SpParamsMED}}).}
 
-\item{IFNherbData}{A data frame with cover and mean height of the herb layer.}
+\item{pies_menores}{A data frame with measured regeneration tree data (PCPiesMenores in IFN2).}
+
+\item{regenera}{A data frame with measured regeneration tree data (PCRegenera in IFN3 and IFN4).}
+
+\item{matorral}{A data frame with measured shrub data (PCMatorral).}
+
+\item{herb_data}{A data frame with cover and mean height of the herb layer.}
 
 \item{setDefaults}{Initializes default values for missing fields in IFN data.}
 
-\item{filterWrongRecords}{Filters wrong records (records with missing values, zero values or wrong growth forms)}
+\item{filterWrongRecords}{Filters wrong records (records with missing values, zero values or wrong growth forms).
+This should normally result in the removal of dead/cut trees.}
 
-\item{keepNumOrden}{Keeps num orden as additional column (OrdenIfn2, OrdenIfn3, ...)}
+\item{keepNumOrden}{Keeps num orden as additional column (OrdenIf2, OrdenIf3 or OrdenIf4) to identify trees.}
 
 \item{verbose}{A boolean flag to indicate console output.}
 }
 \value{
-Function \code{IFN2forest} returns an object of class \code{\link{forest}}, whereas function \code{IFN2forestlist} returns a list of \code{\link{forest}} objects.
+A list of \code{\link{forest}} objects.
 }
 \description{
-Creates a \code{\link{forest}} object from Spanish Forest Inventory (IFN) data (DGCN 2005).
+Creates a list of \code{\link{forest}} objects from Spanish Forest Inventory (IFN) data in its
+second (IFN2), third (IFN3; DGCN 2005) and fourth (IFN4) editions.
 }
 \details{
-IFN input data needs to be in a specific format.
+IFN input data needs to be in a specific format, following IFN specifications.
 \itemize{
   \item{
     For \code{pies_mayores}, the following columns are required:
@@ -65,6 +58,27 @@ IFN input data needs to be in a specific format.
       \item{Dn1: Diameter at breast height (in mm), first measurement.}
       \item{Dn2: Diameter at breast height (in mm), second measurement.}
       \item{Ht: Total tree height (in m)}
+    }
+  }
+  \item{
+    For \code{pies_menores}, the following columns are required:
+    \itemize{
+      \item{ID: Plot ID string}
+      \item{Especie: String of tree IFN species code (will be mapped to medfate code).}
+      \item{Numero: Number of stems for 2.5-7.5 cm DBH class.}
+      \item{Hm: Average height (in dm).}
+      \item{Regena: Regeneration code ('0', 1', '2', '3').}
+    }
+  }
+  \item{
+    For \code{regenera}, the following columns are required:
+    \itemize{
+      \item{ID: Plot ID string}
+      \item{Especie: String of tree IFN species code (will be mapped to medfate code).}
+      \item{CatDes: Regeneration category ( 1', '2', '3' or '4').}
+      \item{Densidad: Density category ( 1', '2', or '3').}
+      \item{NumPies: Number of stems for 2.5-7.5 cm DBH class.}
+      \item{Hm: Average height (in dm).}
     }
   }
   \item{
@@ -78,27 +92,32 @@ IFN input data needs to be in a specific format.
   }
 }
 
-Functions \code{IFN2forest} and \code{IFN2forestlist} call \code{\link{translateIFNSpeciesCodes}} internally
+Function \code{IFN2forest} call \code{\link{translateIFNSpeciesCodes}} internally
 to translate IFN codes into medfate codes.
 }
 \examples{
+
+# Medfate species parameters
 data(SpParamsMED)
+
+# Builds from IFN2 data a list whose elements are 'forest' objects
+data(piesMenoresIFN2)
 data(piesMayoresIFN2)
 data(matorralIFN2)
-
-# Builds an object 'forest' corresponding to one specific forest plot
-f = IFN2forest(piesMayoresIFN2, matorralIFN2,
-               ID = "081065", SpParams = SpParamsMED)
-print(f)
-
-# Builds a list whose elements are 'forest' objects
-l = IFN2forestlist(piesMayoresIFN2, matorralIFN2, SpParamsMED)
+l <- IFN2forest(piesMayoresIFN2, SpParamsMED,
+               matorral = matorralIFN2, pies_menores = piesMenoresIFN2)
 
 # Plot codes are in list names
 names(l)
 
-# First forest object
-l[[1]]
+
+# Builds from IFN3 data a list whose elements are 'forest' objects
+data(piesMayoresIFN3)
+data(regeneraIFN3)
+data(matorralIFN3)
+l <- IFN2forest(piesMayoresIFN3, SpParamsMED,
+               matorral = matorralIFN3, regenera = regeneraIFN3)
+
 }
 \references{
 DGCN (2005). Tercer Inventario Forestal Nacional (1997-2007): Catalunya. Dirección General de Conservación de la Naturaleza, Ministerio de Medio Ambiente, Madrid.

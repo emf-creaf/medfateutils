@@ -5,6 +5,7 @@
 # Version 0.1.6
 - Compliance with medfate ver. 2.8.2
 - Warning raised when taxon names do not match
+- Rewriting IFN2forest function
 
 # Version 0.1.4
 - Names changed for IFN example datasets

@@ -1,5 +1,4 @@
 export(IFN2forest)
-export(IFN2forestlist)
 export(estimateRootingDepth)
 export(estimateRootingDepthList)
 export(initSpParams)

@@ -7,26 +7,26 @@
   FACTOREXP[which(d>=42.5)] = 4
   return(factor[FACTOREXP])
 }
+
 .IFN2forest<-function(xid, yid, SpParams,
                       zid = NULL,
                       setDefaults=TRUE, filterWrongRecords = TRUE,
                       keepNumOrden = TRUE) {
   f <- emptyforest()
   f$treeData <- data.frame(Species = xid$Species,
-                          N = rep(NA, nrow(xid)),
-                          DBH = (xid$Dn1+xid$Dn2)/10, # From mm to cm
-                          Height = xid$Ht*100, # From m to cm
+                          N = xid$N,
+                          DBH = xid$DBH,
+                          Height = xid$Height,
                           Z50 = rep(NA, nrow(xid)),
                           Z95 = rep(NA, nrow(xid)))
-  f$treeData$N <- .densityFactor(f$treeData$DBH)
   if(keepNumOrden) {
-    if("OrdenIfn2" %in% names(xid)) f$treeData$OrdenIfn2 = xid$OrdenIfn2
-    if("OrdenIfn3" %in% names(xid)) f$treeData$OrdenIfn3 = xid$OrdenIfn3
-    if("OrdenIfn4" %in% names(xid)) f$treeData$OrdenIfn4 = xid$OrdenIfn4
+    if("OrdenIf2" %in% names(xid)) f$treeData$OrdenIf2 = xid$OrdenIf2
+    if("OrdenIf3" %in% names(xid)) f$treeData$OrdenIf3 = xid$OrdenIf3
+    if("OrdenIf4" %in% names(xid)) f$treeData$OrdenIf4 = xid$OrdenIf4
   }
   f$shrubData <- data.frame(Species = yid$Species,
-                           Cover = as.numeric(yid$Fcc),
-                           Height = yid$Hm*10,# From dm to cm
+                           Cover = yid$Cover,
+                           Height = yid$Height,
                            Z50 = rep(NA, nrow(yid)),
                            Z95 = rep(NA, nrow(yid)))
   if(setDefaults) {
@@ -70,20 +70,23 @@
 
 #' Extract forest from IFN data
 #'
-#' Creates a \code{\link{forest}} object from Spanish Forest Inventory (IFN) data (DGCN 2005).
+#' Creates a list of \code{\link{forest}} objects from Spanish Forest Inventory (IFN) data in its
+#' second (IFN2), third (IFN3; DGCN 2005) and fourth (IFN4) editions.
 #'
 #' @param pies_mayores A data frame with measured tree data (PCPiesMayores).
-#' @param matorral A data frame with measured shrub data (PCMatorral).
-#' @param ID A string with the ID of the plot to be extracted.
 #' @param SpParams A data frame with species parameters (see \code{\link{SpParamsMED}}).
-#' @param IFNherbData A data frame with cover and mean height of the herb layer.
+#' @param pies_menores A data frame with measured regeneration tree data (PCPiesMenores in IFN2).
+#' @param regenera A data frame with measured regeneration tree data (PCRegenera in IFN3 and IFN4).
+#' @param matorral A data frame with measured shrub data (PCMatorral).
+#' @param herb_data A data frame with cover and mean height of the herb layer.
 #' @param setDefaults Initializes default values for missing fields in IFN data.
-#' @param filterWrongRecords Filters wrong records (records with missing values, zero values or wrong growth forms)
-#' @param keepNumOrden Keeps num orden as additional column (OrdenIfn2, OrdenIfn3, ...)
+#' @param filterWrongRecords Filters wrong records (records with missing values, zero values or wrong growth forms).
+#'                          This should normally result in the removal of dead/cut trees.
+#' @param keepNumOrden Keeps num orden as additional column (OrdenIf2, OrdenIf3 or OrdenIf4) to identify trees.
 #' @param verbose A boolean flag to indicate console output.
 #'
 #' @details
-#' IFN input data needs to be in a specific format.
+#' IFN input data needs to be in a specific format, following IFN specifications.
 #' \itemize{
 #'   \item{
 #'     For \code{pies_mayores}, the following columns are required:
@@ -93,6 +96,27 @@
 #'       \item{Dn1: Diameter at breast height (in mm), first measurement.}
 #'       \item{Dn2: Diameter at breast height (in mm), second measurement.}
 #'       \item{Ht: Total tree height (in m)}
+#'     }
+#'   }
+#'   \item{
+#'     For \code{pies_menores}, the following columns are required:
+#'     \itemize{
+#'       \item{ID: Plot ID string}
+#'       \item{Especie: String of tree IFN species code (will be mapped to medfate code).}
+#'       \item{Numero: Number of stems for 2.5-7.5 cm DBH class.}
+#'       \item{Hm: Average height (in dm).}
+#'       \item{Regena: Regeneration code ('0', 1', '2', '3').}
+#'     }
+#'   }
+#'   \item{
+#'     For \code{regenera}, the following columns are required:
+#'     \itemize{
+#'       \item{ID: Plot ID string}
+#'       \item{Especie: String of tree IFN species code (will be mapped to medfate code).}
+#'       \item{CatDes: Regeneration category ( 1', '2', '3' or '4').}
+#'       \item{Densidad: Density category ( 1', '2', or '3').}
+#'       \item{NumPies: Number of stems for 2.5-7.5 cm DBH class.}
+#'       \item{Hm: Average height (in dm).}
 #'     }
 #'   }
 #'   \item{
@@ -106,10 +130,10 @@
 #'   }
 #' }
 #'
-#' Functions \code{IFN2forest} and \code{IFN2forestlist} call \code{\link{translateIFNSpeciesCodes}} internally
+#' Function \code{IFN2forest} call \code{\link{translateIFNSpeciesCodes}} internally
 #' to translate IFN codes into medfate codes.
 #'
-#' @return Function \code{IFN2forest} returns an object of class \code{\link{forest}}, whereas function \code{IFN2forestlist} returns a list of \code{\link{forest}} objects.
+#' @return A list of \code{\link{forest}} objects.
 #'
 #' @export
 #'
@@ -121,89 +145,106 @@
 #' @seealso \code{\link{forest}}, \code{\link{translateIFNSpeciesCodes}}
 #'
 #' @examples
+#'
+#' # Medfate species parameters
 #' data(SpParamsMED)
+#'
+#' # Builds from IFN2 data a list whose elements are 'forest' objects
+#' data(piesMenoresIFN2)
 #' data(piesMayoresIFN2)
 #' data(matorralIFN2)
-#'
-#' # Builds an object 'forest' corresponding to one specific forest plot
-#' f = IFN2forest(piesMayoresIFN2, matorralIFN2,
-#'                ID = "081065", SpParams = SpParamsMED)
-#' print(f)
-#'
-#' # Builds a list whose elements are 'forest' objects
-#' l = IFN2forestlist(piesMayoresIFN2, matorralIFN2, SpParamsMED)
+#' l <- IFN2forest(piesMayoresIFN2, SpParamsMED,
+#'                matorral = matorralIFN2, pies_menores = piesMenoresIFN2)
 #'
 #' # Plot codes are in list names
 #' names(l)
 #'
-#' # First forest object
-#' l[[1]]
-IFN2forest<-function(pies_mayores, matorral, ID, SpParams,
-                     IFNherbData = NULL,
+#'
+#' # Builds from IFN3 data a list whose elements are 'forest' objects
+#' data(piesMayoresIFN3)
+#' data(regeneraIFN3)
+#' data(matorralIFN3)
+#' l <- IFN2forest(piesMayoresIFN3, SpParamsMED,
+#'                matorral = matorralIFN3, regenera = regeneraIFN3)
+#'
+#' @export
+IFN2forest<-function(pies_mayores, SpParams,
+                     pies_menores = NULL, regenera = NULL, matorral = NULL,
+                     herb_data=NULL,
                      setDefaults=TRUE,
                      filterWrongRecords = TRUE, keepNumOrden = TRUE, verbose = TRUE) {
 
-  xid <- pies_mayores[pies_mayores$ID==ID,, drop = FALSE]
-  yid <- matorral[matorral$ID==ID,, drop = FALSE]
-
-  toRemX <- is.na(xid$Especie) | is.na(xid$Dn1) | is.na(xid$Ht)
-  if(sum(toRemX)>0) {
-    if(verbose) cat(paste0("Filtered records in tree data: ", sum(toRemX),"\n"))
-    xid <- xid[!toRemX,]
-  }
-  toRemY <- is.na(yid$Especie) | is.na(yid$Fcc) | is.na(yid$Hm)
-  if(sum(toRemY)>0) {
-    if(verbose) cat(paste0("Filtered records in shrub data: ", sum(toRemY),"\n"))
-    yid <- yid[!toRemY,]
-  }
-
-  xid$Species <- translateIFNSpeciesCodes(xid$Especie, SpParams$IFNcodes)
-  yid$Species <- translateIFNSpeciesCodes(yid$Especie, SpParams$IFNcodes)
-  #Remove NA species
-  if(sum(is.na(xid$Species))>0) {
-    if(verbose) {
-      cat(paste0("Tree data records with unrecognized IFN species codes: ",
-                 sum(is.na(xid$Species)),"/", length(xid$Species),
-                 " (",round(100*sum(is.na(xid$Species))/length(xid$Species),1),"%)\n"))
-      print(table(xid$Especie[is.na(xid$Species)], useNA = "ifany"))
-    }
-    xid <- xid[!is.na(xid$Species),]
-  }
-  if(sum(is.na(yid$Species))>0) {
-    if(verbose) {
-      cat(paste0("Shrub data records with unrecognized IFN species codes: ",
-                 sum(is.na(yid$Species)),"/", length(yid$Species),
-                 " (",round(100*sum(is.na(yid$Species))/length(yid$Species),1),"%)\n"))
-      print(table(yid$Especie[is.na(yid$Species)], useNA = "ifany"))
-    }
-    yid <- yid[!is.na(yid$Species),]
-  }
-
-  if(!is.null(IFNherbData)) {
-    zid <- IFNherbData[IFNherbData$ID==ID,, drop =FALSE]
-  } else {
-    zid <- NULL
-  }
-  return(.IFN2forest(xid,yid,SpParams,
-                     zid, setDefaults, filterWrongRecords, keepNumOrden))
-}
-
-#' @rdname IFN2forest
-#' @export
-IFN2forestlist<-function(pies_mayores, matorral, SpParams,
-                         IFNherbData=NULL,
-                         setDefaults=TRUE,
-                         filterWrongRecords = TRUE, keepNumOrden = TRUE, verbose = TRUE) {
-
   if(sum(c("Ht","Dn1", "Dn2","Especie","ID") %in% names(pies_mayores))<4) stop("Columns in 'pies_mayores' must include 'ID','Especie','Dn1', 'Dn2' and 'Ht'")
-  if(sum(c("Hm","Fcc","Especie","ID") %in% names(matorral))<4) stop("Columns in 'matorral' must include 'ID','Especie','Fcc' and 'Hm'")
-  IDs <- as.character(sort(unique(c(pies_mayores$ID, matorral$ID))))
+  IDs <- pies_mayores$ID
+
+  if(!is.null(pies_menores)) {
+    if(sum(c("Hm","Numero","Especie","ID", "Regena") %in% names(pies_menores))<5) stop("Columns in 'pies_menores' must include 'ID','Especie','Numero', 'Regena' and 'Hm'")
+    IDs <- c(IDs, pies_menores$ID)
+  } else {
+    pies_menores <- data.frame(ID = character(0), Especie = character(0), Numero = numeric(0), Hm = numeric(0), Regena = numeric(0))
+  }
+
+  if(!is.null(regenera)) {
+    if(sum(c("Hm","CatDes","Especie","ID", "Densidad", "NumPies") %in% names(regenera))<6)
+      stop("Columns in 'regenera' must include 'ID','Especie','CatDes', 'Densidad', 'NumPies' and 'Hm'")
+    IDs <- c(IDs, regenera$ID)
+  } else {
+    regenera <- data.frame(ID = character(0), Especie = character(0), CatDes = character(0), Densidad = character(0), NumPies = numeric(0), Hm = numeric(0))
+  }
+
+  if(!is.null(matorral)) {
+    if(sum(c("Hm","Fcc","Especie","ID") %in% names(matorral))<4) stop("Columns in 'matorral' must include 'ID','Especie','Fcc' and 'Hm'")
+    IDs <- c(IDs, matorral$ID)
+  } else {
+    matorral <- data.frame(ID = character(0), Especie = character(0), Fcc = numeric(0), Hm = numeric(0))
+  }
+
+  IDs <- as.character(sort(unique(IDs)))
 
   if(verbose) cat(paste0("Number of plots: ", length(IDs),"\n"))
-  x <- pies_mayores[pies_mayores$ID %in% IDs, , drop = FALSE]
-  y <- matorral[matorral$ID %in% IDs, , drop = FALSE]
+  x_mayores <- pies_mayores[pies_mayores$ID %in% IDs, , drop = FALSE]
+  x_mayores$DBH <- (x_mayores$Dn1+x_mayores$Dn2)/10 # From mm to cm
+  x_mayores$Height <- x_mayores$Ht*100 # From m to cm
+  x_mayores$N <- .densityFactor(x_mayores$DBH)
 
-  toRemX <- is.na(x$Especie) | is.na(x$Dn1) | is.na(x$Dn2) | is.na(x$Ht)
+  ## Pies Menores from IFN2
+  x_menores2 <- pies_menores[pies_menores$ID %in% IDs, , drop = FALSE]
+  x_menores2$DBH <- rep(5, nrow(x_menores2))
+  x_menores2$Height <- x_menores2$Hm*10 # From dm to cm
+  x_menores2$N <- .densityFactor(x_menores2$DBH) * x_menores2$Numero
+  x_menores2 <- x_menores2[!is.na(x_menores2$Height),,drop=FALSE]
+
+  x_regenera2 <- pies_menores[pies_menores$ID %in% IDs, , drop = FALSE]
+  x_regenera2 <- x_regenera2[!is.na(x_regenera2$Regena),,drop=FALSE]
+  x_regenera2$Regena <- as.numeric(x_regenera2$Regena)
+  x_regenera2 <- x_regenera2[x_regenera2$Regena>0 & x_regenera2$Regena<4,,drop=FALSE]
+  x_regenera2$DBH <- rep(1, nrow(x_regenera2)) # Default
+  x_regenera2$Height <- rep(100, nrow(x_regenera2)) # Default
+  x_regenera2$N <- c(2.5,10,20)[x_regenera2$Regena]*.densityFactor(x_regenera2$DBH) # Density from Regena
+
+
+  # Pies menores/regenera from IFN3/IFN4
+  x_regenera34 <- regenera[regenera$ID %in% IDs, , drop = FALSE]
+  x_menores34<-x_regenera34[x_regenera34$CatDes=="4",, drop = FALSE]
+  x_menores34$DBH <- rep(5, nrow(x_menores34))
+  x_menores34$N <- .densityFactor(x_menores34$DBH) * x_menores34$NumPies
+  x_menores34$Height <- x_menores34$Hm*10 # From dm to cm
+
+  x_regenera34 <- x_regenera34[x_regenera34$CatDes!="4",, drop = FALSE]
+  x_regenera34$DBH <- c(0.1,0.5,1.5)[as.numeric(x_regenera34$CatDes)]
+  x_regenera34$Height <- c(10,80,100)[as.numeric(x_regenera34$CatDes)]
+  x_regenera34$N <- c(2.5,10,20)[as.numeric(x_regenera34$Densidad)]*.densityFactor(x_regenera34$DBH) # Density from CatDes
+
+  # Merge all tree data sources
+  x <- dplyr::bind_rows(x_mayores,
+                        x_menores2, x_menores34,
+                        x_regenera2, x_regenera34)
+
+  y <- matorral[matorral$ID %in% IDs, , drop = FALSE]
+  y$Cover <- y$Fcc
+  y$Height <- y$Hm*10 # From dm to cm
+
+  toRemX <- is.na(x$Especie) | is.na(x$DBH) | is.na(x$Height)
   if(sum(toRemX)>0) {
     if(verbose) cat(paste0("Filtered records in tree data: ", sum(toRemX),"\n"))
     x <- x[!toRemX,]
@@ -240,7 +281,7 @@ IFN2forestlist<-function(pies_mayores, matorral, SpParams,
   }
 
   if(verbose) cat("Extracting IFN data...\n")
-  if(is.null(IFNherbData)) {
+  if(is.null(herb_data)) {
     lx <- split(x, factor(x$ID, levels=IDs))
     ly <- split(y, factor(y$ID, levels=IDs))
 
@@ -248,7 +289,7 @@ IFN2forestlist<-function(pies_mayores, matorral, SpParams,
       .IFN2forest(x,y, SpParams=SpParams, setDefaults = setDefaults, filterWrongRecords = filterWrongRecords, keepNumOrden = keepNumOrden)
     }, lx, ly, IDs)
   } else {
-    z <- IFNherbData[IFNherbData$ID %in% IDs, ]
+    z <- herb_data[herb_data$ID %in% IDs, ]
     lx <- split(x, factor(x$ID, levels=IDs))
     ly <- split(y, factor(y$ID, levels=IDs))
     lz <- split(z, factor(z$ID, levels=IDs))
