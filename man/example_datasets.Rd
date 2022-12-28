@@ -3,14 +3,19 @@
 \docType{data}
 \name{example_datasets}
 \alias{example_datasets}
-\alias{example_shrubdata_ifn}
-\alias{example_treedata_ifn}
+\alias{piesMayoresIFN2}
+\alias{piesMenoresIFN2}
+\alias{matorralIFN2}
+\alias{piesMayoresIFN3}
+\alias{regeneraIFN3}
+\alias{matorralIFN3}
 \alias{poblet_trees}
 \title{Example datasets}
 \source{
 \itemize{
-  \item{Datasets \code{example_shrubdata_ifn} and \code{example_treedata_ifn} were extracted from the Third Spanish National Forest Inventory.}
-  \item{Dataset \code{poblet_trees} corresponds to field data sampled by the Catalan Forest Ownership Center (Centre de la Propietat Forestal; CPF).}
+  \item{Data tables \code{piesMayoresIFN2}, \code{piesMenoresIFN2} and \code{matorralIFN2} were extracted from the Second Spanish National Forest Inventory.}
+  \item{Data tables \code{piesMayoresIFN3}, \code{regeneraIFN3} and \code{matorralIFN3} were extracted from the Third Spanish National Forest Inventory.}
+  \item{Data table \code{poblet_trees} corresponds to field data sampled by the Catalan Forest Ownership Center (Centre de la Propietat Forestal; CPF).}
  }
 }
 \description{

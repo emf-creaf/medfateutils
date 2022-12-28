@@ -35,12 +35,13 @@
 #'    }
 #' }
 #' @name example_datasets
-#' @aliases example_shrubdata_ifn example_treedata_ifn poblet_trees
+#' @aliases piesMayoresIFN2 piesMenoresIFN2 matorralIFN2 piesMayoresIFN3 regeneraIFN3 matorralIFN3 poblet_trees
 #' @docType data
 #' @source
 #' \itemize{
-#'   \item{Datasets \code{example_shrubdata_ifn} and \code{example_treedata_ifn} were extracted from the Third Spanish National Forest Inventory.}
-#'   \item{Dataset \code{poblet_trees} corresponds to field data sampled by the Catalan Forest Ownership Center (Centre de la Propietat Forestal; CPF).}
+#'   \item{Data tables \code{piesMayoresIFN2}, \code{piesMenoresIFN2} and \code{matorralIFN2} were extracted from the Second Spanish National Forest Inventory.}
+#'   \item{Data tables \code{piesMayoresIFN3}, \code{regeneraIFN3} and \code{matorralIFN3} were extracted from the Third Spanish National Forest Inventory.}
+#'   \item{Data table \code{poblet_trees} corresponds to field data sampled by the Catalan Forest Ownership Center (Centre de la Propietat Forestal; CPF).}
 #'  }
 #' @keywords data
 NULL
