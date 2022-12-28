@@ -29,7 +29,7 @@ IFN2forest(
 
 \item{matorral}{A data frame with measured shrub data (PCMatorral).}
 
-\item{herb_data}{A data frame with cover and mean height of the herb layer.}
+\item{herb_data}{A data frame with cover and mean height of the herb layer for each forest plot.}
 
 \item{setDefaults}{Initializes default values for missing fields in IFN data.}
 

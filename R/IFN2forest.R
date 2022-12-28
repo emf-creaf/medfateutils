@@ -8,47 +8,6 @@
   return(factor[FACTOREXP])
 }
 
-.IFN2forest<-function(xid, yid, SpParams,
-                      zid = NULL,
-                      setDefaults=TRUE, filterWrongRecords = TRUE,
-                      keepNumOrden = TRUE) {
-  f <- emptyforest()
-  f$treeData <- data.frame(Species = xid$Species,
-                          N = xid$N,
-                          DBH = xid$DBH,
-                          Height = xid$Height,
-                          Z50 = rep(NA, nrow(xid)),
-                          Z95 = rep(NA, nrow(xid)))
-  if(keepNumOrden) {
-    if("OrdenIf2" %in% names(xid)) f$treeData$OrdenIf2 = xid$OrdenIf2
-    if("OrdenIf3" %in% names(xid)) f$treeData$OrdenIf3 = xid$OrdenIf3
-    if("OrdenIf4" %in% names(xid)) f$treeData$OrdenIf4 = xid$OrdenIf4
-  }
-  f$shrubData <- data.frame(Species = yid$Species,
-                           Cover = yid$Cover,
-                           Height = yid$Height,
-                           Z50 = rep(NA, nrow(yid)),
-                           Z95 = rep(NA, nrow(yid)))
-  if(setDefaults) {
-    f$treeData$Z95 <- species_parameter(f$treeData$Species, SpParams, "Z95")
-    f$treeData$Z50 <- species_parameter(f$treeData$Species, SpParams, "Z50")
-    f$shrubData$Z95 <- species_parameter(f$shrubData$Species, SpParams, "Z95")
-    f$shrubData$Z50 <- species_parameter(f$shrubData$Species, SpParams, "Z50")
-    f$treeData$Z95[is.na(f$treeData$Z95)] <- 1000
-    f$shrubData$Z95[is.na(f$shrubData$Z95)] = 800
-    f$treeData$Z50[is.na(f$treeData$Z50)] <- exp(log(f$treeData$Z95[is.na(f$treeData$Z50)])/1.3)
-    f$shrubData$Z50[is.na(f$shrubData$Z50)] <- exp(log(f$shrubData$Z95[is.na(f$shrubData$Z50)])/1.3)
-  }
-
-  if(!is.null(zid)) {
-    f$herbCover <- zid$Cover
-    f$herbHeight <- zid$Height
-    if(length(f$herbCover)>1) f$herbCover <- mean(f$herbCover, na.rm=TRUE)
-    if(length(f$herbHeight)>1) f$herbHeight <- mean(f$herbHeight, na.rm=TRUE)
-  }
-  return(f)
-}
-
 #' Extract forest from IFN data
 #'
 #' Creates a list of \code{\link{forest}} objects from Spanish Forest Inventory (IFN) data in its
@@ -59,7 +18,7 @@
 #' @param pies_menores A data frame with measured regeneration tree data (PCPiesMenores in IFN2).
 #' @param regenera A data frame with measured regeneration tree data (PCRegenera in IFN3 and IFN4).
 #' @param matorral A data frame with measured shrub data (PCMatorral).
-#' @param herb_data A data frame with cover and mean height of the herb layer.
+#' @param herb_data A data frame with cover and mean height of the herb layer for each forest plot.
 #' @param setDefaults Initializes default values for missing fields in IFN data.
 #' @param filterWrongRecords Filters wrong records (records with missing values, zero values or wrong growth forms).
 #'                          This should normally result in the removal of dead/cut trees.
@@ -286,22 +245,58 @@ IFN2forest<-function(pies_mayores, SpParams,
     sgf <- species_characterParameter(y$Species, SpParams, "GrowthForm")
     y <- y[sgf!="Tree",, drop=FALSE]
   }
-  if(verbose) cat("Extracting IFN data...\n")
-  if(is.null(herb_data)) {
-    lx <- split(x, factor(x$ID, levels=IDs))
-    ly <- split(y, factor(y$ID, levels=IDs))
 
-    forestlist <- Map(function(x,y, id) {
-      .IFN2forest(x,y, SpParams=SpParams, setDefaults = setDefaults, filterWrongRecords = filterWrongRecords, keepNumOrden = keepNumOrden)
-    }, lx, ly, IDs)
+  x$Z50 <- NA
+  x$Z95 <- NA
+  y$Z50 <- NA
+  y$Z95 <- NA
+  if(setDefaults) {
+    if(verbose) cat("Setting default root distribution ...\n")
+    x$Z95 <- species_parameter(x$Species, SpParams, "Z95")
+    x$Z50 <- species_parameter(x$Species, SpParams, "Z50")
+    y$Z95 <- species_parameter(y$Species, SpParams, "Z95")
+    y$Z50 <- species_parameter(y$Species, SpParams, "Z50")
+    x$Z95[is.na(x$Z95)] <- 1000
+    y$Z95[is.na(y$Z95)] <- 800
+    x$Z50[is.na(x$Z50)] <- exp(log(x$Z95[is.na(x$Z50)])/1.3)
+    y$Z50[is.na(y$Z50)] <- exp(log(y$Z95[is.na(y$Z50)])/1.3)
+  }
+
+  if(verbose) cat("Building forest objects...\n")
+  xf <- x[,c("ID", "Species","DBH", "Height", "N", "Z50", "Z95")]
+  if(keepNumOrden) {
+    if("OrdenIf2" %in% names(x)) xf$OrdenIf2 <- x$OrdenIf2
+    if("OrdenIf3" %in% names(x)) xf$OrdenIf3 <- x$OrdenIf3
+    if("OrdenIf4" %in% names(x)) xf$OrdenIf4 <- x$OrdenIf4
+  }
+  yf <- y[,c("ID", "Species", "Height", "Cover", "Z50", "Z95")]
+
+  lx <- split(xf, factor(x$ID, levels=IDs), drop = FALSE)
+  ly <- split(yf, factor(y$ID, levels=IDs), drop = FALSE)
+
+  if(!is.null(herb_data)) {
+    z <- herb_data[herb_data$ID %in% IDs, , drop = FALSE]
   } else {
-    z <- herb_data[herb_data$ID %in% IDs, ]
-    lx <- split(x, factor(x$ID, levels=IDs))
-    ly <- split(y, factor(y$ID, levels=IDs))
-    lz <- split(z, factor(z$ID, levels=IDs))
-    forestlist <- Map(function(x,y, z, id) {
-      .IFN2forest(x,y, z, SpParams=SpParams,setDefaults = setDefaults, filterWrongRecords = filterWrongRecords, keepNumOrden = keepNumOrden)
-    }, lx, ly, lz, IDs)
+    z <- data.frame(ID=character(0), Cover = numeric(0), Height = numeric(0))
+  }
+  lz <- split(z, factor(z$ID, levels=IDs), drop = FALSE)
+
+  forestlist <- vector("list", length(IDs))
+  names(forestlist) <- IDs
+  for(i in 1:length(IDs)) {
+    f <- list()
+    f$treeData <- data.frame(lx[[i]], row.names=NULL)
+    f$shrubData <- data.frame(ly[[i]], row.names=NULL)
+    if(nrow(lz[[i]])>0) {
+      zi <- lz[[i]]
+      f$herbCover <- mean(zi$Cover, na.rm=TRUE)
+      f$herbHeight <- mean(zi$Height, na.rm=TRUE)
+    } else {
+      f$herbCover <- NA
+      f$herbHeight <- NA
+    }
+    class(f) <- c("forest", "list")
+    forestlist[[i]] <- f
   }
   if(verbose) cat("done.\n")
   return(forestlist)
