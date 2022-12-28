@@ -125,107 +125,76 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SpParamsMED</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">example_treedata_ifn</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">example_shrubdata_ifn</span><span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Builds an object 'forest' corresponding to one specific forest plot</span></span></span>
-<span class="r-in"><span><span class="va">f1</span> <span class="op">=</span> <span class="fu"><a href="IFN2forest.html">IFN2forest</a></span><span class="op">(</span><span class="va">example_treedata_ifn</span>, <span class="va">example_shrubdata_ifn</span>,</span></span>
-<span class="r-in"><span>                ID <span class="op">=</span> <span class="st">"81065"</span>, SpParams <span class="op">=</span> <span class="va">SpParamsMED</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Filtered records in tree data: 11</span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">f1</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $treeData</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Species         N   DBH Height      Z50 Z95 OIF2 OIF3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1      149 127.32395  9.55    750 173.1933 813    0    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2      149 127.32395  9.40    650 173.1933 813    0    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3      149  31.83099 21.00   1600 173.1933 813    2    3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4      149  14.14711 23.30   1450 173.1933 813    0    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5      149  31.83099 22.15   1450 173.1933 813    4    5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6      149  14.14711 23.10   1450 173.1933 813    0    6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7      149  31.83099 19.00   1350 173.1933 813    5    7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8      149  14.14711 25.40   1450 173.1933 813    9    8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9      149  31.83099 18.50   1250 173.1933 813   11    9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10     149 127.32395  8.20    750 173.1933 813    0   10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11     149  31.83099 21.25   1400 173.1933 813   13   11</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12     149  31.83099 19.30   1300 173.1933 813   14   12</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13     149  14.14711 33.95   1900 173.1933 813   17   13</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14     149 127.32395 11.35    750 173.1933 813    0   14</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15     149 127.32395  8.75    750 173.1933 813    0   15</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16     149 127.32395 10.50    750 173.1933 813    0   16</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $shrubData</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Species Cover Height      Z50  Z95</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1      165     2     30 647.0011 4510</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2      156     3    100 305.4645 1700</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3      141     2    120 173.0294  812</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4      188     3    100 203.0918 1000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5      212     2    150 173.0294  812</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6      107     2     10 173.0294  812</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7      101     3     50 143.9056  639</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8      123     3     30 105.7274  428</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9      183    10    150 151.6395  684</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10      79     2     30 153.5119  695</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $herbCover</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $herbHeight</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "forest" "list"  </span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">soilpar</span> <span class="op">=</span> <span class="fu">defaultSoilParams</span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">f2</span> <span class="op">=</span> <span class="fu">estimateRootingDepth</span><span class="op">(</span><span class="va">f1</span>, <span class="va">soilpar</span>, <span class="fl">300</span>, <span class="fl">100</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">f2</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $treeData</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Species         N   DBH Height      Z50 Z95 OIF2 OIF3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1      149 127.32395  9.55    750 208.9364 500    0    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2      149 127.32395  9.40    650 208.9364 500    0    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3      149  31.83099 21.00   1600 208.9364 500    2    3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4      149  14.14711 23.30   1450 208.9364 500    0    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5      149  31.83099 22.15   1450 208.9364 500    4    5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6      149  14.14711 23.10   1450 208.9364 500    0    6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7      149  31.83099 19.00   1350 208.9364 500    5    7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8      149  14.14711 25.40   1450 208.9364 500    9    8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9      149  31.83099 18.50   1250 208.9364 500   11    9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10     149 127.32395  8.20    750 208.9364 500    0   10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11     149  31.83099 21.25   1400 208.9364 500   13   11</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12     149  31.83099 19.30   1300 208.9364 500   14   12</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13     149  14.14711 33.95   1900 208.9364 500   17   13</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14     149 127.32395 11.35    750 208.9364 500    0   14</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15     149 127.32395  8.75    750 208.9364 500    0   15</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16     149 127.32395 10.50    750 208.9364 500    0   16</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $shrubData</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Species Cover Height      Z50 Z95</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1      165     2     30 250.0000 500</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2      156     3    100 250.0000 500</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3      141     2    120 250.0000 500</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4      188     3    100 250.0000 500</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5      212     2    150 236.8821 500</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6      107     2     10 172.1502 500</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7      101     3     50 203.0155 500</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8      123     3     30 250.0000 500</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9      183    10    150 172.7408 500</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10      79     2     30 203.0155 500</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $herbCover</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $herbHeight</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "forest" "list"  </span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">l1</span> <span class="op">=</span> <span class="fu"><a href="IFN2forest.html">IFN2forestlist</a></span><span class="op">(</span><span class="va">example_treedata_ifn</span>, <span class="va">example_shrubdata_ifn</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Builds from IFN3 data a list whose elements are 'forest' objects</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">piesMayoresIFN3</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">regeneraIFN3</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">matorralIFN3</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">l1</span> <span class="op">&lt;-</span> <span class="fu"><a href="IFN2forest.html">IFN2forest</a></span><span class="op">(</span><span class="va">piesMayoresIFN3</span>, <span class="va">SpParamsMED</span>,</span></span>
+<span class="r-in"><span>               matorral <span class="op">=</span> <span class="va">matorralIFN3</span>, regenera <span class="op">=</span> <span class="va">regeneraIFN3</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Number of plots: 5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Filtered records in tree data: 20</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Translating species codes...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Extracting IFN data...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> done.</span>
-<span class="r-in"><span><span class="va">l2</span> <span class="op">=</span> <span class="fu">estimateRootingDepthList</span><span class="op">(</span><span class="va">l1</span>, <span class="va">soilpar</span>, <span class="fl">300</span>, <span class="fl">100</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Estimate rooting depth</span></span></span>
+<span class="r-in"><span><span class="va">soilpar</span> <span class="op">&lt;-</span> <span class="fu">defaultSoilParams</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">l2</span> <span class="op">&lt;-</span> <span class="fu">estimateRootingDepthList</span><span class="op">(</span><span class="va">l1</span>, <span class="va">soilpar</span>, <span class="fl">300</span>, <span class="fl">100</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Compare tree rooting depths</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">l1</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">treeData</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Species           N  DBH Height      Z50  Z95 OrdenIf2 OrdenIf3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1      149   31.830989 19.1    750 173.1933  813      000      001</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2      149   31.830989 18.8    650 173.1933  813      000      002</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3      149   14.147106 42.0   1600 173.1933  813      002      003</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4      149    5.092958 46.6   1450 173.1933  813      000      004</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5      149    5.092958 44.3   1450 173.1933  813      004      005</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6      149    5.092958 46.2   1450 173.1933  813      000      006</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7      149   14.147106 38.0   1350 173.1933  813      005      007</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8      149    5.092958 50.8   1450 173.1933  813      009      008</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9      149   14.147106 37.0   1250 173.1933  813      011      009</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10     149   31.830989 16.4    750 173.1933  813      000      010</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11     149    5.092958 42.5   1400 173.1933  813      013      011</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12     149   14.147106 38.6   1300 173.1933  813      014      012</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13     149    5.092958 67.9   1900 173.1933  813      017      013</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14     149   14.147106 22.7    750 173.1933  813      000      014</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15     149   31.830989 17.5    750 173.1933  813      000      015</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16     149   31.830989 21.0    750 173.1933  813      000      016</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17     149 1400.563501  5.0    350 173.1933  813     &lt;NA&gt;     &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18     149  318.309887  0.1     10 173.1933  813     &lt;NA&gt;     &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19     149 1273.239546  0.5     80 173.1933  813     &lt;NA&gt;     &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20     149 1273.239546  1.5    100 173.1933  813     &lt;NA&gt;     &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21     115  318.309887  0.5     80 199.9600  980     &lt;NA&gt;     &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22     166 1273.239546  0.1     10 647.0011 4510     &lt;NA&gt;     &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23     166  318.309887  0.5     80 647.0011 4510     &lt;NA&gt;     &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24     168  318.309887  0.1     10 702.5790 5020     &lt;NA&gt;     &lt;NA&gt;</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">l2</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">treeData</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Species           N  DBH Height      Z50     Z95 OrdenIf2 OrdenIf3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1      149   31.830989 19.1    750 203.6321 500.000      000      001</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2      149   31.830989 18.8    650 203.6321 500.000      000      002</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3      149   14.147106 42.0   1600 203.6321 500.000      002      003</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4      149    5.092958 46.6   1450 203.6321 500.000      000      004</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5      149    5.092958 44.3   1450 203.6321 500.000      004      005</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6      149    5.092958 46.2   1450 203.6321 500.000      000      006</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7      149   14.147106 38.0   1350 203.6321 500.000      005      007</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8      149    5.092958 50.8   1450 203.6321 500.000      009      008</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9      149   14.147106 37.0   1250 203.6321 500.000      011      009</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10     149   31.830989 16.4    750 203.6321 500.000      000      010</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11     149    5.092958 42.5   1400 203.6321 500.000      013      011</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12     149   14.147106 38.6   1300 203.6321 500.000      014      012</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13     149    5.092958 67.9   1900 203.6321 500.000      017      013</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14     149   14.147106 22.7    750 203.6321 500.000      000      014</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15     149   31.830989 17.5    750 203.6321 500.000      000      015</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16     149   31.830989 21.0    750 203.6321 500.000      000      016</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17     149 1400.563501  5.0    350 203.6321 500.000     &lt;NA&gt;     &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18     149  318.309887  0.1     10 203.6321 500.000     &lt;NA&gt;     &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19     149 1273.239546  0.5     80 203.6321 500.000     &lt;NA&gt;     &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20     149 1273.239546  1.5    100 203.6321 500.000     &lt;NA&gt;     &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21     115  318.309887  0.5     80 286.2504 500.000     &lt;NA&gt;     &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22     166 1273.239546  0.1     10 249.7409 562.058     &lt;NA&gt;     &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23     166  318.309887  0.5     80 249.7409 562.058     &lt;NA&gt;     &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24     168  318.309887  0.1     10 293.7324 500.000     &lt;NA&gt;     &lt;NA&gt;</span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -240,7 +209,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>
