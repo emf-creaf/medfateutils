@@ -40,18 +40,6 @@
     f$shrubData$Z50[is.na(f$shrubData$Z50)] <- exp(log(f$shrubData$Z95[is.na(f$shrubData$Z50)])/1.3)
   }
   if(filterWrongRecords) {
-    #Remove missing
-    f$treeData <- f$treeData[!is.na(f$treeData$Height),, drop=FALSE]
-    f$treeData <- f$treeData[!is.na(f$treeData$DBH),, drop=FALSE]
-    f$treeData <- f$treeData[!is.na(f$treeData$N),, drop=FALSE]
-    f$shrubData <- f$shrubData[!is.na(f$shrubData$Cover),, drop=FALSE]
-    f$shrubData <- f$shrubData[!is.na(f$shrubData$Height),, drop=FALSE]
-    #Remove zero values
-    f$treeData <- f$treeData[f$treeData$Height>0,, drop=FALSE]
-    f$treeData <- f$treeData[f$treeData$DBH>0,, drop=FALSE]
-    f$treeData <- f$treeData[f$treeData$N>0,, drop=FALSE]
-    f$shrubData <- f$shrubData[f$shrubData$Cover>0,, drop=FALSE]
-    f$shrubData <- f$shrubData[f$shrubData$Height>0,, drop=FALSE]
     #Remove wrong growthform
     tgf <- species_characterParameter(f$treeData$Species, SpParams, "GrowthForm")
     f$treeData <- f$treeData[tgf!="Shrub",, drop=FALSE]
@@ -255,15 +243,23 @@ IFN2forest<-function(pies_mayores, SpParams,
   y$Cover <- as.numeric(y$Fcc)
   y$Height <- as.numeric(y$Hm)*10 # From dm to cm
 
-  toRemX <- is.na(x$Especie) | is.na(x$DBH) | is.na(x$Height)
-  if(sum(toRemX)>0) {
-    if(verbose) cat(paste0("Filtered records in tree data: ", sum(toRemX),"\n"))
-    x <- x[!toRemX,]
-  }
-  toRemY <- is.na(y$Especie) | is.na(y$Fcc) | is.na(y$Hm)
-  if(sum(toRemY)>0) {
-    if(verbose) cat(paste0("Filtered records in shrub data: ", sum(toRemY),"\n"))
-    y <- y[!toRemY,]
+  if(filterWrongRecords) {
+    if(verbose) cat("Filtering missing and zero values...\n")
+
+    #Remove missing
+    x <- x[!is.na(x$Height),, drop=FALSE]
+    x <- x[!is.na(x$DBH),, drop=FALSE]
+    x <- x[!is.na(x$N),, drop=FALSE]
+    x <- x[!is.na(x$Height),, drop=FALSE]
+    y <- y[!is.na(y$Cover),, drop=FALSE]
+    y <- y[!is.na(y$Height),, drop=FALSE]
+    #Remove zero values
+    x <- x[x$Height>0,, drop=FALSE]
+    x <- x[x$DBH>0,, drop=FALSE]
+    x <- x[x$N>0,, drop=FALSE]
+    y <- y[y$Cover>0,, drop=FALSE]
+    y <- y[y$Height>0,, drop=FALSE]
+
   }
 
   if(verbose) cat("Translating species codes...\n")
