@@ -176,10 +176,16 @@ IFN2forest<-function(pies_mayores, SpParams,
 
   if(sum(c("Ht","Dn1", "Dn2","Especie","ID") %in% names(pies_mayores))<4) stop("Columns in 'pies_mayores' must include 'ID','Especie','Dn1', 'Dn2' and 'Ht'")
   IDs <- pies_mayores$ID
+  pies_mayores$Dn1 <- as.numeric(pies_mayores$Dn1)
+  pies_mayores$Dn2 <- as.numeric(pies_mayores$Dn2)
+  pies_mayores$Ht <- as.numeric(pies_mayores$Ht)
 
   if(!is.null(pies_menores)) {
     if(sum(c("Hm","Numero","Especie","ID", "Regena") %in% names(pies_menores))<5) stop("Columns in 'pies_menores' must include 'ID','Especie','Numero', 'Regena' and 'Hm'")
     IDs <- c(IDs, pies_menores$ID)
+    pies_menores$Numero <- as.numeric(pies_menores$Numero)
+    pies_menores$Regena <- as.numeric(pies_menores$Regena)
+    pies_menores$Hm <- as.numeric(pies_menores$Hm)
   } else {
     pies_menores <- data.frame(ID = character(0), Especie = character(0), Numero = numeric(0), Hm = numeric(0), Regena = numeric(0))
   }
@@ -188,6 +194,8 @@ IFN2forest<-function(pies_mayores, SpParams,
     if(sum(c("Hm","CatDes","Especie","ID", "Densidad", "NumPies") %in% names(regenera))<6)
       stop("Columns in 'regenera' must include 'ID','Especie','CatDes', 'Densidad', 'NumPies' and 'Hm'")
     IDs <- c(IDs, regenera$ID)
+    regenera$NumPies <- as.numeric(regenera$NumPies)
+    regenera$Hm <- as.numeric(regenera$Hm)
   } else {
     regenera <- data.frame(ID = character(0), Especie = character(0), CatDes = character(0), Densidad = character(0), NumPies = numeric(0), Hm = numeric(0))
   }
@@ -195,6 +203,8 @@ IFN2forest<-function(pies_mayores, SpParams,
   if(!is.null(matorral)) {
     if(sum(c("Hm","Fcc","Especie","ID") %in% names(matorral))<4) stop("Columns in 'matorral' must include 'ID','Especie','Fcc' and 'Hm'")
     IDs <- c(IDs, matorral$ID)
+    matorral$Fcc <- as.numeric(matorral$Fcc)
+    matorral$Hm <- as.numeric(matorral$Hm)
   } else {
     matorral <- data.frame(ID = character(0), Especie = character(0), Fcc = numeric(0), Hm = numeric(0))
   }
@@ -203,15 +213,15 @@ IFN2forest<-function(pies_mayores, SpParams,
 
   if(verbose) cat(paste0("Number of plots: ", length(IDs),"\n"))
   x_mayores <- pies_mayores[pies_mayores$ID %in% IDs, , drop = FALSE]
-  x_mayores$DBH <- (x_mayores$Dn1+x_mayores$Dn2)/10 # From mm to cm
-  x_mayores$Height <- x_mayores$Ht*100 # From m to cm
+  x_mayores$DBH <- (as.numeric(x_mayores$Dn1) + as.numeric(x_mayores$Dn2))/10 # From mm to cm
+  x_mayores$Height <- as.numeric(x_mayores$Ht)*100 # From m to cm
   x_mayores$N <- .densityFactor(x_mayores$DBH)
 
   ## Pies Menores from IFN2
   x_menores2 <- pies_menores[pies_menores$ID %in% IDs, , drop = FALSE]
   x_menores2$DBH <- rep(5, nrow(x_menores2))
-  x_menores2$Height <- x_menores2$Hm*10 # From dm to cm
-  x_menores2$N <- .densityFactor(x_menores2$DBH) * x_menores2$Numero
+  x_menores2$Height <- as.numeric(x_menores2$Hm)*10 # From dm to cm
+  x_menores2$N <- .densityFactor(x_menores2$DBH) * as.numeric(x_menores2$Numero)
   x_menores2 <- x_menores2[!is.na(x_menores2$Height),,drop=FALSE]
   x_menores2$Regena <- as.numeric(x_menores2$Regena)
 
@@ -228,8 +238,8 @@ IFN2forest<-function(pies_mayores, SpParams,
   x_regenera34 <- regenera[regenera$ID %in% IDs, , drop = FALSE]
   x_menores34<-x_regenera34[x_regenera34$CatDes=="4",, drop = FALSE]
   x_menores34$DBH <- rep(5, nrow(x_menores34))
-  x_menores34$N <- .densityFactor(x_menores34$DBH) * x_menores34$NumPies
-  x_menores34$Height <- x_menores34$Hm*10 # From dm to cm
+  x_menores34$N <- .densityFactor(x_menores34$DBH) * as.numeric(x_menores34$NumPies)
+  x_menores34$Height <- as.numeric(x_menores34$Hm)*10 # From dm to cm
 
   x_regenera34 <- x_regenera34[x_regenera34$CatDes!="4",, drop = FALSE]
   x_regenera34$DBH <- c(0.1,0.5,1.5)[as.numeric(x_regenera34$CatDes)]
@@ -242,8 +252,8 @@ IFN2forest<-function(pies_mayores, SpParams,
                         x_regenera2, x_regenera34)
 
   y <- matorral[matorral$ID %in% IDs, , drop = FALSE]
-  y$Cover <- y$Fcc
-  y$Height <- y$Hm*10 # From dm to cm
+  y$Cover <- as.numeric(y$Fcc)
+  y$Height <- as.numeric(y$Hm)*10 # From dm to cm
 
   toRemX <- is.na(x$Especie) | is.na(x$DBH) | is.na(x$Height)
   if(sum(toRemX)>0) {
