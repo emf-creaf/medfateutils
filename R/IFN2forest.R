@@ -39,13 +39,6 @@
     f$treeData$Z50[is.na(f$treeData$Z50)] <- exp(log(f$treeData$Z95[is.na(f$treeData$Z50)])/1.3)
     f$shrubData$Z50[is.na(f$shrubData$Z50)] <- exp(log(f$shrubData$Z95[is.na(f$shrubData$Z50)])/1.3)
   }
-  if(filterWrongRecords) {
-    #Remove wrong growthform
-    tgf <- species_characterParameter(f$treeData$Species, SpParams, "GrowthForm")
-    f$treeData <- f$treeData[tgf!="Shrub",, drop=FALSE]
-    sgf <- species_characterParameter(f$shrubData$Species, SpParams, "GrowthForm")
-    f$shrubData <- f$shrubData[sgf!="Tree",, drop=FALSE]
-  }
 
   if(!is.null(zid)) {
     f$herbCover <- zid$Cover
@@ -286,7 +279,13 @@ IFN2forest<-function(pies_mayores, SpParams,
     }
     y <- y[!is.na(y$Species),]
   }
-
+  if(filterWrongRecords) {
+    if(verbose) cat("Filtering wrong growth forms ...\n")
+    tgf <- species_characterParameter(x$Species, SpParams, "GrowthForm")
+    x <- x[tgf!="Shrub",, drop=FALSE]
+    sgf <- species_characterParameter(y$Species, SpParams, "GrowthForm")
+    y <- y[sgf!="Tree",, drop=FALSE]
+  }
   if(verbose) cat("Extracting IFN data...\n")
   if(is.null(herb_data)) {
     lx <- split(x, factor(x$ID, levels=IDs))
