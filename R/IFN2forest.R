@@ -213,6 +213,7 @@ IFN2forest<-function(pies_mayores, SpParams,
   x_menores2$Height <- x_menores2$Hm*10 # From dm to cm
   x_menores2$N <- .densityFactor(x_menores2$DBH) * x_menores2$Numero
   x_menores2 <- x_menores2[!is.na(x_menores2$Height),,drop=FALSE]
+  x_menores2$Regena <- as.numeric(x_menores2$Regena)
 
   x_regenera2 <- pies_menores[pies_menores$ID %in% IDs, , drop = FALSE]
   x_regenera2 <- x_regenera2[!is.na(x_regenera2$Regena),,drop=FALSE]
