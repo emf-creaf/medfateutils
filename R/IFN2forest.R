@@ -285,8 +285,8 @@ IFN2forest<-function(pies_mayores, SpParams,
   names(forestlist) <- IDs
   for(i in 1:length(IDs)) {
     f <- list()
-    f$treeData <- data.frame(lx[[i]], row.names=NULL)
-    f$shrubData <- data.frame(ly[[i]], row.names=NULL)
+    f$treeData <- data.frame(lx[[i]][,-1], row.names=NULL)
+    f$shrubData <- data.frame(ly[[i]][,-1], row.names=NULL)
     if(nrow(lz[[i]])>0) {
       zi <- lz[[i]]
       f$herbCover <- mean(zi$Cover, na.rm=TRUE)
