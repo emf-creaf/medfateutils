@@ -227,7 +227,7 @@ IFN2forest<-function(pies_mayores, SpParams,
                  " (",round(100*sum(is.na(x$Species))/length(x$Species),1),"%)\n"))
       print(table(x$Especie[is.na(x$Species)], useNA = "ifany"))
     }
-    x <- x[!is.na(x$Species),]
+    x <- x[!is.na(x$Species),, drop = FALSE]
   }
   if(sum(is.na(y$Species))>0) {
     if(verbose) {
@@ -236,8 +236,13 @@ IFN2forest<-function(pies_mayores, SpParams,
                  " (",round(100*sum(is.na(y$Species))/length(y$Species),1),"%)\n"))
       print(table(y$Especie[is.na(y$Species)], useNA = "ifany"))
     }
-    y <- y[!is.na(y$Species),]
+    y <- y[!is.na(y$Species),, drop = FALSE]
   }
+
+  # Translate to species names
+  x$Species[!is.na(x$Species)] <- medfate:::.speciesCharacterParameterFromSpIndex(x$Species[!is.na(x$Species)], SpParams, "Name")
+  y$Species[!is.na(y$Species)] <- medfate:::.speciesCharacterParameterFromSpIndex(y$Species[!is.na(y$Species)], SpParams, "Name")
+
   if(filterWrongRecords) {
     if(verbose) cat("Filtering wrong growth forms ...\n")
     tgf <- species_characterParameter(x$Species, SpParams, "GrowthForm")

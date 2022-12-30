@@ -10,7 +10,7 @@ Authors@R: c(
 Description: Utility functions to facilitate defining inputs (soil, species or vegetation parameters) for simulations with
   package medfate.
 License: GPL (>= 2)
-Depends: R (>= 3.4.0), medfate (>= 2.8.2)
+Depends: R (>= 3.4.0), medfate (>= 2.9.0)
 Imports: taxize, httr, jsonlite, methods, sf, magrittr, dplyr
 Encoding: UTF-8
 LazyData: true

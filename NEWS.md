@@ -3,7 +3,7 @@
 -----------------------------------
 
 # Version 0.1.6
-- Compliance with medfate ver. 2.8.2
+- Compliance with medfate ver. 2.9.0
 - Warning raised when taxon names do not match
 - Rewriting IFN2forest function
 

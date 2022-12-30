@@ -136,7 +136,7 @@ forest_mapTreeTable<-function(x, mapping_x, SpParams, plot_size_x = NULL) {
     for(i in 1:n) {
       indices = which(SpParams$Name==Species.name[i])
       if(length(indices)>0) {
-        treeData$Species[i] = SpParams$SpIndex[indices]
+        treeData$Species[i] = SpParams$Name[indices]
       } else {
         non_recognized = unique(c(non_recognized, Species.name[i]))
       }
@@ -194,7 +194,7 @@ forest_mapShrubTable<-function(y, mapping_y, SpParams, plot_size_y = NULL) {
     for(i in 1:n) {
       indices = which(SpParams$Name==Species.name[i])
       if(length(indices)>0) {
-        shrubData$Species[i] = SpParams$SpIndex[indices]
+        shrubData$Species[i] = SpParams$Name[indices]
       } else {
         non_recognized = unique(c(non_recognized, Species.name[i]))
       }

@@ -1,6 +1,6 @@
 #' Translate species codes
 #'
-#' Translate IFN species codes to medfate codes
+#' Translate IFN species codes to medfate SpIndex codes
 #'
 #' @param x A vector of IFN species codes.
 #' @param IFNcodes A string vector (of length equal to the number of rows in \code{SpParams} of the IFN species codes that correspond to the model species codification. Each string may contain different coma-separated codes in order to merge IFN species into a single model species.
@@ -28,6 +28,6 @@ translateIFNSpeciesCodes<-function(x, IFNcodes) {
   x_numeric = as.numeric(x)
   x_numeric[x_numeric <= 0] = NA
   result = rep(NA, length(x_numeric))
-  result[!is.na(x_numeric)] <-repVect[x_numeric[!is.na(x_numeric)]]
+  result[!is.na(x_numeric)] <- repVect[x_numeric[!is.na(x_numeric)]]
   return(result)
 }

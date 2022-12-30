@@ -16,7 +16,7 @@ translateIFNSpeciesCodes(x, IFNcodes)
 A string vector with the length of \code{x} and translated codes.
 }
 \description{
-Translate IFN species codes to medfate codes
+Translate IFN species codes to medfate SpIndex codes
 }
 \seealso{
 \code{\link{IFN2forest}}
