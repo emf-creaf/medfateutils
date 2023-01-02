@@ -251,10 +251,10 @@ IFN2forest<-function(pies_mayores, SpParams,
     y <- y[sgf!="Tree",, drop=FALSE]
   }
 
-  x$Z50 <- NA
-  x$Z95 <- NA
-  y$Z50 <- NA
-  y$Z95 <- NA
+  x$Z50 <- rep(NA, nrow(x))
+  x$Z95 <- rep(NA, nrow(x))
+  y$Z50 <- rep(NA, nrow(y))
+  y$Z95 <- rep(NA, nrow(y))
   if(setDefaults) {
     if(verbose) cat("Setting default root distribution ...\n")
     x$Z95 <- species_parameter(x$Species, SpParams, "Z95")
