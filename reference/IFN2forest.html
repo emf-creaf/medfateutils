@@ -86,7 +86,7 @@ second (IFN2), third (IFN3; DGCN 2005) and fourth (IFN4) editions.</p>
 
 
 <dt>herb_data</dt>
-<dd><p>A data frame with cover and mean height of the herb layer.</p></dd>
+<dd><p>A data frame with cover and mean height of the herb layer for each forest plot.</p></dd>
 
 
 <dt>setDefaults</dt>
@@ -151,7 +151,7 @@ to translate IFN codes into medfate codes.</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
-    <div class="dont-index"><p><code>forest</code>, <code><a href="translateIFNSpeciesCodes.html">translateIFNSpeciesCodes</a></code></p></div>
+    <div class="dont-index"><p><code>forest</code>, <code><a href="translateIFNSpeciesCodes.html">translateIFNSpeciesCodes</a></code> <code><a href="example_datasets.html">example_datasets</a></code></p></div>
     </div>
     <div id="author">
     <h2>Author</h2>
@@ -171,6 +171,7 @@ to translate IFN codes into medfate codes.</p>
 <span class="r-in"><span><span class="va">l</span> <span class="op">&lt;-</span> <span class="fu">IFN2forest</span><span class="op">(</span><span class="va">piesMayoresIFN2</span>, <span class="va">SpParamsMED</span>,</span></span>
 <span class="r-in"><span>               matorral <span class="op">=</span> <span class="va">matorralIFN2</span>, pies_menores <span class="op">=</span> <span class="va">piesMenoresIFN2</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Number of plots: 5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Filtering missing and zero values...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Translating species codes...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Tree data records with unrecognized IFN species codes: 1/117 (0.9%)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -180,7 +181,9 @@ to translate IFN codes into medfate codes.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 0103 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    5 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Extracting IFN data...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Filtering wrong growth forms ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Setting default root distribution ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Building forest objects...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> done.</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Plot codes are in list names</span></span></span>
@@ -195,9 +198,11 @@ to translate IFN codes into medfate codes.</p>
 <span class="r-in"><span><span class="va">l</span> <span class="op">&lt;-</span> <span class="fu">IFN2forest</span><span class="op">(</span><span class="va">piesMayoresIFN3</span>, <span class="va">SpParamsMED</span>,</span></span>
 <span class="r-in"><span>               matorral <span class="op">=</span> <span class="va">matorralIFN3</span>, regenera <span class="op">=</span> <span class="va">regeneraIFN3</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Number of plots: 5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Filtered records in tree data: 20</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Filtering missing and zero values...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Translating species codes...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Extracting IFN data...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Filtering wrong growth forms ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Setting default root distribution ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Building forest objects...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> done.</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
