@@ -13,7 +13,8 @@ matorralIFN2 <- tibble::as_tibble(read.table(file=paste0(IFN_path, "Products/IFN
                                                                                    "character", "numeric", "numeric")))
 
 IDs = c("081065", "081066", "081067", "081068", "081069")
-piesMayoresIFN2 <- piesMayoresIFN2[piesMayoresIFN2$ID %in% IDs,]
+piesMayoresIFN2 <- piesMayoresIFN2[piesMayoresIFN2$ID %in% IDs,c("Provincia", "Estadillo", "ID", "OrdenIf2",
+                                                                 "Especie", "Dn1", "Dn2", "Ht")]
 piesMenoresIFN2 <- piesMenoresIFN2[piesMenoresIFN2$ID %in% IDs,]
 matorralIFN2 <- matorralIFN2[matorralIFN2$ID %in% IDs,]
 usethis::use_data(piesMayoresIFN2, overwrite = T)

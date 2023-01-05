@@ -123,7 +123,7 @@ l <- IFN2forest(piesMayoresIFN3, SpParamsMED,
 DGCN (2005). Tercer Inventario Forestal Nacional (1997-2007): Catalunya. Dirección General de Conservación de la Naturaleza, Ministerio de Medio Ambiente, Madrid.
 }
 \seealso{
-\code{\link{forest}}, \code{\link{translateIFNSpeciesCodes}}
+\code{\link{forest}}, \code{\link{translateIFNSpeciesCodes}} \code{\link{example_datasets}}
 }
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, EMF-CREAF
