@@ -4,6 +4,12 @@
     <loc>/404.html</loc>
   </url>
   <url>
+    <loc>/articles/SpeciesMappingIFN.html</loc>
+  </url>
+  <url>
+    <loc>/articles/index.html</loc>
+  </url>
+  <url>
     <loc>/authors.html</loc>
   </url>
   <url>
@@ -49,6 +55,6 @@
     <loc>/reference/soilgridsParams.html</loc>
   </url>
   <url>
-    <loc>/reference/translateIFNSpeciesCodes.html</loc>
+    <loc>/reference/translateSpeciesCodes.html</loc>
   </url>
 </urlset>

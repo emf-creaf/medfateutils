@@ -17,13 +17,16 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfateutils</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.7</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav"><li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li>
+  <a href="../articles/index.html">Articles</a>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -73,7 +76,7 @@
 
 
 <dt>SpParams</dt>
-<dd><p>A data frame with species parameters (see <code>SpParamsMED</code>) from which valid species names are drawn.</p></dd>
+<dd><p>A data frame with species parameters (see <code><a href="https://emf-creaf.github.io/medfate/reference/SpParams.html" class="external-link">SpParamsMED</a></code>) from which valid species names are drawn.</p></dd>
 
 
 <dt>plot_size_x</dt>
@@ -113,7 +116,7 @@ cover values.</p></dd>
     <h2>Value</h2>
     
 
-<p>Functions <code>forest_mapTreeTable</code> and <code>forest_mapShrubTable</code> return a data frame with the structure of <code>treeData</code> and <code>shrubData</code> from <code>forest</code> objects. Function <code>forest_mapWoodyTable</code> returns directly a <code>forest</code> object.</p>
+<p>Functions <code>forest_mapTreeTable</code> and <code>forest_mapShrubTable</code> return a data frame with the structure of <code>treeData</code> and <code>shrubData</code> from <code><a href="https://emf-creaf.github.io/medfate/reference/forest.html" class="external-link">forest</a></code> objects. Function <code>forest_mapWoodyTable</code> returns directly a <code><a href="https://emf-creaf.github.io/medfate/reference/forest.html" class="external-link">forest</a></code> object.</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
@@ -131,7 +134,7 @@ cover values.</p></dd>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SpParamsMED</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Create an empty forest object</span></span></span>
-<span class="r-in"><span><span class="va">f</span> <span class="op">&lt;-</span> <span class="fu">emptyforest</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://emf-creaf.github.io/medfate/reference/forest.html" class="external-link">emptyforest</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># (1) Mapping tree data</span></span></span>
 <span class="r-in"><span><span class="co"># Load Poblet tree data</span></span></span>
@@ -171,12 +174,12 @@ cover values.</p></dd>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># (3) Print forest attributes</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">f</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Tree density (ind/ha): 22828.7878198462 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Tree BA (m2/ha): 42.6957047 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cover (%) trees (open ground): 100  shrubs: 65.4334845 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Density (ind/ha) adult trees: 3777.277316  saplings: 0  shrubs (estimated): 19051.5105038 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Cover (%) adult trees: 100  saplings: 0  shrubs: 65.4334845 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Shrub crown phytovolume (m3/m2): 0.9966703 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> LAI (m2/m2) total: 7.927011  trees: 6.7141704  shrubs: 1.2128406 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Live fine fuel (kg/m2) total: 2.1503272  trees: 1.7424533  shrubs: 0.4078738 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> LAI (m2/m2) total: 6.5110178  adult trees: 5.2981772  saplings: 0  shrubs: 1.2128406 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Fuel (kg/m2) total: 6.5110178  adult trees: 5.2981772  saplings: 0  shrubs: 1.2128406 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> PAR ground (%): NA  SWR ground (%): NA </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># (4) Forest initialization in a single step</span></span></span>
@@ -185,12 +188,12 @@ cover values.</p></dd>
 <span class="r-in"><span>                           SpParams <span class="op">=</span> <span class="va">SpParamsMED</span>,</span></span>
 <span class="r-in"><span>                           plot_size_x <span class="op">=</span> <span class="va">sampled_area</span>, plot_size_y <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">f</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Tree density (ind/ha): 22828.7878198462 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Tree BA (m2/ha): 42.6957047 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cover (%) trees (open ground): 100  shrubs: 65.4334845 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Density (ind/ha) adult trees: 3777.277316  saplings: 0  shrubs (estimated): 19051.5105038 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Cover (%) adult trees: 100  saplings: 0  shrubs: 65.4334845 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Shrub crown phytovolume (m3/m2): 0.9966703 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> LAI (m2/m2) total: 7.927011  trees: 6.7141704  shrubs: 1.2128406 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Live fine fuel (kg/m2) total: 2.1503272  trees: 1.7424533  shrubs: 0.4078738 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> LAI (m2/m2) total: 6.5110178  adult trees: 5.2981772  saplings: 0  shrubs: 1.2128406 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Fuel (kg/m2) total: 6.5110178  adult trees: 5.2981772  saplings: 0  shrubs: 1.2128406 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> PAR ground (%): NA  SWR ground (%): NA </span>
 </code></pre></div>
     </div>

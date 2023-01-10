@@ -17,13 +17,16 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfateutils</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.7</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav"><li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li>
+  <a href="../articles/index.html">Articles</a>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -69,11 +72,11 @@
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>forest</dt>
-<dd><p>An object of class <code>forest</code>.</p></dd>
+<dd><p>An object of class <code><a href="https://emf-creaf.github.io/medfate/reference/forest.html" class="external-link">forest</a></code>.</p></dd>
 
 
 <dt>soil</dt>
-<dd><p>An object of class <code>soil</code> or a data frame with soil parameters.</p></dd>
+<dd><p>An object of class <code><a href="https://emf-creaf.github.io/medfate/reference/soil.html" class="external-link">soil</a></code> or a data frame with soil parameters.</p></dd>
 
 
 <dt>PET_summer</dt>
@@ -85,7 +88,7 @@
 
 
 <dt>SpParams</dt>
-<dd><p>A data frame with species parameters (see <code>SpParamsMED</code>).</p></dd>
+<dd><p>A data frame with species parameters (see <code><a href="https://emf-creaf.github.io/medfate/reference/SpParams.html" class="external-link">SpParamsMED</a></code>).</p></dd>
 
 
 <dt>fillMissing</dt>
@@ -93,22 +96,22 @@
 
 
 <dt>forestlist</dt>
-<dd><p>A list of objects of class <code>forest</code>.</p></dd>
+<dd><p>A list of objects of class <code><a href="https://emf-creaf.github.io/medfate/reference/forest.html" class="external-link">forest</a></code>.</p></dd>
 
 
 <dt>soillist</dt>
-<dd><p>A list with objects of class <code>soil</code> or data frames with soil parameters.</p></dd>
+<dd><p>A list with objects of class <code><a href="https://emf-creaf.github.io/medfate/reference/soil.html" class="external-link">soil</a></code> or data frames with soil parameters.</p></dd>
 
 </dl></div>
     <div id="value">
     <h2>Value</h2>
     
 
-<p>Function <code>estimateRootingDepth</code> returns object of class <code>forest</code> with modified values for <code>Z50</code> and <code>Z95</code>. Function <code>estimateRootingDepthList</code> returns a list of forest objects with modified root distribution parameters.</p>
+<p>Function <code>estimateRootingDepth</code> returns object of class <code><a href="https://emf-creaf.github.io/medfate/reference/forest.html" class="external-link">forest</a></code> with modified values for <code>Z50</code> and <code>Z95</code>. Function <code>estimateRootingDepthList</code> returns a list of forest objects with modified root distribution parameters.</p>
     </div>
     <div id="details">
     <h2>Details</h2>
-    <p>If <code>PET_summer</code> or <code>P_summer</code> are of length one, their elements are repeated for all elements in <code>forestlist</code>. Similarly, if <code>soillist</code> is an object of class <code>soil</code> or a data frame with soil parameters, the same soil parameters are repeated for all elements in <code>forestlist</code>.</p>
+    <p>If <code>PET_summer</code> or <code>P_summer</code> are of length one, their elements are repeated for all elements in <code>forestlist</code>. Similarly, if <code>soillist</code> is an object of class <code><a href="https://emf-creaf.github.io/medfate/reference/soil.html" class="external-link">soil</a></code> or a data frame with soil parameters, the same soil parameters are repeated for all elements in <code>forestlist</code>.</p>
     </div>
     <div id="references">
     <h2>References</h2>
@@ -116,7 +119,7 @@
     </div>
     <div id="see-also">
     <h2>See also</h2>
-    <div class="dont-index"><p><code><a href="https://emf-creaf.github.io/medfate/reference/forest.html" class="external-link">forest</a></code>, <code><a href="translateIFNSpeciesCodes.html">translateIFNSpeciesCodes</a></code></p></div>
+    <div class="dont-index"><p><code><a href="https://emf-creaf.github.io/medfate/reference/forest.html" class="external-link">forest</a></code>, <code><a href="IFN2forest.html">IFN2forest</a></code></p></div>
     </div>
     <div id="author">
     <h2>Author</h2>
@@ -126,13 +129,16 @@
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Builds from IFN3 data a list whose elements are 'forest' objects</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">IFN_species_mapping</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">piesMayoresIFN3</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">regeneraIFN3</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">matorralIFN3</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">l1</span> <span class="op">&lt;-</span> <span class="fu"><a href="IFN2forest.html">IFN2forest</a></span><span class="op">(</span><span class="va">piesMayoresIFN3</span>, <span class="va">SpParamsMED</span>,</span></span>
+<span class="r-in"><span><span class="va">l1</span> <span class="op">&lt;-</span> <span class="fu"><a href="IFN2forest.html">IFN2forest</a></span><span class="op">(</span><span class="va">piesMayoresIFN3</span>, <span class="va">IFN_species_mapping</span>, <span class="va">SpParamsMED</span>,</span></span>
 <span class="r-in"><span>               matorral <span class="op">=</span> <span class="va">matorralIFN3</span>, regenera <span class="op">=</span> <span class="va">regeneraIFN3</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Number of plots: 5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Filtering missing and zero values...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Filtering small trees (DBH &lt; 1) ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Filtering dead trees...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Translating species codes...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Filtering wrong growth forms ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Setting default root distribution ...</span>
@@ -140,87 +146,50 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> done.</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Estimate rooting depth</span></span></span>
-<span class="r-in"><span><span class="va">soilpar</span> <span class="op">&lt;-</span> <span class="fu">defaultSoilParams</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">soilpar</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://emf-creaf.github.io/medfate/reference/defaultSoilParams.html" class="external-link">defaultSoilParams</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">l2</span> <span class="op">&lt;-</span> <span class="fu">estimateRootingDepthList</span><span class="op">(</span><span class="va">l1</span>, <span class="va">soilpar</span>, <span class="fl">300</span>, <span class="fl">100</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Compare tree rooting depths</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">l1</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">treeData</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               Species  DBH Height           N      Z50  Z95 OrdenIf2 OrdenIf3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1         Pinus nigra 19.1    750   31.830989 173.1933  813      000      001</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2         Pinus nigra 18.8    650   31.830989 173.1933  813      000      002</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3         Pinus nigra 42.0   1600   14.147106 173.1933  813      002      003</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4         Pinus nigra 46.6   1450    5.092958 173.1933  813      000      004</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5         Pinus nigra 44.3   1450    5.092958 173.1933  813      004      005</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6         Pinus nigra 46.2   1450    5.092958 173.1933  813      000      006</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7         Pinus nigra 38.0   1350   14.147106 173.1933  813      005      007</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8         Pinus nigra 50.8   1450    5.092958 173.1933  813      009      008</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9         Pinus nigra 37.0   1250   14.147106 173.1933  813      011      009</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10        Pinus nigra 16.4    750   31.830989 173.1933  813      000      010</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11        Pinus nigra 42.5   1400    5.092958 173.1933  813      013      011</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12        Pinus nigra 38.6   1300   14.147106 173.1933  813      014      012</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13        Pinus nigra 67.9   1900    5.092958 173.1933  813      017      013</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14        Pinus nigra 22.7    750   14.147106 173.1933  813      000      014</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15        Pinus nigra 17.5    750   31.830989 173.1933  813      000      015</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16        Pinus nigra 21.0    750   31.830989 173.1933  813      000      016</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17        Pinus nigra  5.0    350 1400.563501 173.1933  813     &lt;NA&gt;     &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18        Pinus nigra  0.1     10  318.309887 173.1933  813     &lt;NA&gt;     &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 19        Pinus nigra  0.5     80 1273.239546 173.1933  813     &lt;NA&gt;     &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 20        Pinus nigra  1.5    100 1273.239546 173.1933  813     &lt;NA&gt;     &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 21 Juniperus communis  0.5     80  318.309887 199.9600  980     &lt;NA&gt;     &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 22    Quercus faginea  0.1     10 1273.239546 647.0011 4510     &lt;NA&gt;     &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 23    Quercus faginea  0.5     80  318.309887 647.0011 4510     &lt;NA&gt;     &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 24       Quercus ilex  0.1     10  318.309887 702.5790 5020     &lt;NA&gt;     &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        Species  DBH Height           N      Z50 Z95 OrdenIf2 OrdenIf3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  Pinus nigra 19.1    750   31.830989 173.1933 813      000      001</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  Pinus nigra 18.8    650   31.830989 173.1933 813      000      002</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  Pinus nigra 42.0   1600   14.147106 173.1933 813      002      003</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  Pinus nigra 46.6   1450    5.092958 173.1933 813      000      004</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  Pinus nigra 44.3   1450    5.092958 173.1933 813      004      005</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  Pinus nigra 46.2   1450    5.092958 173.1933 813      000      006</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7  Pinus nigra 38.0   1350   14.147106 173.1933 813      005      007</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8  Pinus nigra 50.8   1450    5.092958 173.1933 813      009      008</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9  Pinus nigra 37.0   1250   14.147106 173.1933 813      011      009</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 Pinus nigra 16.4    750   31.830989 173.1933 813      000      010</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11 Pinus nigra 42.5   1400    5.092958 173.1933 813      013      011</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12 Pinus nigra 38.6   1300   14.147106 173.1933 813      014      012</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13 Pinus nigra 67.9   1900    5.092958 173.1933 813      017      013</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14 Pinus nigra 22.7    750   14.147106 173.1933 813      000      014</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15 Pinus nigra 17.5    750   31.830989 173.1933 813      000      015</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16 Pinus nigra 21.0    750   31.830989 173.1933 813      000      016</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17 Pinus nigra  5.0    350 1400.563501 173.1933 813     &lt;NA&gt;     &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18 Pinus nigra  1.5    100 1273.239546 173.1933 813     &lt;NA&gt;     &lt;NA&gt;</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">l2</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">treeData</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               Species  DBH Height           N      Z50     Z95 OrdenIf2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1         Pinus nigra 19.1    750   31.830989 203.6321 500.000      000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2         Pinus nigra 18.8    650   31.830989 203.6321 500.000      000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3         Pinus nigra 42.0   1600   14.147106 203.6321 500.000      002</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4         Pinus nigra 46.6   1450    5.092958 203.6321 500.000      000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5         Pinus nigra 44.3   1450    5.092958 203.6321 500.000      004</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6         Pinus nigra 46.2   1450    5.092958 203.6321 500.000      000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7         Pinus nigra 38.0   1350   14.147106 203.6321 500.000      005</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8         Pinus nigra 50.8   1450    5.092958 203.6321 500.000      009</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9         Pinus nigra 37.0   1250   14.147106 203.6321 500.000      011</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10        Pinus nigra 16.4    750   31.830989 203.6321 500.000      000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11        Pinus nigra 42.5   1400    5.092958 203.6321 500.000      013</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12        Pinus nigra 38.6   1300   14.147106 203.6321 500.000      014</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13        Pinus nigra 67.9   1900    5.092958 203.6321 500.000      017</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14        Pinus nigra 22.7    750   14.147106 203.6321 500.000      000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15        Pinus nigra 17.5    750   31.830989 203.6321 500.000      000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16        Pinus nigra 21.0    750   31.830989 203.6321 500.000      000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17        Pinus nigra  5.0    350 1400.563501 203.6321 500.000     &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18        Pinus nigra  0.1     10  318.309887 203.6321 500.000     &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 19        Pinus nigra  0.5     80 1273.239546 203.6321 500.000     &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 20        Pinus nigra  1.5    100 1273.239546 203.6321 500.000     &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 21 Juniperus communis  0.5     80  318.309887 286.2504 500.000     &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 22    Quercus faginea  0.1     10 1273.239546 249.7409 562.058     &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 23    Quercus faginea  0.5     80  318.309887 249.7409 562.058     &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 24       Quercus ilex  0.1     10  318.309887 293.7324 500.000     &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    OrdenIf3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1       001</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2       002</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3       003</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4       004</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5       005</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6       006</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7       007</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8       008</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9       009</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10      010</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11      011</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12      012</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13      013</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14      014</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15      015</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16      016</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17     &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18     &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 19     &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 20     &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 21     &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 22     &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 23     &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 24     &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        Species  DBH Height           N      Z50 Z95 OrdenIf2 OrdenIf3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  Pinus nigra 19.1    750   31.830989 207.6492 500      000      001</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  Pinus nigra 18.8    650   31.830989 207.6492 500      000      002</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  Pinus nigra 42.0   1600   14.147106 207.6492 500      002      003</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  Pinus nigra 46.6   1450    5.092958 207.6492 500      000      004</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  Pinus nigra 44.3   1450    5.092958 207.6492 500      004      005</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  Pinus nigra 46.2   1450    5.092958 207.6492 500      000      006</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7  Pinus nigra 38.0   1350   14.147106 207.6492 500      005      007</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8  Pinus nigra 50.8   1450    5.092958 207.6492 500      009      008</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9  Pinus nigra 37.0   1250   14.147106 207.6492 500      011      009</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 Pinus nigra 16.4    750   31.830989 207.6492 500      000      010</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11 Pinus nigra 42.5   1400    5.092958 207.6492 500      013      011</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12 Pinus nigra 38.6   1300   14.147106 207.6492 500      014      012</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13 Pinus nigra 67.9   1900    5.092958 207.6492 500      017      013</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14 Pinus nigra 22.7    750   14.147106 207.6492 500      000      014</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15 Pinus nigra 17.5    750   31.830989 207.6492 500      000      015</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16 Pinus nigra 21.0    750   31.830989 207.6492 500      000      016</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17 Pinus nigra  5.0    350 1400.563501 207.6492 500     &lt;NA&gt;     &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18 Pinus nigra  1.5    100 1273.239546 207.6492 500     &lt;NA&gt;     &lt;NA&gt;</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

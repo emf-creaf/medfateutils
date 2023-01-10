@@ -18,13 +18,16 @@ second (IFN2), third (IFN3; DGCN 2005) and fourth (IFN4) editions."><!-- mathjax
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfateutils</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.7</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav"><li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li>
+  <a href="../articles/index.html">Articles</a>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -44,13 +47,14 @@ second (IFN2), third (IFN3; DGCN 2005) and fourth (IFN4) editions."><!-- mathjax
     </div>
 
     <div class="ref-description">
-    <p>Creates a list of <code>forest</code> objects from Spanish Forest Inventory (IFN) data in its
+    <p>Creates a list of <code><a href="https://emf-creaf.github.io/medfate/reference/forest.html" class="external-link">forest</a></code> objects from Spanish Forest Inventory (IFN) data in its
 second (IFN2), third (IFN3; DGCN 2005) and fourth (IFN4) editions.</p>
     </div>
 
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">IFN2forest</span><span class="op">(</span></span>
 <span>  <span class="va">pies_mayores</span>,</span>
+<span>  <span class="va">IFN_species_mapping</span>,</span>
 <span>  <span class="va">SpParams</span>,</span>
 <span>  pies_menores <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  regenera <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -58,7 +62,9 @@ second (IFN2), third (IFN3; DGCN 2005) and fourth (IFN4) editions.</p>
 <span>  herb_data <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  setDefaults <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  filterWrongRecords <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  filterDeadTrees <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  keepNumOrden <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  minDBH <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -69,8 +75,12 @@ second (IFN2), third (IFN3; DGCN 2005) and fourth (IFN4) editions.</p>
 <dd><p>A data frame with measured tree data (PCPiesMayores).</p></dd>
 
 
+<dt>IFN_species_mapping</dt>
+<dd><p>A data frame with the mapping from IFN species codes to medfate species names  (see <code>IFN_species_mapping</code>).</p></dd>
+
+
 <dt>SpParams</dt>
-<dd><p>A data frame with species parameters (see <code>SpParamsMED</code>).</p></dd>
+<dd><p>A data frame with medfate species parameters (see <code><a href="https://emf-creaf.github.io/medfate/reference/SpParams.html" class="external-link">SpParamsMED</a></code>).</p></dd>
 
 
 <dt>pies_menores</dt>
@@ -98,8 +108,16 @@ second (IFN2), third (IFN3; DGCN 2005) and fourth (IFN4) editions.</p>
 This should normally result in the removal of dead/cut trees.</p></dd>
 
 
+<dt>filterDeadTrees</dt>
+<dd><p>Filters dead trees (with OrdenIf3 or OrdenIf4 equal to "888" or "999")</p></dd>
+
+
 <dt>keepNumOrden</dt>
 <dd><p>Keeps num orden as additional column (OrdenIf2, OrdenIf3 or OrdenIf4) to identify trees.</p></dd>
+
+
+<dt>minDBH</dt>
+<dd><p>Minimum diameter threshold to filter out small trees</p></dd>
 
 
 <dt>verbose</dt>
@@ -110,7 +128,7 @@ This should normally result in the removal of dead/cut trees.</p></dd>
     <h2>Value</h2>
     
 
-<p>A list of <code>forest</code> objects.</p>
+<p>A list of <code><a href="https://emf-creaf.github.io/medfate/reference/forest.html" class="external-link">forest</a></code> objects.</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -142,7 +160,7 @@ This should normally result in the removal of dead/cut trees.</p></dd>
 <li><p>Fcc: Numeric values of shrub cover (in %).</p></li>
 <li><p>Hm: Average shrub height (in dm).</p></li>
 </ul></li>
-</ul><p>Function <code>IFN2forest</code> call <code><a href="translateIFNSpeciesCodes.html">translateIFNSpeciesCodes</a></code> internally
+</ul><p>Function <code>IFN2forest</code> call <code><a href="translateSpeciesCodes.html">translateSpeciesCodes</a></code> internally
 to translate IFN codes into medfate codes.</p>
     </div>
     <div id="references">
@@ -151,7 +169,7 @@ to translate IFN codes into medfate codes.</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
-    <div class="dont-index"><p><code>forest</code>, <code><a href="translateIFNSpeciesCodes.html">translateIFNSpeciesCodes</a></code> <code><a href="example_datasets.html">example_datasets</a></code></p></div>
+    <div class="dont-index"><p><code><a href="https://emf-creaf.github.io/medfate/reference/forest.html" class="external-link">forest</a></code>, <code><a href="translateSpeciesCodes.html">translateSpeciesCodes</a></code> <code><a href="example_datasets.html">example_datasets</a></code></p></div>
     </div>
     <div id="author">
     <h2>Author</h2>
@@ -160,18 +178,23 @@ to translate IFN codes into medfate codes.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Medfate species parameters</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Medfate species parameters</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SpParamsMED</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Species mapping from IFN</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">IFN_species_mapping</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Builds from IFN2 data a list whose elements are 'forest' objects</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">piesMenoresIFN2</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">piesMayoresIFN2</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">matorralIFN2</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">l</span> <span class="op">&lt;-</span> <span class="fu">IFN2forest</span><span class="op">(</span><span class="va">piesMayoresIFN2</span>, <span class="va">SpParamsMED</span>,</span></span>
+<span class="r-in"><span><span class="va">l</span> <span class="op">&lt;-</span> <span class="fu">IFN2forest</span><span class="op">(</span><span class="va">piesMayoresIFN2</span>, <span class="va">IFN_species_mapping</span>,</span></span>
+<span class="r-in"><span>               SpParams <span class="op">=</span> <span class="va">SpParamsMED</span>,</span></span>
 <span class="r-in"><span>               matorral <span class="op">=</span> <span class="va">matorralIFN2</span>, pies_menores <span class="op">=</span> <span class="va">piesMenoresIFN2</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Number of plots: 5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Filtering missing and zero values...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Filtering small trees (DBH &lt; 1) ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Filtering dead trees...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Translating species codes...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Tree data records with unrecognized IFN species codes: 1/117 (0.9%)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -195,10 +218,13 @@ to translate IFN codes into medfate codes.</p>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">piesMayoresIFN3</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">regeneraIFN3</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">matorralIFN3</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">l</span> <span class="op">&lt;-</span> <span class="fu">IFN2forest</span><span class="op">(</span><span class="va">piesMayoresIFN3</span>, <span class="va">SpParamsMED</span>,</span></span>
+<span class="r-in"><span><span class="va">l</span> <span class="op">&lt;-</span> <span class="fu">IFN2forest</span><span class="op">(</span><span class="va">piesMayoresIFN3</span>, <span class="va">IFN_species_mapping</span>,</span></span>
+<span class="r-in"><span>               SpParams <span class="op">=</span> <span class="va">SpParamsMED</span>,</span></span>
 <span class="r-in"><span>               matorral <span class="op">=</span> <span class="va">matorralIFN3</span>, regenera <span class="op">=</span> <span class="va">regeneraIFN3</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Number of plots: 5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Filtering missing and zero values...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Filtering small trees (DBH &lt; 1) ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Filtering dead trees...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Translating species codes...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Filtering wrong growth forms ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Setting default root distribution ...</span>
