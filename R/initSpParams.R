@@ -20,8 +20,17 @@
 #'
 #' @examples
 #' \dontrun{
-#'   sp_names = c("Salvia rosmarinifolia", "Pinus contorta")
-#'   initSpParams(sp_names, SpParamsDefinition)
+#' # Load species parameter definition from medfate
+#' data(SpParamsDefinition)
+#'
+#' # Simple example with two species
+#' sp_names = c("Salvia rosmarinifolia", "Pinus contorta")
+#' initSpParams(sp_names, SpParamsDefinition)
+#'
+#' # Initialisation with IFN species mapping
+#' data(IFN_species_mapping)
+#' initSpParams(IFN_species_mapping$Name, SpParamsDefinition, verbose = TRUE)
+#'
 #' }
 initSpParams<-function(sp_names, SpParamsDefinition,
                        fill_taxonomic = TRUE,

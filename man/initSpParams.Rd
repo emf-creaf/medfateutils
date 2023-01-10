@@ -32,8 +32,17 @@ Taxonomic information is retrieved using functions in package taxize and GBIF as
 }
 \examples{
 \dontrun{
-  sp_names = c("Salvia rosmarinifolia", "Pinus contorta")
-  initSpParams(sp_names, SpParamsDefinition)
+# Load species parameter definition from medfate
+data(SpParamsDefinition)
+
+# Simple example with two species
+sp_names = c("Salvia rosmarinifolia", "Pinus contorta")
+initSpParams(sp_names, SpParamsDefinition)
+
+# Initialisation with IFN species mapping
+data(IFN_species_mapping)
+initSpParams(IFN_species_mapping$Name, SpParamsDefinition)
+
 }
 }
 \seealso{
