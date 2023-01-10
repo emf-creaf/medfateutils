@@ -10,8 +10,8 @@
 \usage{
 populateGrowthForm(
   SpParams,
-  tree_codes,
-  shrub_codes = character(0),
+  tree_names,
+  shrub_names = character(0),
   erase_previous = FALSE,
   fill_fromGenus = FALSE
 )
@@ -38,9 +38,9 @@ populateTreeDiameterHeightParams(
 \arguments{
 \item{SpParams}{A data frame of medfate species parameters to be populated}
 
-\item{tree_codes}{String vector of tree species codes}
+\item{tree_names}{String vector of translated tree species names}
 
-\item{shrub_codes}{String vector of shrub species codes}
+\item{shrub_names}{String vector of translated shrub species names}
 
 \item{erase_previous}{A boolean flag to indicate that values should be set to NA before populating with data}
 

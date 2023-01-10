@@ -5,8 +5,8 @@
 #' @name populateSpParamsFromInventory
 #'
 #' @param SpParams A data frame of medfate species parameters to be populated
-#' @param tree_codes String vector of tree species codes
-#' @param shrub_codes String vector of shrub species codes
+#' @param tree_names String vector of translated tree species names
+#' @param shrub_names String vector of translated shrub species names
 #' @param erase_previous A boolean flag to indicate that values should be set to NA before populating with data
 #' @param fill_fromGenus A boolean flag to indicate that genus adscription of species should be used to fill missing values
 #'
@@ -18,51 +18,37 @@
 #' @seealso \code{\link{initSpParams}}
 #'
 populateGrowthForm<-function(SpParams,
-                             tree_codes, shrub_codes = character(0),
+                             tree_names, shrub_names = character(0),
                              erase_previous = FALSE,
                              fill_fromGenus = FALSE) {
-  tree_codes <- as.character(unique(tree_codes[!is.na(tree_codes)]))
-  shrub_codes <- as.character(unique(shrub_codes[!is.na(shrub_codes)]))
+  tree_names <- as.character(unique(tree_names[!is.na(tree_names)]))
+  shrub_names <- as.character(unique(shrub_names[!is.na(shrub_names)]))
 
-  tree_inSpParams <- rep(FALSE, length(tree_codes))
-  shrub_inSpParams <- rep(FALSE, length(shrub_codes))
+  tree_inSpParams <- tree_names %in% SpParams$Name
+  shrub_inSpParams <- shrub_names %in% SpParams$Name
 
   if(erase_previous) SpParams$GrowthForm<-NA
 
-  ss <- strsplit(SpParams$IFNcodes,"/")
-  ntrees <- 0
-  nshrubs <- 0
-  ntreeshrubs <- 0
-  notfound <- 0
-  for(i in 1:nrow(SpParams)) {
-    IFNcodes = ss[[i]]
-    tree_inSpParams[which(tree_codes %in% IFNcodes)] = TRUE
-    shrub_inSpParams[which(shrub_codes %in% IFNcodes)] = TRUE
-    is_tree = sum(IFNcodes %in% tree_codes)>0
-    is_shrub = sum(IFNcodes %in% shrub_codes)>0
-    if(is_tree && !is_shrub) {
-      SpParams$GrowthForm[i]="Tree"
-      ntrees <- ntrees+1
-    } else if(!is_tree && is_shrub) {
-      SpParams$GrowthForm[i]="Shrub"
-      nshrubs <- nshrubs+1
-    } else if(is_tree && is_shrub) {
-      SpParams$GrowthForm[i]="Tree/Shrub"
-      ntreeshrubs <- ntreeshrubs+1
-    } else {
-      notfound <- notfound+1
-    }
-  }
+  is_tree <- SpParams$Name %in% tree_names
+  is_shrub <- SpParams$Name %in% shrub_names
+  SpParams$GrowthForm[is_tree && !is_shrub] <- "Tree"
+  SpParams$GrowthForm[!is_tree && is_shrub] <- "Shrub"
+  SpParams$GrowthForm[is_tree && is_shrub] <- "Tree/Shrub"
+
+  ntrees <- sum(is_tree && !is_shrub)
+  nshrubs <- sum(!is_tree && is_shrub)
+  ntreeshrubs <- sum(is_tree && is_shrub)
+
   message(paste0(" Tree: ", ntrees, " shrub: ", nshrubs, " tree/shrub: ", ntreeshrubs, " not found: ", notfound))
-  if(sum(!tree_inSpParams)>0) message(paste0(" Tree input codes not in SpParams: ", paste0(tree_codes[!tree_inSpParams], collapse=",")))
-  if(sum(!shrub_inSpParams)>0) message(paste0(" Shrub input codes not in SpParams: ", paste0(shrub_codes[!shrub_inSpParams], collapse=",")))
+  if(sum(!tree_inSpParams)>0) message(paste0(" Tree input names not in SpParams: ", paste0(tree_names[!tree_inSpParams], collapse=",")))
+  if(sum(!shrub_inSpParams)>0) message(paste0(" Shrub input names not in SpParams: ", paste0(shrub_names[!shrub_inSpParams], collapse=",")))
   if(fill_fromGenus) {
     for(i in 1:nrow(SpParams)) {
       if(is.na(SpParams$GrowthForm[i])) { # Finds species within the same genus and copy growth form if all equal
-        genGF = SpParams$GrowthForm[SpParams$Genus==SpParams$Genus[i]]
-        genGF = genGF[!is.na(genGF)]
+        genGF <- SpParams$GrowthForm[SpParams$Genus==SpParams$Genus[i]]
+        genGF <- genGF[!is.na(genGF)]
         if(length(unique(genGF))==1) {
-          SpParams$GrowthForm[i] = genGF[1]
+          SpParams$GrowthForm[i] <- genGF[1]
           message(paste0("Species '", SpParams$Name[i],"' assigned growth form '",
                          SpParams$GrowthForm[i],"'"))
         }
