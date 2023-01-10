@@ -1,5 +1,9 @@
 IFN_path <- "~/OneDrive/EMFDatasets/ForestInventories/IFN/"
 
+# Species mapping table
+IFN_species_mapping <- read.table("data-raw/IFN_species_mapping.csv", sep="\t", header=TRUE)
+usethis::use_data(IFN_species_mapping, overwrite = T)
+
 # Read IFN2 data
 piesMayoresIFN2 <- tibble::as_tibble(read.table(file=paste0(IFN_path, "Products/IFN2/piesMayoresDataIFN2_Catalunya.csv"),
                                                 sep="\t", header=TRUE, colClasses = c("character", "character",

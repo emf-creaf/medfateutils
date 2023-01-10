@@ -2,11 +2,8 @@
 #'
 #'  Creates an empty species parameter table for medfate, populating taxonomic information if desired.
 #'
-#' @param sp_codes Vector of IFN species codes
-#' @param sp_names Vector of IFN species names
+#' @param sp_names Vector of species names, taxon names or arbitrary species group names
 #' @param SpParamsDefinition Data frame of species parameter definition from package 'medfate'
-#' @param group_codes List of species group codes (strings where species of the same group are separated by "/", e.g. "code1/code2/code3")
-#' @param group_names Vector of group names of the same length as \code{group_codes}
 #' @param fill_taxonomic Boolean flag to indicate that taxonomic information should be filled (retrieved from GBIF using package 'taxize')
 #' @param verbose A boolean flag to indicate extra console output
 #'
@@ -23,32 +20,18 @@
 #'
 #' @examples
 #' \dontrun{
-#'   sp_codes = c("76","84")
 #'   sp_names = c("Salvia rosmarinifolia", "Pinus contorta")
-#'   initSpParams(sp_codes, sp_names)
+#'   initSpParams(sp_names, SpParamsDefinition)
 #' }
-initSpParams<-function(sp_codes, sp_names, SpParamsDefinition,
-                       group_codes = NULL, group_names = NULL,
+initSpParams<-function(sp_names, SpParamsDefinition,
                        fill_taxonomic = TRUE,
                        verbose = FALSE) {
 
-  sp_codes = as.character(sp_codes)
-  sp_names = as.character(sp_names)
-
-  if(length(sp_codes) !=length(unique(sp_codes))) stop("Species codes must be unique!")
-
-  if(!is.null(group_codes)) {
-    in_groups = unlist(strsplit(group_codes, split="/"))
-    sel = !(sp_codes %in% in_groups)
-    if(verbose) cat(paste0(sum(!sel), " codes found in groups.\n"))
-    sp_codes = sp_codes[sel]
-    sp_names = sp_names[sel]
-  }
-  SpParams <- data.frame(Name = c(sp_names, group_names),
-                         IFNcodes = c(sp_codes, group_codes))
-  SpParams<- SpParams[order(SpParams$Name),]
-  row.names(SpParams)<-NULL
-  SpParams$SpIndex = 0:(nrow(SpParams)-1)
+  if(length(sp_names)==0) stop("Please, supply at least one species name")
+  SpParams <- data.frame(Name = as.character(sp_names))
+  SpParams<- SpParams[order(SpParams$Name),, drop = FALSE]
+  row.names(SpParams) <- NULL
+  SpParams$SpIndex <- 0:(nrow(SpParams)-1)
   for(cn in SpParamsDefinition$ParameterName) {
     if(!(cn %in% names(SpParams))) {
       SpParams[[cn]] = NA

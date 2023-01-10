@@ -2,10 +2,11 @@
  NEWS for R Package "medfateutils"
 -----------------------------------
 
-# Version 0.1.6
+# Version 0.1.7
 - Compliance with medfate ver. 2.9.0
 - Warning raised when taxon names do not match
 - Rewriting IFN2forest function
+- Species mapping table for IFN
 
 # Version 0.1.4
 - Names changed for IFN example datasets

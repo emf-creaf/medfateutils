@@ -52,10 +52,11 @@ If \code{PET_summer} or \code{P_summer} are of length one, their elements are re
 }
 \examples{
 # Builds from IFN3 data a list whose elements are 'forest' objects
+data(IFN_species_mapping)
 data(piesMayoresIFN3)
 data(regeneraIFN3)
 data(matorralIFN3)
-l1 <- IFN2forest(piesMayoresIFN3, SpParamsMED,
+l1 <- IFN2forest(piesMayoresIFN3, IFN_species_mapping, SpParamsMED,
                matorral = matorralIFN3, regenera = regeneraIFN3)
 
 # Estimate rooting depth
@@ -71,7 +72,7 @@ print(l2[[1]]$treeData)
 Cabon, A., Martinez-Vilalta, J., de Aragon, J.M., Poyatos, R., De Caceres, M., 2018. Applying the eco-hydrological equilibrium hypothesis to model root distribution in water-limited forests. Ecohydrology 11, e2015. https://doi.org/10.1002/eco.2015
 }
 \seealso{
-\code{\link[medfate]{forest}}, \code{\link{translateIFNSpeciesCodes}}
+\code{\link[medfate]{forest}}, \code{\link{IFN2forest}}
 }
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, EMF-CREAF

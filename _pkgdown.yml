@@ -6,6 +6,11 @@ home:
     href: https://emf-creaf.github.io/medfatebook/index.html
 
 
+articles:
+- title: Species mapping
+  contents:
+    - starts_with("SpeciesMappingIFN")
+
 reference:
 - title: Vegetation parameters
   desc:  Forest object definition from inventory data
@@ -14,10 +19,15 @@ reference:
   - starts_with("forest")
   - starts_with("example")
 
+- title: Species codification
+  desc:  Translation of forest inventory species codes.
+  contents:
+  - translateSpeciesCodes
+  - IFN_species_mapping
+
 - title: Species parameters
   desc:  Creation and population of species parameter data tables.
   contents:
-  - translateIFNSpeciesCodes
   - initSpParams
   - starts_with("populate")
 

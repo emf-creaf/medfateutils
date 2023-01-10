@@ -7,6 +7,7 @@
 \usage{
 IFN2forest(
   pies_mayores,
+  IFN_species_mapping,
   SpParams,
   pies_menores = NULL,
   regenera = NULL,
@@ -23,7 +24,9 @@ IFN2forest(
 \arguments{
 \item{pies_mayores}{A data frame with measured tree data (PCPiesMayores).}
 
-\item{SpParams}{A data frame with species parameters (see \code{\link{SpParamsMED}}).}
+\item{IFN_species_mapping}{A data frame with the mapping from IFN species codes to medfate species names  (see \code{\link{IFN_species_mapping}}).}
+
+\item{SpParams}{A data frame with medfate species parameters (see \code{\link{SpParamsMED}}).}
 
 \item{pies_menores}{A data frame with measured regeneration tree data (PCPiesMenores in IFN2).}
 
@@ -98,19 +101,22 @@ IFN input data needs to be in a specific format, following IFN specifications.
   }
 }
 
-Function \code{IFN2forest} call \code{\link{translateIFNSpeciesCodes}} internally
+Function \code{IFN2forest} call \code{\link{translateSpeciesCodes}} internally
 to translate IFN codes into medfate codes.
 }
 \examples{
-
 # Medfate species parameters
 data(SpParamsMED)
+
+# Species mapping from IFN
+data(IFN_species_mapping)
 
 # Builds from IFN2 data a list whose elements are 'forest' objects
 data(piesMenoresIFN2)
 data(piesMayoresIFN2)
 data(matorralIFN2)
-l <- IFN2forest(piesMayoresIFN2, SpParamsMED,
+l <- IFN2forest(piesMayoresIFN2, IFN_species_mapping,
+               SpParams = SpParamsMED,
                matorral = matorralIFN2, pies_menores = piesMenoresIFN2)
 
 # Plot codes are in list names
@@ -121,7 +127,8 @@ names(l)
 data(piesMayoresIFN3)
 data(regeneraIFN3)
 data(matorralIFN3)
-l <- IFN2forest(piesMayoresIFN3, SpParamsMED,
+l <- IFN2forest(piesMayoresIFN3, IFN_species_mapping,
+               SpParams = SpParamsMED,
                matorral = matorralIFN3, regenera = regeneraIFN3)
 
 }
@@ -129,7 +136,7 @@ l <- IFN2forest(piesMayoresIFN3, SpParamsMED,
 DGCN (2005). Tercer Inventario Forestal Nacional (1997-2007): Catalunya. Dirección General de Conservación de la Naturaleza, Ministerio de Medio Ambiente, Madrid.
 }
 \seealso{
-\code{\link{forest}}, \code{\link{translateIFNSpeciesCodes}} \code{\link{example_datasets}}
+\code{\link{forest}}, \code{\link{translateSpeciesCodes}} \code{\link{example_datasets}}
 }
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, EMF-CREAF

@@ -6,25 +6,16 @@
 \title{Initializes Species Parameter Table}
 \usage{
 initSpParams(
-  sp_codes,
   sp_names,
   SpParamsDefinition,
-  group_codes = NULL,
-  group_names = NULL,
   fill_taxonomic = TRUE,
   verbose = FALSE
 )
 }
 \arguments{
-\item{sp_codes}{Vector of IFN species codes}
-
-\item{sp_names}{Vector of IFN species names}
+\item{sp_names}{Vector of species names, taxon names or arbitrary species group names}
 
 \item{SpParamsDefinition}{Data frame of species parameter definition from package 'medfate'}
-
-\item{group_codes}{List of species group codes (strings where species of the same group are separated by "/", e.g. "code1/code2/code3")}
-
-\item{group_names}{Vector of group names of the same length as \code{group_codes}}
 
 \item{fill_taxonomic}{Boolean flag to indicate that taxonomic information should be filled (retrieved from GBIF using package 'taxize')}
 
@@ -41,9 +32,8 @@ Taxonomic information is retrieved using functions in package taxize and GBIF as
 }
 \examples{
 \dontrun{
-  sp_codes = c("76","84")
   sp_names = c("Salvia rosmarinifolia", "Pinus contorta")
-  initSpParams(sp_codes, sp_names)
+  initSpParams(sp_names, SpParamsDefinition)
 }
 }
 \seealso{
