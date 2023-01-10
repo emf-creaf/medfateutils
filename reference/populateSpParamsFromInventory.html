@@ -60,7 +60,7 @@
 <span></span>
 <span><span class="fu">populateHeightParams</span><span class="op">(</span></span>
 <span>  <span class="va">SpParams</span>,</span>
-<span>  <span class="va">species_codes</span>,</span>
+<span>  <span class="va">species_names</span>,</span>
 <span>  <span class="va">height_values</span>,</span>
 <span>  quantile_Hmed <span class="op">=</span> <span class="fl">0.5</span>,</span>
 <span>  quantile_Hmax <span class="op">=</span> <span class="fl">0.99</span>,</span>
@@ -69,7 +69,7 @@
 <span></span>
 <span><span class="fu">populateTreeDiameterHeightParams</span><span class="op">(</span></span>
 <span>  <span class="va">SpParams</span>,</span>
-<span>  <span class="va">species_codes</span>,</span>
+<span>  <span class="va">species_names</span>,</span>
 <span>  <span class="va">height_values</span>,</span>
 <span>  <span class="va">diameter_values</span>,</span>
 <span>  quantile_fHDmin <span class="op">=</span> <span class="fl">0.05</span>,</span>
@@ -100,8 +100,8 @@
 <dd><p>A boolean flag to indicate that genus adscription of species should be used to fill missing values</p></dd>
 
 
-<dt>species_codes</dt>
-<dd><p>A string vector of species codes</p></dd>
+<dt>species_names</dt>
+<dd><p>A string vector of translated species names (see <code><a href="translateSpeciesCodes.html">translateSpeciesCodes</a></code>)</p></dd>
 
 
 <dt>height_values</dt>
