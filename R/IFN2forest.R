@@ -22,6 +22,8 @@
 #' @param setDefaults Initializes default values for missing fields in IFN data.
 #' @param filterWrongRecords Filters wrong records (records with missing values, zero values or wrong growth forms).
 #'                          This should normally result in the removal of dead/cut trees.
+#' @param filterDeadTrees Filters dead trees (with OrdenIf3 or OrdenIf4 equal to "888" or "999")
+#' @param minDBH Minimum diameter threshold to filter out small trees
 #' @param keepNumOrden Keeps num orden as additional column (OrdenIf2, OrdenIf3 or OrdenIf4) to identify trees.
 #' @param verbose A boolean flag to indicate console output.
 #'
@@ -112,7 +114,9 @@ IFN2forest<-function(pies_mayores, SpParams,
                      pies_menores = NULL, regenera = NULL, matorral = NULL,
                      herb_data=NULL,
                      setDefaults=TRUE,
-                     filterWrongRecords = TRUE, keepNumOrden = TRUE, verbose = TRUE) {
+                     filterWrongRecords = TRUE, filterDeadTrees = TRUE,
+                     keepNumOrden = TRUE,
+                     minDBH = 1, verbose = TRUE) {
 
   if(sum(c("Ht","Dn1", "Dn2","Especie","ID") %in% names(pies_mayores))<4) stop("Columns in 'pies_mayores' must include 'ID','Especie','Dn1', 'Dn2' and 'Ht'")
   IDs <- pies_mayores$ID
@@ -212,6 +216,16 @@ IFN2forest<-function(pies_mayores, SpParams,
     y <- y[y$Cover>0,, drop=FALSE]
     y <- y[y$Height>0,, drop=FALSE]
 
+  }
+
+  if(!is.null(minDBH)) {
+    if(verbose) cat(paste0("Filtering small trees (DBH < ", minDBH,") ...\n"))
+    x <- x[x$DBH >= minDBH, , drop = FALSE]
+  }
+  if(filterDeadTrees) {
+    if(verbose) cat("Filtering dead trees...\n")
+    if("OrdenIf3" %in% names(x)) x <- x[!(x$OrdenIf3 %in% c("888","999")), , drop = FALSE]
+    if("OrdenIf4" %in% names(x)) x <- x[!(x$OrdenIf4 %in% c("888","999")), , drop = FALSE]
   }
 
   if(verbose) cat("Translating species codes...\n")

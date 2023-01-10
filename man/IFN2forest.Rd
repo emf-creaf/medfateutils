@@ -14,7 +14,9 @@ IFN2forest(
   herb_data = NULL,
   setDefaults = TRUE,
   filterWrongRecords = TRUE,
+  filterDeadTrees = TRUE,
   keepNumOrden = TRUE,
+  minDBH = 1,
   verbose = TRUE
 )
 }
@@ -36,7 +38,11 @@ IFN2forest(
 \item{filterWrongRecords}{Filters wrong records (records with missing values, zero values or wrong growth forms).
 This should normally result in the removal of dead/cut trees.}
 
+\item{filterDeadTrees}{Filters dead trees (with OrdenIf3 or OrdenIf4 equal to "888" or "999")}
+
 \item{keepNumOrden}{Keeps num orden as additional column (OrdenIf2, OrdenIf3 or OrdenIf4) to identify trees.}
+
+\item{minDBH}{Minimum diameter threshold to filter out small trees}
 
 \item{verbose}{A boolean flag to indicate console output.}
 }
