@@ -18,7 +18,7 @@ populateGrowthForm(
 
 populateHeightParams(
   SpParams,
-  species_codes,
+  species_names,
   height_values,
   quantile_Hmed = 0.5,
   quantile_Hmax = 0.99,
@@ -27,7 +27,7 @@ populateHeightParams(
 
 populateTreeDiameterHeightParams(
   SpParams,
-  species_codes,
+  species_names,
   height_values,
   diameter_values,
   quantile_fHDmin = 0.05,
@@ -46,7 +46,7 @@ populateTreeDiameterHeightParams(
 
 \item{fill_fromGenus}{A boolean flag to indicate that genus adscription of species should be used to fill missing values}
 
-\item{species_codes}{A string vector of species codes}
+\item{species_names}{A string vector of translated species names (see \code{\link{translateSpeciesCodes}})}
 
 \item{height_values}{A numeric vector of plant heights (in cm)}
 

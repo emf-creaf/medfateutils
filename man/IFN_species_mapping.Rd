@@ -7,4 +7,7 @@
 \description{
 Data frame with the mapping of species codes from Spanish National Forest Inventory into medfate' species names
 }
+\details{
+See vignette 'Species mapping for the Spanish NFI' in the package website.
+}
 \keyword{data}

@@ -74,14 +74,14 @@ populateGrowthForm<-function(SpParams,
 
 #' @rdname populateSpParamsFromInventory
 #'
-#' @param species_codes A string vector of species codes
+#' @param species_names A string vector of translated species names (see \code{\link{translateSpeciesCodes}})
 #' @param height_values A numeric vector of plant heights (in cm)
 #' @param quantile_Hmed Quantile for Hmed
 #' @param quantile_Hmax Quantile for Hmax
 #'
 #' @export
 populateHeightParams<-function(SpParams,
-                               species_codes,
+                               species_names,
                                height_values,
                                quantile_Hmed = 0.5,
                                quantile_Hmax = 0.99,
@@ -103,15 +103,13 @@ populateHeightParams<-function(SpParams,
     species_codes = species_codes[!toRemove]
     message(paste0(sum(toRemove), " zero height values removed from input."))
   }
-  sp_medfate <- translateIFNSpeciesCodes(species_codes, SpParams$IFNcodes)
 
   if(erase_previous) {
     SpParams$Hmed <- NA
     SpParams$Hmax <- NA
   }
   for(i in 1:nrow(SpParams)) {
-    medfate_code = SpParams$SpIndex[i]
-    heights <- height_values[sp_medfate == medfate_code]
+    heights <- height_values[species_names == SpParams$Name[i]]
     heights <- heights[!is.na(heights)]
     if(length(heights)>0) {
       SpParams$Hmed[i] <- round(as.numeric(quantile(heights, probs=quantile_Hmed, na.rm=FALSE)))
@@ -131,7 +129,7 @@ populateHeightParams<-function(SpParams,
 #'
 #' @export
 populateTreeDiameterHeightParams<-function(SpParams,
-                                           species_codes,
+                                           species_names,
                                            height_values,
                                            diameter_values,
                                            quantile_fHDmin = 0.05,
@@ -160,7 +158,6 @@ populateTreeDiameterHeightParams<-function(SpParams,
     species_codes = species_codes[!toRemove]
     message(paste0(sum(toRemove), " zero height/diameter values removed from input."))
   }
-  sp_medfate <- translateSpeciesCodes(species_codes, SpParams$IFNcodes)
 
   if(erase_previous) {
     SpParams$fHDmin <- NA
@@ -170,11 +167,10 @@ populateTreeDiameterHeightParams<-function(SpParams,
   ntree <- 0
   nmis <- 0
   for(i in 1:nrow(SpParams)) {
-    medfate_code = SpParams$SpIndex[i]
     growth_form = SpParams$GrowthForm[i]
     if(growth_form %in% c("Tree", "Tree/Shrub")) {
       ntree <- ntree + 1
-      sel = (sp_medfate == medfate_code)
+      sel = (species_names == SpParams$Name[i])
       sel[is.na(sel)] = FALSE
       if(sum(sel)>0) {
         heights <- height_values[sel]
