@@ -103,3 +103,17 @@
 #'  }
 #' @keywords data
 NULL
+
+
+#' Species mapping for the Spanish NFI
+#'
+#' Data frame with the mapping of species codes from Spanish National Forest Inventory into medfate' species names
+#'
+#' See vignette 'Species mapping for the Spanish NFI' in the package website.
+#'
+#' @name IFN_species_mapping
+#' @aliases IFN_species_mapping
+#' @docType data
+#'
+#' @keywords data
+NULL

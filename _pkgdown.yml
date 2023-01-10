@@ -23,7 +23,7 @@ reference:
   desc:  Translation of forest inventory species codes.
   contents:
   - translateSpeciesCodes
-  - IFN_species_mapping
+  - starts_with("IFN_species")
 
 - title: Species parameters
   desc:  Creation and population of species parameter data tables.

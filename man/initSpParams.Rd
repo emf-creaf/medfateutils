@@ -41,7 +41,7 @@ initSpParams(sp_names, SpParamsDefinition)
 
 # Initialisation with IFN species mapping
 data(IFN_species_mapping)
-initSpParams(IFN_species_mapping$Name, SpParamsDefinition)
+initSpParams(IFN_species_mapping$Name, SpParamsDefinition, verbose = TRUE)
 
 }
 }

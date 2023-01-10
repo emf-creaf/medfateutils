@@ -1,12 +1,12 @@
 ---
-title: "Species mapping for the Spain IFN"
+title: "Species mapping for the Spanish NFI"
 author: "Miquel De Cáceres"
 date: "`r Sys.Date()`"
 output: 
   rmarkdown::html_document:
     toc: TRUE
 params:
-  spparams_rebuild: TRUE
+  spparams_rebuild: FALSE
 ---
 
 ## Introduction
@@ -261,7 +261,7 @@ head(IFN_species_mapping)
 ```
 
 ```{r save_SpParams, eval = params$spparams_rebuild, include = FALSE}
-write.table(x = IFN_species_mapping, 
+write.table(x = IFN_species_mapping,
             file = "../data-raw/IFN_species_mapping.csv", quote = FALSE,
             sep="\t", row.names = FALSE)
 ```

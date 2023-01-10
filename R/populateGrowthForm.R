@@ -160,7 +160,7 @@ populateTreeDiameterHeightParams<-function(SpParams,
     species_codes = species_codes[!toRemove]
     message(paste0(sum(toRemove), " zero height/diameter values removed from input."))
   }
-  sp_medfate <- translateIFNSpeciesCodes(species_codes, SpParams$IFNcodes)
+  sp_medfate <- translateSpeciesCodes(species_codes, SpParams$IFNcodes)
 
   if(erase_previous) {
     SpParams$fHDmin <- NA
