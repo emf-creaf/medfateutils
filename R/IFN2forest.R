@@ -162,7 +162,7 @@ IFN2forest<-function(pies_mayores, IFN_species_mapping, SpParams,
 
   if(verbose) cat(paste0("Number of plots: ", length(IDs),"\n"))
   x_mayores <- pies_mayores[pies_mayores$ID %in% IDs, , drop = FALSE]
-  x_mayores$DBH <- (as.numeric(x_mayores$Dn1) + as.numeric(x_mayores$Dn2))/10 # From mm to cm
+  x_mayores$DBH <- (as.numeric(x_mayores$Dn1) + as.numeric(x_mayores$Dn2))/(2*10) # From mm to cm
   x_mayores$Height <- as.numeric(x_mayores$Ht)*100 # From m to cm
   x_mayores$N <- .densityFactor(x_mayores$DBH)
 
