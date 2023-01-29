@@ -2,6 +2,7 @@ IFN_path <- "~/OneDrive/EMFDatasets/ForestInventories/IFN/"
 
 # Species mapping table
 IFN_species_mapping <- read.table("data-raw/IFN_species_mapping.csv", sep="\t", header=TRUE)
+# IFN_species_mapping$Name[IFN_species_mapping$Name == "Arbutus unedo "] <- "Arbutus unedo"
 usethis::use_data(IFN_species_mapping, overwrite = T)
 
 # Read IFN2 data
