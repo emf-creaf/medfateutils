@@ -7,6 +7,7 @@
 - Warning raised when taxon names do not match
 - Rewriting IFN2forest function
 - Species mapping table for IFN
+- Functions spwb_ldrOptimization, spwb_ldrCalibration and spwb_sensitivity moved from medfate
 
 # Version 0.1.4
 - Names changed for IFN example datasets

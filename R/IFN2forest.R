@@ -244,22 +244,26 @@ IFN2forest<-function(pies_mayores, IFN_species_mapping, SpParams,
 
   #Remove NA species
   if(sum(is.na(x$Species))>0) {
-    if(verbose) {
-      cat(paste0("Tree data records with unrecognized IFN species codes: ",
-                 sum(is.na(x$Species)),"/", length(x$Species),
-                 " (",round(100*sum(is.na(x$Species))/length(x$Species),1),"%)\n"))
-      print(table(x$Especie[is.na(x$Species)], useNA = "ifany"))
+    if(filterWrongRecords) {
+      if(verbose) {
+        cat(paste0("Tree data records with unrecognized IFN species codes: ",
+                   sum(is.na(x$Species)),"/", length(x$Species),
+                   " (",round(100*sum(is.na(x$Species))/length(x$Species),1),"%)\n"))
+        print(table(x$Especie[is.na(x$Species)], useNA = "ifany"))
+      }
+      x <- x[!is.na(x$Species),, drop = FALSE]
     }
-    x <- x[!is.na(x$Species),, drop = FALSE]
   }
   if(sum(is.na(y$Species))>0) {
-    if(verbose) {
-      cat(paste0("Shrub data records with unrecognized IFN species codes: ",
-                 sum(is.na(y$Species)),"/", length(y$Species),
-                 " (",round(100*sum(is.na(y$Species))/length(y$Species),1),"%)\n"))
-      print(table(y$Especie[is.na(y$Species)], useNA = "ifany"))
+    if(filterWrongRecords) {
+      if(verbose) {
+        cat(paste0("Shrub data records with unrecognized IFN species codes: ",
+                   sum(is.na(y$Species)),"/", length(y$Species),
+                   " (",round(100*sum(is.na(y$Species))/length(y$Species),1),"%)\n"))
+        print(table(y$Especie[is.na(y$Species)], useNA = "ifany"))
+      }
+      y <- y[!is.na(y$Species),, drop = FALSE]
     }
-    y <- y[!is.na(y$Species),, drop = FALSE]
   }
 
   if(filterWrongRecords) {
@@ -276,10 +280,10 @@ IFN2forest<-function(pies_mayores, IFN_species_mapping, SpParams,
   y$Z95 <- rep(NA, nrow(y))
   if(setDefaults) {
     if(verbose) cat("Setting default root distribution ...\n")
-    x$Z95 <- species_parameter(x$Species, SpParams, "Z95")
-    x$Z50 <- species_parameter(x$Species, SpParams, "Z50")
-    y$Z95 <- species_parameter(y$Species, SpParams, "Z95")
-    y$Z50 <- species_parameter(y$Species, SpParams, "Z50")
+    x$Z95[!is.na(x$Species)] <- species_parameter(x$Species[!is.na(x$Species)], SpParams, "Z95")
+    x$Z50[!is.na(x$Species)] <- species_parameter(x$Species[!is.na(x$Species)], SpParams, "Z50")
+    y$Z95[!is.na(y$Species)] <- species_parameter(y$Species[!is.na(y$Species)], SpParams, "Z95")
+    y$Z50[!is.na(y$Species)] <- species_parameter(y$Species[!is.na(y$Species)], SpParams, "Z50")
     x$Z95[is.na(x$Z95)] <- 1000
     y$Z95[is.na(y$Z95)] <- 800
     x$Z50[is.na(x$Z50)] <- exp(log(x$Z95[is.na(x$Z50)])/1.3)
