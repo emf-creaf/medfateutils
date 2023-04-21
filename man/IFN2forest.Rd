@@ -17,6 +17,7 @@ IFN2forest(
   filterWrongRecords = TRUE,
   filterDeadTrees = TRUE,
   keepNumOrden = TRUE,
+  keepSpeciesCode = TRUE,
   minDBH = 1,
   verbose = TRUE
 )
@@ -44,6 +45,8 @@ This should normally result in the removal of dead/cut trees.}
 \item{filterDeadTrees}{Filters dead trees (with OrdenIf3 or OrdenIf4 equal to "888" or "999")}
 
 \item{keepNumOrden}{Keeps num orden as additional column (OrdenIf2, OrdenIf3 or OrdenIf4) to identify trees.}
+
+\item{keepSpeciesCode}{Keeps IFN species code.}
 
 \item{minDBH}{Minimum diameter threshold to filter out small trees}
 

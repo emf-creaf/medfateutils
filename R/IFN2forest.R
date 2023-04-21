@@ -26,6 +26,7 @@
 #' @param filterDeadTrees Filters dead trees (with OrdenIf3 or OrdenIf4 equal to "888" or "999")
 #' @param minDBH Minimum diameter threshold to filter out small trees
 #' @param keepNumOrden Keeps num orden as additional column (OrdenIf2, OrdenIf3 or OrdenIf4) to identify trees.
+#' @param keepSpeciesCode Keeps IFN species code.
 #' @param verbose A boolean flag to indicate console output.
 #'
 #' @details
@@ -120,7 +121,7 @@ IFN2forest<-function(pies_mayores, IFN_species_mapping, SpParams,
                      herb_data=NULL,
                      setDefaults=TRUE,
                      filterWrongRecords = TRUE, filterDeadTrees = TRUE,
-                     keepNumOrden = TRUE,
+                     keepNumOrden = TRUE, keepSpeciesCode = TRUE,
                      minDBH = 1, verbose = TRUE) {
 
   if(sum(c("Ht","Dn1", "Dn2","Especie","ID") %in% names(pies_mayores))<4) stop("Columns in 'pies_mayores' must include 'ID','Especie','Dn1', 'Dn2' and 'Ht'")
@@ -292,12 +293,19 @@ IFN2forest<-function(pies_mayores, IFN_species_mapping, SpParams,
 
   if(verbose) cat("Building forest objects...\n")
   xf <- x[,c("ID", "Species","DBH", "Height", "N", "Z50", "Z95")]
+  yf <- y[,c("ID", "Species", "Height", "Cover", "Z50", "Z95")]
+  if(keepSpeciesCode) {
+    xf$IFNcode = x$Especie
+    yf$IFNcode = y$Especie
+    xf<- xf[,c("ID","IFNcode", "Species","DBH", "Height", "N", "Z50", "Z95")]
+    yf <- yf[,c("ID", "IFNcode", "Species", "Height", "Cover", "Z50", "Z95")]
+  }
   if(keepNumOrden) {
     if("OrdenIf2" %in% names(x)) xf$OrdenIf2 <- x$OrdenIf2
     if("OrdenIf3" %in% names(x)) xf$OrdenIf3 <- x$OrdenIf3
     if("OrdenIf4" %in% names(x)) xf$OrdenIf4 <- x$OrdenIf4
   }
-  yf <- y[,c("ID", "Species", "Height", "Cover", "Z50", "Z95")]
+
 
   lx <- split(xf, factor(x$ID, levels=IDs), drop = FALSE)
   ly <- split(yf, factor(y$ID, levels=IDs), drop = FALSE)
