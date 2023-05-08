@@ -14,7 +14,7 @@
 
 
 #' @rdname spwb_ldrOptimization
-#' 
+#'
 #' @param x An object of class \code{\link{spwbInput}}.
 #' @param meteo A data frame with daily meteorological data series (see \code{\link{spwb}}).
 #' @param cohorts A character string with the names of cohorts to be explored. If \code{NULL} then all cohorts are explored.
@@ -26,109 +26,109 @@
 #' @param transformation Function to modify the size of Z intervals to be explored (by default, bins are equal).
 #' @param heat_stop An integer defining the number of days during to discard from the calculation of the optimal root distribution. Usefull if the soil water content initialization is not certain
 #' @param ... Additional parameters to function \code{\link{spwb}}.
-#' 
-spwb_ldrExploration<-function(x, meteo, cohorts = NULL, 
-                              RZmin = 301, RZmax = 4000, V1min = 0.01, V1max = 0.94, resolution = 10, 
-                              heat_stop = 0, transformation = "identity", verbose = FALSE, 
+#'
+spwb_ldrExploration<-function(x, meteo, cohorts = NULL,
+                              RZmin = 301, RZmax = 4000, V1min = 0.01, V1max = 0.94, resolution = 10,
+                              heat_stop = 0, transformation = "identity", verbose = FALSE,
                               ...) {
   # define the days to keep in the analysis
   op_days <- (heat_stop+1):nrow(meteo)
-  
+
   # Define the values of Z50 and Z90 to be explored
   trans <- function(x) do.call(transformation, list(x))
   inverse_trans <- .inverse(trans, lower = 0.01, upper = 100) # inverse of the function used for the transformation
-  
+
   if(RZmax > x$soil$SoilDepth){
     if(verbose) cat("\n RZmax is larger than soil depth\n")
   }
-  
+
   RZ_trans <- seq(trans(RZmin), trans(RZmax), length.out = resolution)
   RZ <- as.numeric(unlist(sapply(RZ_trans, FUN = inverse_trans)))
-  
+
   # the case where RZ = Z1 will create problems when using the LDR model -> remove if it exists
   Z1 <- x$soil$dVec[1]
   if(sum(RZ == Z1) > 0){
     if(verbose) cat("\nThe function to derive the root proportion in each soil layer is not defined for RZ = Z1 (depth of the first soil layer)\n",
-                    "This value is removed\n", 
+                    "This value is removed\n",
                     paste("Resolution is now\n", resolution-1))
     RZ <- RZ[-which(RZ == Z1)]
   }
-  
+
   if(V1max >= 0.9497887){
     if(verbose) cat("\nThe function to derive the root proportion in each soil layer is only defined for V1 c ]0,0.949[\nV1max is set to 0.94\n")
-    V1max <- 0.94  
+    V1max <- 0.94
   }
   if(V1min <= 0){
     if(verbose) cat("\nThe function to derive the root proportion in each soil layer is only defined for V1 c ]0,0.949[\nV1min is set to 0.01\n")
-    V1min <- 0.001  
+    V1min <- 0.001
   }
-  
+
   V1 <- seq(V1min,V1max,length.out = length(RZ)) # the proportion of root in the first soil layer
   # Create a matrix with V1 as rows and RZ as column, filled with logical values to indicate the parameter combinations to explore
   mExplore <- matrix(T, nrow = length(V1), ncol = length(RZ), dimnames = list(V1 = V1, RZ = RZ))
   # mExplore[lower.tri(mExplore, diag = T)] <- F
-  
+
   # Calculate Z50
   Z50 <- .root_ldrZ50(V = array(V1,dim = dim(mExplore)), Z = array(Z1, dim = dim(mExplore)), Z95 = t(array(RZ, dim = dim(mExplore))))
   dimnames(Z50) <- dimnames(mExplore)
-  # Prepare array for V 
-  V <- array(dim = c(length(x$soil$dVec),length(V1), length(RZ)), 
+  # Prepare array for V
+  V <- array(dim = c(length(x$soil$dVec),length(V1), length(RZ)),
              dimnames = list(layer = 1:length(x$soil$dVec), V1 = V1, RZ = RZ))
-  
+
   # Sum LAI of all species
-  x$above$LAI_live <- sum(x$above$LAI_live) 
-  x$above$LAI_expanded <- sum(x$above$LAI_expanded) 
+  x$above$LAI_live <- sum(x$above$LAI_live)
+  x$above$LAI_expanded <- sum(x$above$LAI_expanded)
   x$above$LAI_dead <- sum(x$above$LAI_dead)
-  
+
   # Data outputs
   if(is.null(cohorts)) cohorts = row.names(x$cohorts)
   An<-E <- PsiMin <- array(dim = c(length(cohorts), length(V1), length(RZ)), dimnames = list(cohort = cohorts, V1 = V1, RZ = RZ))
-  
+
   # Start loop
   cc <- which(mExplore == T, arr.ind = T)
-  
+
   # Reset input
   resetInputs(x)
-  
+
   for(ci in 1:length(cohorts)){
     coh = cohorts[ci]
     sp = which(row.names(x$cohorts)==coh)
-    
+
     cat(paste("Exploring root distribution of cohort", coh,"(", x$cohorts$Name[sp],"):\n"))
-    
+
     x_1sp <- x
     x_1sp$cohorts <- x$cohorts[sp,,drop = FALSE]
     x_1sp$above <- x$above[sp,,drop = FALSE]
     x_1sp$below <- x$below
-    x_1sp$belowLayers$V <- x$belowLayers$V[sp,,drop = FALSE] 
-    x_1sp$paramsInterception <- x$paramsInterception[sp,,drop = FALSE] 
-    x_1sp$paramsTransp <- x$paramsTransp[sp,,drop = FALSE] 
-    x_1sp$Transpiration <- x$Transpiration[sp,drop = FALSE] 
-    x_1sp$Photosynthesis <- x$Photosynthesis[sp,drop = FALSE] 
+    x_1sp$belowLayers$V <- x$belowLayers$V[sp,,drop = FALSE]
+    x_1sp$paramsInterception <- x$paramsInterception[sp,,drop = FALSE]
+    x_1sp$paramsTransp <- x$paramsTransp[sp,,drop = FALSE]
+    x_1sp$Transpiration <- x$Transpiration[sp,drop = FALSE]
+    x_1sp$Photosynthesis <- x$Photosynthesis[sp,drop = FALSE]
     if(x_1sp$control$transpirationMode=="Granier") {
-      x_1sp$PLC <- x$PLC[sp,drop = FALSE] 
+      x_1sp$PLC <- x$PLC[sp,drop = FALSE]
     } else {
-      x_1sp$belowLayers$VGrhizo_kmax <- x$belowLayers$V[sp,,drop = FALSE] 
-      x_1sp$belowLayers$VCroot_kmax <- x$belowLayers$V[sp,,drop = FALSE] 
-      x_1sp$paramsAnatomy <- x$paramsAnatomy[sp,,drop = FALSE] 
-      x_1sp$paramsWaterStorage <- x$paramsWaterStorage[sp,,drop = FALSE] 
-      x_1sp$StemPLC <- x$StemPLC[sp,drop = FALSE] 
-      x_1sp$Einst <- x$Einst[sp,drop = FALSE] 
-      x_1sp$RhizoPsi <- x$RhizoPsi[sp,,drop = FALSE] 
-      x_1sp$RootCrownPsi <- x$RootCrownPsi[sp,drop = FALSE] 
-      x_1sp$StemSympPsi <- x$StemSympPsi[sp,drop = FALSE] 
-      x_1sp$StemPsi1 <- x$StemPsi1[sp,drop = FALSE] 
-      x_1sp$StemPsi2 <- x$StemPsi2[sp,drop = FALSE] 
-      x_1sp$LeafSympPsi <- x$LeafSympPsi[sp,drop = FALSE] 
-      x_1sp$LeafPsi <- x$LeafPsi[sp,drop = FALSE] 
+      x_1sp$belowLayers$VGrhizo_kmax <- x$belowLayers$V[sp,,drop = FALSE]
+      x_1sp$belowLayers$VCroot_kmax <- x$belowLayers$V[sp,,drop = FALSE]
+      x_1sp$paramsAnatomy <- x$paramsAnatomy[sp,,drop = FALSE]
+      x_1sp$paramsWaterStorage <- x$paramsWaterStorage[sp,,drop = FALSE]
+      x_1sp$StemPLC <- x$StemPLC[sp,drop = FALSE]
+      x_1sp$Einst <- x$Einst[sp,drop = FALSE]
+      x_1sp$RhizoPsi <- x$RhizoPsi[sp,,drop = FALSE]
+      x_1sp$RootCrownPsi <- x$RootCrownPsi[sp,drop = FALSE]
+      x_1sp$StemSympPsi <- x$StemSympPsi[sp,drop = FALSE]
+      x_1sp$StemPsi1 <- x$StemPsi1[sp,drop = FALSE]
+      x_1sp$StemPsi2 <- x$StemPsi2[sp,drop = FALSE]
+      x_1sp$LeafSympPsi <- x$LeafSympPsi[sp,drop = FALSE]
+      x_1sp$LeafPsi <- x$LeafPsi[sp,drop = FALSE]
     }
     x_1sp$control$verbose <- F
-    
+
     pb <- txtProgressBar(max = nrow(cc), style = 3)
     for(row in 1:nrow(cc)){
       i <- cc[row,1]
       j <- cc[row,2]
-      
+
       # Update the depth of the different soil layer to match RZ
       s. <- x$soil
       s.$SoilDepth <- RZ[j]
@@ -151,7 +151,7 @@ spwb_ldrExploration<-function(x, meteo, cohorts = NULL,
       s.[["VG_theta_res"]] <- s.[["VG_theta_res"]][1:nl]
       s.[["VG_theta_sat"]] <- s.[["VG_theta_sat"]][1:nl]
       s.[["Ksat"]] <- s.[["Ksat"]][1:nl]
-      
+
       V[,i,j] <- 0
       x_1sp$belowLayers$V = x$belowLayers$V[sp,1:nl,drop = FALSE]
       x_1sp$belowLayers$V[1,] <- root_ldrDistribution(Z50 = Z50[i,j], Z95 = RZ[j], d=s.$dVec)
@@ -159,7 +159,7 @@ spwb_ldrExploration<-function(x, meteo, cohorts = NULL,
 
       x_1sp[["soil"]] <- s.
       s_res <- spwb(x = x_1sp, meteo = meteo, ...)
-      
+
       # Outputs
       years <- substr(as.Date(rownames(meteo)), start = 1, stop = 4)
       ma <- function(x,n=10){
@@ -173,7 +173,7 @@ spwb_ldrExploration<-function(x, meteo, cohorts = NULL,
       } else {
         psi <- s_res$Plants$StemPsi[op_days]
       }
-      PsiMin[ci,i,j] <- mean(aggregate(psi, 
+      PsiMin[ci,i,j] <- mean(aggregate(psi,
                                        by = list(years[op_days]),
                                        FUN = function(x) {
                                          m <- ma(x)
@@ -197,9 +197,9 @@ spwb_ldrExploration<-function(x, meteo, cohorts = NULL,
 }
 
 #' Optimization of root distribution
-#' 
-#' Functions \code{spwb_ldrExploration} and \code{spwb_ldrOptimization} are used to 
-#' find optimum the species root distribution within \code{spwb}, given the arguments 
+#'
+#' Functions \code{spwb_ldrExploration} and \code{spwb_ldrOptimization} are used to
+#' find optimum the species root distribution within \code{spwb}, given the arguments
 #' \code{x}, \code{meteo} and \code{psi_crit}.
 #'
 #' @param y The result of calling \code{spwb_ldrExploration}.
@@ -213,78 +213,80 @@ spwb_ldrExploration<-function(x, meteo, cohorts = NULL,
 #'       \item{\code{opt_mode = 5} maximizes photosynthesis, subject to root construction constrains, among combinations with stress according to \code{psi_crit}).}
 #'     }
 #' @param verbose A logical value. Print the internal messages of the function?
-#' 
-#' @details 
-#' For each combination of the parameters RZ and V1 the function \code{spwb_ldrExploration} runs \code{spwb}, 
-#' setting the total soil depth equal to RZ. The root proportion in each soil layer is derived from V1, 
-#' the depth of the first soil layer and RZ using the LDR root distribution model (Schenk and Jackson, 2002) 
+#'
+#' @details
+#' For each combination of the parameters RZ and V1 the function \code{spwb_ldrExploration} runs \code{spwb},
+#' setting the total soil depth equal to RZ. The root proportion in each soil layer is derived from V1,
+#' the depth of the first soil layer and RZ using the LDR root distribution model (Schenk and Jackson, 2002)
 #' and assuming that the depth containing 95 percent of the roots is equal to RZ.
-#' Function \code{spwb_ldrOptimization} takes the result of the exploration and tries 
-#' to find optimum root distribution parameters. \code{psi_crit}, the species specific 
-#' water potential inducing hydraulic failure, can be approached by the water potential 
-#' inducing 50 percent of loss of conductance for the and gymnosperms and 88 percent for 
-#' the angiosperms (Urli et al., 2013, Brodribb et al., 2010). Details of the hypothesis 
+#' Function \code{spwb_ldrOptimization} takes the result of the exploration and tries
+#' to find optimum root distribution parameters. \code{psi_crit}, the species specific
+#' water potential inducing hydraulic failure, can be approached by the water potential
+#' inducing 50 percent of loss of conductance for the and gymnosperms and 88 percent for
+#' the angiosperms (Urli et al., 2013, Brodribb et al., 2010). Details of the hypothesis
 #' and limitations of the optimization method are given in Cabon et al. (2019).
-#' 
-#' @return 
-#' Function \code{spwb_ldrExploration} returns a list containing a list containing 
-#' the explored RZ and V1 combinations as well as arrays with the values of average daily plant transpiration, 
+#'
+#' @return
+#' Function \code{spwb_ldrExploration} returns a list containing a list containing
+#' the explored RZ and V1 combinations as well as arrays with the values of average daily plant transpiration,
 #' average daily net photosynthesis and the minimum plant water potential for each cohort and parameter combination.
-#' 
-#' Function \code{spwb_ldrOptimization}  returns a data frame with containing 
-#' the species index used in medfate, \code{psi_crit} and the optimized values of V1 
-#' and the LDR parameters Z50 and Z95 (see \code{\link{root_ldrDistribution}}) 
-#' and as many rows as the number of species. 
-#' 
-#' @references 
+#'
+#' Function \code{spwb_ldrOptimization}  returns a data frame with containing
+#' the species index used in medfate, \code{psi_crit} and the optimized values of V1
+#' and the LDR parameters Z50 and Z95 (see \code{\link{root_ldrDistribution}})
+#' and as many rows as the number of species.
+#'
+#' @references
 #' Brodribb, T.J., Bowman, D.J.M.S., Nichols, S., Delzon, S., Burlett, R., 2010. Xylem function and growth rate interact to determine recovery rates after exposure to extreme water deficit. New Phytol. 188, 533–542. doi:10.1111/j.1469-8137.2010.03393.x
-#' 
+#'
 #' Cabon, A., \enc{Martínez-Vilalta}{Martinez-Vilalta}, J., Poyatos, R., \enc{Martínez de Aragón}{Martinez de Aragon}, J., De \enc{Cáceres}{Caceres}, M. (2018) Applying the eco-hydrological equilibrium hypothesis to estimate root ditribution in water-limited forests. Ecohydrology 11: e2015.
-#' 
+#'
 #' Eagleson, P.S., 1982. Ecological optimality in water-limited natural soil-vegetation systems: 1. Theory and hypothesis. Water Resour. Res. 18, 325–340. doi:10.1029/WR018i002p00325
-#' 
+#'
 #' Schenk, H.J., Jackson, R.B., 2002. The Global Biogeography of Roots. Ecol. Monogr. 72, 311. doi:10.2307/3100092
-#' 
+#'
 #' Urli, M., Porte, A.J., Cochard, H., Guengant, Y., Burlett, R., Delzon, S., 2013. Xylem embolism threshold for catastrophic hydraulic failure in angiosperm trees. Tree Physiol. 33, 672–683. doi:10.1093/treephys/tpt030
-#' 
-#' @author 
-#' Antoine Cabon, CREAF
-#' 
+#'
+#' @author
+#' Antoine Cabon, WSL
+#'
+#' \enc{Arsène}{Arsene} Druel, INRAE
+#'
 #' Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
-#' 
+#'
 #' @seealso \code{\link{spwb}}, \code{\link{soil}}, \code{\link{root_ldrDistribution}}
-#' 
-#' @examples 
+#'
+#' @examples
 #' \donttest{
 #' #Load example daily meteorological data
 #' data(examplemeteo)
-#' 
+#'
 #' #Load example plot plant data
 #' data(exampleforestMED)
-#' 
+#'
 #' #Default species parameterization
 #' data(SpParamsMED)
-#' 
+#'
 #' #Initialize soil with default soil params
 #' examplesoil <- soil(defaultSoilParams(2))
-#' 
+#'
 #' #Initialize control parameters
 #' control <- defaultControl("Granier")
-#' 
+#'
 #' #Initialize input
 #' x <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
-#' 
+#'
 #' #Run exploration (weather subset for faster computation)
-#' y <- spwb_ldrExploration(x = x, meteo = examplemeteo[1:50,], 
+#' y <- spwb_ldrExploration(x = x, meteo = examplemeteo[1:50,],
 #'                         elevation = 100, latitude = 41.82592)
-#' 
+#'
 #' #Optimization under different modes
 #' spwb_ldrOptimization(y = y, psi_crit = c(-2,-3,-4), opt_mode = 1)
 #' }
-#' 
+#'
 #' @name spwb_ldrOptimization
 spwb_ldrOptimization<-function(y, psi_crit, opt_mode = 1) {
-  
+
 
   E = y$E
   An = y$An
@@ -295,7 +297,7 @@ spwb_ldrOptimization<-function(y, psi_crit, opt_mode = 1) {
   cohorts = y$cohorts
 
   if(length(psi_crit)!= length(cohorts)) stop("The length of 'psi_crit' must be equal to the number of cohorts in 'y'.")
-  
+
   optim <- data.frame(psi_crit = psi_crit, Z50 = NA, Z95 = NA, V1 = NA)
   row.names(optim) = cohorts
   for (i in 1:length(cohorts)){
@@ -308,8 +310,8 @@ spwb_ldrOptimization<-function(y, psi_crit, opt_mode = 1) {
       # cost <- (matrix(z, ncol = 1)%*%(1-v) + matrix(300, ncol = 1, nrow = length(z))%*%v)^(3/2)
       supinf <- matrix(0, ncol = ncol(psimin), nrow = nrow(psimin))
       supinf[psimin >= psi_crit[i]] <- 1
-      subselb <- rbind(supinf[-nrow(supinf),]-supinf[-1,], rep(0, ncol(supinf))) 
-      subselt <- rbind(rep(0, ncol(supinf)), supinf[-1,]-supinf[-nrow(supinf),]) 
+      subselb <- rbind(supinf[-nrow(supinf),]-supinf[-1,], rep(0, ncol(supinf)))
+      subselt <- rbind(rep(0, ncol(supinf)), supinf[-1,]-supinf[-nrow(supinf),])
       subsell <- cbind(rep(0, nrow(supinf)), supinf[,-1]-supinf[,-ncol(supinf)])
       subselr <- cbind(supinf[,-ncol(supinf)]-supinf[,-1], rep(0, nrow(supinf)))
       sel <- matrix(F, ncol = ncol(psimin), nrow = nrow(psimin))
@@ -323,7 +325,7 @@ spwb_ldrOptimization<-function(y, psi_crit, opt_mode = 1) {
         optim$V1[i] <- V1[point[1]]
         optim$Z95[i] <- RZ[point[2]]
       }
-    } 
+    }
     else if(opt_mode==2) {
       selPsi = (psimin > psi_crit[i]) # Select combinations with less stress than psi_crit
       if(sum(selPsi)==0) selPsi = (psimin == max(psimin)) # If none, select combination of minimum stress
@@ -333,7 +335,7 @@ spwb_ldrOptimization<-function(y, psi_crit, opt_mode = 1) {
       optim$Z50[i] <- Z50[point[1], point[2]]
       optim$V1[i] <- V1[point[1]]
       optim$Z95[i] <- RZ[point[2]]
-    } 
+    }
     else if(opt_mode==3) {
       selPsi = (psimin > psi_crit[i]) # Select combinations with less stress than psi_crit
       if(sum(selPsi)==0) selPsi = (psimin == max(psimin)) # If none, select combination of minimum stress
@@ -356,7 +358,7 @@ spwb_ldrOptimization<-function(y, psi_crit, opt_mode = 1) {
       optim$Z50[i] <- Z50[point[1], point[2]]
       optim$V1[i] <- V1[point[1]]
       optim$Z95[i] <- RZ[point[2]]
-    } 
+    }
     else if(opt_mode==5) {
       selPsi = (psimin > psi_crit[i]) # Select combinations with less stress than psi_crit
       if(sum(selPsi)==0) selPsi = (psimin == max(psimin)) # If none, select combination of minimum stress
@@ -369,7 +371,7 @@ spwb_ldrOptimization<-function(y, psi_crit, opt_mode = 1) {
       optim$Z50[i] <- Z50[point[1], point[2]]
       optim$V1[i] <- V1[point[1]]
       optim$Z95[i] <- RZ[point[2]]
-    } 
+    }
   }
   return(optim)
 }
@@ -379,11 +381,11 @@ spwb_ldrOptimization<-function(y, psi_crit, opt_mode = 1) {
 # x is the output of the function spwb_ldrOptimization with explore_out = T
 # .plot.ldrOptimization <- function(x, SP = 1, raster_var = "E", contour_var = "E", special_breaks_var = "Psi",
 #                              legend_pos = c(1,1), xaxis_pos = "bottom", yaxis_pos = "left", special_breaks = 0, axis_trans = "identity"){
-#   
+#
 #   Psi.xyz <- melt(x$explore_out$PsiMin[SP,,])
 #   E.xyz <- melt(x$explore_out$E[SP,,]*365)
 #   xy <- Psi.xyz[,c("V1", "RZ")]
-#   
+#
 #   # Raster layer
 #   if(raster_var == "Psi"){
 #     leg_title <- expression(paste(Psi[min],"(MPa)"))
@@ -393,7 +395,7 @@ spwb_ldrOptimization<-function(y, psi_crit, opt_mode = 1) {
 #     leg_title <- expression(paste("E (mm ", yr^{-1}, ")"))
 #     data_raster <- E.xyz
 #   }
-#   
+#
 #   # Contour layer
 #   if(contour_var == "Psi"){
 #     data_contour <- Psi.xyz
@@ -405,7 +407,7 @@ spwb_ldrOptimization<-function(y, psi_crit, opt_mode = 1) {
 #     bw1 <- 50
 #     bw2 <- 10
 #   }
-#   
+#
 #   # Add special break
 #   if(special_breaks_var == "Psi"){
 #     data_special_breaks <- Psi.xyz
@@ -413,10 +415,10 @@ spwb_ldrOptimization<-function(y, psi_crit, opt_mode = 1) {
 #   if(special_breaks_var == "E"){
 #     data_special_breaks <- E.xyz
 #   }
-#   
+#
 #   # Optimized parameters
 #   x$optim$RZ <- x$optim$Z95
-#   
+#
 #   # Plot
 #   p <- ggplot(xy, aes(x = RZ, y = V1))+
 #     geom_raster(data = data_raster, aes(fill = value))+
@@ -432,6 +434,293 @@ spwb_ldrOptimization<-function(y, psi_crit, opt_mode = 1) {
 #     theme(legend.position = legend_pos, legend.justification = legend_pos, legend.background = element_rect(fill = rgb(1,1,1,0.7)))+
 #     scale_x_continuous(position = xaxis_pos, trans = axis_trans)+
 #     scale_y_continuous(position = yaxis_pos, trans = "identity")
-#   
+#
 #   return(p)
 # }
+
+#' @rdname spwb_ldrOptimization
+#' @param PLC_target Leaf PLC target (quantile 90)
+#' @param PLC_tol Limit of the PLC target tolerance, only in some conditions
+#' @param max_simu Maximum of simulation authorized before to stop
+#' @param model_varLim Limit of the RU variation of the model accepted
+#' @param max_rocks Maximum content in coarse fragments
+#'
+spwb_rockOptimization<-function(x, meteo, PLC_target = 12, PLC_tol = 0.5,
+                                max_simu = 7, model_varLim = 10,
+                                max_rocks = 99, verbose = FALSE){
+
+  soil <- x$soil
+  nlayers <- length(soil$dVec)
+  control <- x$control
+  LAI_max <- sum(x$above$LAI_live, na.rm = TRUE)
+
+  # Select non variable parameters
+  coarseFragOri <- sum(soil$rfc*soil$dVec)/sum(soil$dVec)
+  RU_vg_ori <- sum(medfate::soil_waterExtractable(soil, model = control$soilFunctions))
+
+  soil_max <- soil
+  soil_max$rfc <- rep(0, nlayers)
+  soil_min <- soil
+  soil_min$rfc <- rep(max_rocks, nlayers)
+  RU_vg_max <- sum(medfate::soil_waterExtractable(soil_max, model = control$soilFunctions))
+  RU_vg_min <- sum(medfate::soil_waterExtractable(soil_min, model = control$soilFunctions))
+
+
+  RU_cible   <- NA
+  fracFind   <- FALSE
+  illBeBack  <- FALSE
+  model_Pval <- NULL
+  model_Sval <- NULL
+  ResAnalysis <- data.frame( RU = 0 , QPLCl9 = 100 )
+  if (LAI_max ==0) fracFind <- TRUE else RU_cible   <- 200
+  while( ( nrow(ResAnalysis) < (max_simu+1) && !fracFind ) || (( nrow(ResAnalysis) < (max_simu+2) && illBeBack) ) ) {
+
+    # Compute soil coarse fragment corresponding to target RU
+    if ( RU_cible <= RU_vg_min ) {
+      listCoarseFragNew <- rep(maxCoarseFrag, nlayers)
+    } else if ( RU_cible == RU_vg_ori ) {
+      listCoarseFragNew <- soil$rfc
+    } else if ( RU_cible >= RU_vg_max ) {
+      listCoarseFragNew <- rep(0, nlayers)
+    } else if ( RU_cible >= RU_vg_ori ) {
+      newcoarseFrag <- coarseFragOri + (RU_vg_ori - RU_cible)/RU_vg_ori*(100-coarseFragOri)
+      coarseFragCoef <- newcoarseFrag / coarseFragOri
+      listCoarseFragNew <-  soil$rfc * coarseFragCoef
+    } else  {
+      listCoarseFragOri <- soil$rfc
+      orderCF <- order(listCoarseFragOri)
+
+      newcoarseFrag  <- coarseFragOri + (RU_vg_ori-RU_cible)/RU_vg_ori*(100-coarseFragOri)
+      coarseFragCoef <- newcoarseFrag / coarseFragOri #selectPoints[iPts,paste0("coarseFrag_0-",profondeur_soil,"00_ori")]
+      if ( listCoarseFragOri[orderCF[nlayers]]*coarseFragCoef <= max_rocks ) {
+        # realnewcoarseFrag = (selectPoints[[SE_coarseFrag_1]][iPts]*coarseFragCoef*SE_depth1 + selectPoints[[SE_coarseFrag_2]][iPts]*coarseFragCoef*(SE_depth2-SE_depth1) + selectPoints[[SE_coarseFrag_3]][iPts]*coarseFragCoef*(SE_depth3-SE_depth2)) / SE_depth3
+        listCoarseFragNew <- listCoarseFragOri * coarseFragCoef
+      } else {
+        listDepth = c(SE_depth1,SE_depth2-SE_depth1,SE_depth3-SE_depth2)
+        whichFC = orderCF[3]
+
+        RU_vg_done          = RU_from_wp_fc(selectPoints[[SE_fieldCap]][iPts], selectPoints[[SE_wiltPoint]][iPts], maxCoarseFrag, listDepth[whichFC])
+        coarseFragOri_left  = (listCoarseFragOri[-whichFC][1]*listDepth[-whichFC][1] + listCoarseFragOri[-whichFC][2]*listDepth[-whichFC][2]) / sum(listDepth[-whichFC])
+        RU_vg_ori_left      = RU_from_wp_fc(selectPoints[[SE_fieldCap]][iPts], selectPoints[[SE_wiltPoint]][iPts], coarseFragOri_left, sum(listDepth[-whichFC]))
+
+        newcoarseFrag = coarseFragOri_left + (RU_vg_ori_left-(RU_cible-RU_vg_done))/RU_vg_ori_left*(100-coarseFragOri_left)
+        coarseFragCoef = newcoarseFrag / coarseFragOri_left #selectPoints[iPts,paste0("coarseFrag_0-",profondeur_soil,"00_ori")]
+
+        if ( listCoarseFragOri[orderCF[2]]*coarseFragCoef <= maxCoarseFrag ) {
+          # realnewcoarseFrag = ( maxCoarseFrag*coarseFragCoef*listDepth[whichFC] + listCoarseFragOri[-whichFC][1]*listDepth[-whichFC][1]*coarseFragCoef + listCoarseFragOri[-whichFC][2]*listDepth[-whichFC][2]*coarseFragCoef) / SE_depth3
+          listCoarseFragNew = listCoarseFragOri * coarseFragCoef
+          listCoarseFragNew[whichFC] = maxCoarseFrag
+        } else {
+          RU_vg_done          = RU_vg_done + RU_from_wp_fc(selectPoints[[SE_fieldCap]][iPts], selectPoints[[SE_wiltPoint]][iPts], maxCoarseFrag, listDepth[orderCF[2]])
+          coarseFragOri_left  = listCoarseFragOri[orderCF[1]]
+          RU_vg_ori_left      = RU_from_wp_fc(selectPoints[[SE_fieldCap]][iPts], selectPoints[[SE_wiltPoint]][iPts], coarseFragOri_left, listDepth[orderCF[1]])
+
+          newcoarseFrag = coarseFragOri_left + (RU_vg_ori_left-(RU_cible-RU_vg_done))/RU_vg_ori_left*(100-coarseFragOri_left)
+          coarseFragCoef = newcoarseFrag / coarseFragOri_left #selectPoints[iPts,paste0("coarseFrag_0-",profondeur_soil,"00_ori")]
+
+          listCoarseFragNew = listCoarseFragOri * coarseFragCoef
+          listCoarseFragNew[orderCF[2:3]] = maxCoarseFrag
+        }
+      }
+    }
+    # realnewcoarseFrag = (max(0,min(99,selectPoints[[SE_coarseFrag_1]][iPts]*coarseFragCoef))*SE_depth1 + max(0,min(99,selectPoints[[SE_coarseFrag_2]][iPts]*coarseFragCoef))*(SE_depth2-SE_depth1) + max(0,min(99,selectPoints[[SE_coarseFrag_3]][iPts]*coarseFragCoef))*(SE_depth3-SE_depth2)) / SE_depth3
+    # RU_vg_new = RU_from_wp_fc(selectPoints[iPts,SE_fieldCap], selectPoints[iPts,SE_wiltPoint], realnewcoarseFrag, SE_depth3)
+    listCoarseFragNew = round(listCoarseFragNew,4)
+    RU_vg_new = RU_from_wp_fc(selectPoints[[SE_fieldCap]][iPts], selectPoints[[SE_wiltPoint]][iPts], listCoarseFragNew[1], SE_depth1) + RU_from_wp_fc(selectPoints[[SE_fieldCap]][iPts], selectPoints[[SE_wiltPoint]][iPts], listCoarseFragNew[2], SE_depth2-SE_depth1) + RU_from_wp_fc(selectPoints[[SE_fieldCap]][iPts], selectPoints[[SE_wiltPoint]][iPts], listCoarseFragNew[3], SE_depth3-SE_depth2)
+
+    # Launch simulation
+    createSoilFileWithCF(selectPoints[iPts,], file.path(soil_files_folder,soilParameters_path[iPts]), listCoarseFragNew,
+                         SE_fieldCap, SE_wiltPoint, SE_vg_alpha, SE_vg_n, SE_vg_I, SE_vg_ksat,
+                         SE_vg_sat_cap, SE_vg_res_cap, SE_gsoil, SE_depth1, SE_depth2, SE_depth3, SE_offSetPsoil)
+
+    SureauLauncher(selectPoints, selectPoints[["LAI_max"]], soilParameters_path, iPts, output_path_sureau,
+                   x_site, y_site, clim_site, startYear, simuNbYear, soil_files_folder, surEauClimate_path,
+                   outputType, SurEau_mainDir, resolutionOutput, overWriteOutput, modeling_options, vegetationParameters_path, methodPedoTransf)
+
+    # file.copy(output_path_sureau, file.path(output_Dir,paste0(outname_prefix,name_site,"_RU",round(RU_vg_new),'_',selectPoints[[clim_site]][iPts],'_',outputType,'_',methodPedoTransf,'.csv')))
+
+    # Load result of simulation
+    ResAnalysis = rbind.data.frame(ResAnalysis, c(RU=round(RU_vg_new,2), Q90Stem=quantile(fread(output_path_sureau, sep=" ")$yearly_PLC_Stem_max, 0.9)))
+    #colnames(ResAnalysis) = c("RU","QPLCl9")
+
+    # ResAnalysis = ResAnalysis_save[1:7,] #ok6
+
+    if ( nrow(ResAnalysis)==2 ) {
+      cat('After the first simiuation, the second is selected function of PLC value simulated:', ResAnalysis[2,2])
+      if ( ResAnalysis[2,2] > 50 ) {
+        if ( abs(ResAnalysis[2,2]-(QPLCl9_target)) < QPLCl9_target_tolerence && abs(ResAnalysis[2,1]-RU_vg_max) < model_varLim ) {
+          fracFind = TRUE
+          RU_cible = ResAnalysis[2,1]
+        } else if ( abs(ResAnalysis[2,1]-RU_vg_max) < model_varLim ) {
+          fracFind = TRUE
+          RU_cible = NA
+        } else {
+          RU_cible = 350
+        }
+      } else if ( ResAnalysis[2,2] < 10 ) {
+        RU_cible = 50
+      } else {
+        RU_cible = 100
+      }
+      RU_cible = min(max(RU_cible, RU_vg_min),RU_vg_max)
+      cat("new RU target =",RU_cible, '\n')
+    } else if ( (all(ResAnalysis[-1,2] > 80) && min(ResAnalysis[  ,2])>QPLCl9_target) ||
+                (all(ResAnalysis[-1,2] < 5 ) && min(ResAnalysis[-1,2])<QPLCl9_target) ||
+                (all((ResAnalysis[-1,2] > max(90, QPLCl9_target)) | (ResAnalysis[-1,2] < min(9, QPLCl9_target))) && ( sum(ResAnalysis[-1,2] < min(9, QPLCl9_target))<=1 || (max(ResAnalysis[-1,2][ResAnalysis[-1,2] < min(9, QPLCl9_target)])-min(ResAnalysis[-1,2][ResAnalysis[-1,2] < min(9, QPLCl9_target)])) ) ) )  {
+      cat("There is only extreme values (close to 100 pr close to 0). Try to find intermediate values if it's possible.\n")
+      diffTarget = min(abs(ResAnalysis[-1,2]-QPLCl9_target))
+      if ( diffTarget < QPLCl9_target_tolerence  ) {
+        fracFind = TRUE
+        RU_cible = ResAnalysis[which(abs(ResAnalysis[-1,2]-QPLCl9_target) == diffTarget)+1,1]
+      } else if ( all(ResAnalysis[-1,2] > 80) && min(ResAnalysis[,2])>QPLCl9_target ) {
+        if ( abs(max(ResAnalysis[,1])-RU_vg_max) < model_varLim ) {
+          fracFind = TRUE
+          RU_cible = NA
+        } else {
+          RU_cible = RU_vg_max
+        }
+      } else if ( all(ResAnalysis[-1,2] < 5 ) && min(ResAnalysis[-1,2])<QPLCl9_target ) {
+        if ( abs(min(ResAnalysis[-1,1])-RU_vg_min) < min(model_varLim,RU_vg_min/10) ) {
+          fracFind = TRUE
+          RU_cible = NA
+        } else {
+          RU_cible = RU_vg_min
+        }
+      } else { # case: all((ResAnalysis[-1,2] > max(90, QPLCl9_target)) | (ResAnalysis[-1,2] < min(10, QPLCl9_target))) )
+        RU_justabove = which(ResAnalysis$QPLCl9[order(ResAnalysis$QPLCl9)] > QPLCl9_target)[1]
+        RU_cible = mean(ResAnalysis$RU[order(ResAnalysis$QPLCl9)[c(RU_justabove-1,RU_justabove)]])
+      }
+      if ( !is.na(RU_cible) && min(abs(ResAnalysis[-1,1] - RU_cible)) < model_varLim ) {
+        fracFind = TRUE # TOTO I'LL BE BACK (relancer une dernier fois ?)
+        if ( abs(min(ResAnalysis[-1,1])-RU_vg_min) < min(model_varLim,RU_vg_min/10) || abs(max(ResAnalysis[,1])-RU_vg_max) < model_varLim ) {
+          RU_cible = NA
+          cat('==> fail. Too low or hight values. Stop here. \n')
+        } else if ( lastSimu ) illBeBack = TRUE
+      }
+
+    } else {
+
+      # Try to create the model
+      # Chose the value of P (and slope?)
+      # model = tryNLSmodel(ResAnalysis)
+      RUmodel = RUfromModels(ResAnalysis, QPLCl9_target, bavard = TRUE)
+
+      if ( illBeBack && !is.null(RUmodel) ) {
+        if ( abs(min(max(RUmodel,RU_vg_min), RU_vg_max) - RU_cible) > (model_varLim*2) ) { #  || abs( ResAnalysis[-1,][which.min(abs(ResAnalysis[-1,1]-RUmodel)),2] - QPLCl9_target) > (QPLCl9_target_tolerence*2) ) {
+          cat("########################################################################\n# WARNING: with ILLBEBACK THE NEW VALUE IS FAR FROM TARGET VALUE !!!!! #\n########################################################################\n")
+          illBeBack = FALSE
+        }
+      }
+
+      if ( !illBeBack ) {
+
+        #if ( class(model) != "try-error" ) {
+        if ( !is.null(RUmodel) ) {
+          #if ( !is.null(model_Pval) && abs((model_Pval - summary(model)$parameters['P',1])/model_Pval)<model_varLim && abs((model_Sval - summary(model)$parameters['slope',1])/model_Sval)<(6*model_varLim) ) {
+          # RU_target_old = RU_cible
+
+          RU_cible      = min(max(RUmodel,RU_vg_min), RU_vg_max)
+          # model_Pval = summary(model)$parameters['P',1]
+          # model_Sval = summary(model)$parameters['slope',1]
+          # RU_cible = model_Pval - log(100/QPLCl9_target - 1) * 25/model_Sval
+
+          # Check if the model it's not wrong ==> we are on a wrong side of an existing value
+          resOrder_above = ResAnalysis$QPLCl9[order(ResAnalysis$QPLCl9)] > QPLCl9_target
+          res_justAbove = ResAnalysis[order(ResAnalysis$QPLCl9)[which(resOrder_above)[1]],]
+          if ( resOrder_above[1] == FALSE ) { # case when there is a value above and a value below QPLCl9_target (which is above 10)
+            res_justBelow = ResAnalysis[order(ResAnalysis$QPLCl9)[which(resOrder_above)[1]-1],]
+            if ( RU_cible > res_justBelow$RU || RU_cible < res_justAbove$RU ) {
+              aa = (res_justBelow$QPLCl9 - res_justAbove$QPLCl9) / (res_justBelow$RU- res_justAbove$RU)
+              bb = res_justAbove$QPLCl9 - res_justAbove$RU * aa
+              RU_cible = ( QPLCl9_target - bb ) / aa # mean pondéré (régression linéaire)
+              cat( "NB: The model give a not logical value. Try manually....\n ")
+            }
+          } else if ( RU_cible < res_justAbove$RU ) { # Only value above target and RU_cible below maw RU compute
+            RU_cible = min(max(ResAnalysis[,1]) + (RU_vg_max-RU_vg_min)/3,RU_vg_max)
+          }
+
+          pt_closest    = which.min(abs(ResAnalysis[-1,1]-RU_cible) )
+          # PLC_closest   = ResAnalysis[-1,][pt_closest,2]
+          RU_target_closest = ResAnalysis[-1,][pt_closest,1]
+
+          if ( iPtsDiag )  cat("For simu ", nrow(ResAnalysis)-1, " the difference with MODEL between target and closest is ",abs(RU_target_closest - RU_cible),"\n",sep="")
+          if ( abs(RU_target_closest - RU_cible) < (model_varLim*2) ) {
+            fracFind = TRUE
+            if ( RU_cible != RUmodel && !(abs(RU_target_closest - RUmodel) < (model_varLim*2)) && (RU_cible>RUmodel || QPLCl9_target<ResAnalysis[-1,][pt_closest,2]) ) { RU_cible = NA } else if ( lastSimu ) { illBeBack = TRUE } # else TOTO I'LL BE BACK (relancerune dernier fois)
+          }
+        } else {
+          if (  min(abs(ResAnalysis[-1,2]-QPLCl9_target)) < QPLCl9_target_tolerence  ) {
+            fracFind = TRUE
+            RU_cible = ResAnalysis[which(abs(ResAnalysis[-1,2]-QPLCl9_target)== min(abs(ResAnalysis[-1,2]-QPLCl9_target)))+1,1]
+          } else if ( min(ResAnalysis[,2]) > min(10,QPLCl9_target) ) {
+            # if ( abs(min(ResAnalysis[,2])-(QPLCl9_target)) < QPLCl9_target_tolerence && abs(max(ResAnalysis[,1])-RU_vg_max) < model_varLim ) {
+            #   fracFind = TRUE
+            #   RU_cible = max(ResAnalysis[,1]) } else
+            if ( min(ResAnalysis[,2])>QPLCl9_target && abs(max(ResAnalysis[,1])-RU_vg_max) < model_varLim ) { # Permet que si on est dans une simulation intermédiare, ça ne s'arrete pas
+              fracFind = TRUE # Si on est dans le cas de PLC > PLC_cible alors que RU ~= RU_max
+              RU_cible = NA
+            } else if ( abs(max(ResAnalysis[,1])-RU_vg_max) < model_varLim ) { # une PLC <= PLC_cible et RU ~= RU_max (==> donc valeur 100 (au dessus) et au moins une valeur en dessous)
+              resOrder_above = ResAnalysis$QPLCl9[order(ResAnalysis$QPLCl9)] > QPLCl9_target
+              if ( resOrder_above[1] == FALSE ) { # case when there is a value above and a value below QPLCl9_target (which is above 10)
+                res_justAbove = ResAnalysis[order(ResAnalysis$QPLCl9)[which(resOrder_above)[1]],]
+                res_justBelow = ResAnalysis[order(ResAnalysis$QPLCl9)[which(resOrder_above)[1]-1],]
+                # RU_cible = mean(ResAnalysis$RU[order(ResAnalysis$QPLCl9)[c(which(resOrder_above)[1]-1,which(resOrder_above)[1])]])  # simple mean
+                aa = (res_justBelow$QPLCl9 - res_justAbove$QPLCl9) / (res_justBelow$RU- res_justAbove$RU)
+                bb = res_justAbove$QPLCl9 - res_justAbove$RU * aa
+                RU_cible = ( QPLCl9_target - bb ) / aa # mean pondéré (régression linéaire)
+              } else { # seulement des valeurs au dessus de QPLCl9_target
+                RU_cible = min(max(ResAnalysis[,1]) + (RU_vg_max-RU_vg_min)/3,RU_vg_max)
+              }
+              if ( abs(min(ResAnalysis$RU - RU_cible)) < model_varLim ) { # on vérifie que l'on a pas fait une simulation similaire....
+                fracFind  = TRUE   # else TOTO I'LL BE BACK (relancerune dernier fois ?)
+                if ( lastSimu ) illBeBack = TRUE
+              }
+            } else {
+              RU_cible = min(max(ResAnalysis[,1]) + (RU_vg_max-RU_vg_min)/3,RU_vg_max)
+            }
+          } else if (  max(ResAnalysis[-1,2]) < max(60,QPLCl9_target) && min(ResAnalysis[-1,1])> (RU_vg_min + model_varLim) ) { # Cas où on veut un point avec plus faible PLC (<60 ou < target) mais RU!=RU_min
+            RU_cible = max(min(ResAnalysis[-1,1]) / 2, RU_vg_min)
+            # } else if (  abs(max(ResAnalysis[-1,2])-(QPLCl9_target)) < QPLCl9_target_tolerence && min(ResAnalysis[-1,1])<20 ) {
+            #   fracFind = TRUE
+            #   RU_cible = min(ResAnalysis[-1,1])
+          } else if (  max(ResAnalysis[-1,2]) < QPLCl9_target && abs(min(ResAnalysis[-1,1])-RU_vg_min) < model_varLim ) { # Cas où on a pas de point possible (< target + RU = RU_min)
+            fracFind = TRUE
+            RU_cible = NA
+          } else {
+            # listeRU = c(200,150,250,100,300,50)
+            # sort(listeRU)
+            resOrder_above = ResAnalysis$QPLCl9[order(ResAnalysis$QPLCl9)] > QPLCl9_target
+            if ( resOrder_above[1] == FALSE ) { # case when there is a value above and a value below QPLCl9_target (which is above 10)
+              res_justAbove = ResAnalysis[order(ResAnalysis$QPLCl9)[which(resOrder_above)[1]],]
+              res_justBelow = ResAnalysis[order(ResAnalysis$QPLCl9)[which(resOrder_above)[1]-1],]
+              # RU_cible = mean(ResAnalysis$RU[order(ResAnalysis$QPLCl9)[c(which(resOrder_above)[1]-1,which(resOrder_above)[1])]])  # simple mean
+              aa = (res_justBelow$QPLCl9 - res_justAbove$QPLCl9) / (res_justBelow$RU- res_justAbove$RU)
+              bb = res_justAbove$QPLCl9 - res_justAbove$RU * aa
+              RU_cible = ( QPLCl9_target - bb ) / aa # mean pondéré (régression linéaire)
+            } else { # seulement des valeurs au dessus de QPLCl9_target / a priori pas possible
+              RU_cible = min(max(ResAnalysis[,1]) + (RU_vg_max-RU_vg_min)/3,RU_vg_max)
+            }
+            if ( abs(min(ResAnalysis$RU - RU_cible)) < model_varLim ) { # on vérifie que l'on a pas fait une simulation similaire....
+              fracFind  = TRUE   # else TOTO I'LL BE BACK (relancerune dernier fois ?)
+              if ( lastSimu ) illBeBack = TRUE
+            }
+            # RU_justabove = which(ResAnalysis$QPLCl9[order(ResAnalysis$QPLCl9)] > QPLCl9_target)[1]
+            # RU_cible = mean(ResAnalysis$RU[order(ResAnalysis$QPLCl9)[c(RU_justabove-1,RU_justabove)]])
+            # if ( abs(RU_justabove - RU_cible) < model_varLim ) {
+            #   fracFind = TRUE # TOTO I'LL BE BACK (relancer une dernier fois ?)
+            #   if ( lastSimu ) illBeBack = TRUE
+            # }
+            if ( iPtsDiag )  cat("For simu ", nrow(ResAnalysis)-1, " the difference between target is ",min(abs(ResAnalysis$RU-RU_cible)),"mm.\n",sep="")
+          }
+        }
+
+      } else {
+        illBeBack = FALSE
+      }
+    }
+    if ( illBeBack && min(abs(ResAnalysis[-1,1] - RU_cible)) <  (model_varLim/4) ) illBeBack = FALSE
+  }
+  if ( fracFind == FALSE )  RU_cible = NA
+
+
+}

@@ -3,6 +3,7 @@
 \name{spwb_ldrExploration}
 \alias{spwb_ldrExploration}
 \alias{spwb_ldrOptimization}
+\alias{spwb_rockOptimization}
 \title{Optimization of root distribution}
 \usage{
 spwb_ldrExploration(
@@ -21,6 +22,17 @@ spwb_ldrExploration(
 )
 
 spwb_ldrOptimization(y, psi_crit, opt_mode = 1)
+
+spwb_rockOptimization(
+  x,
+  meteo,
+  PLC_target = 12,
+  PLC_tol = 0.5,
+  max_simu = 7,
+  model_varLim = 10,
+  max_rocks = 99,
+  verbose = FALSE
+)
 }
 \arguments{
 \item{x}{An object of class \code{\link{spwbInput}}.}
@@ -59,32 +71,42 @@ spwb_ldrOptimization(y, psi_crit, opt_mode = 1)
   \item{\code{opt_mode = 4} maximizes transpiration, subject to root construction constrains, among combinations with stress according to \code{psi_crit}).}
   \item{\code{opt_mode = 5} maximizes photosynthesis, subject to root construction constrains, among combinations with stress according to \code{psi_crit}).}
 }}
+
+\item{PLC_target}{Leaf PLC target (quantile 90)}
+
+\item{PLC_tol}{Limit of the PLC target tolerance, only in some conditions}
+
+\item{max_simu}{Maximum of simulation authorized before to stop}
+
+\item{model_varLim}{Limit of the RU variation of the model accepted}
+
+\item{max_rocks}{Maximum content in coarse fragments}
 }
 \value{
-Function \code{spwb_ldrExploration} returns a list containing a list containing 
-the explored RZ and V1 combinations as well as arrays with the values of average daily plant transpiration, 
+Function \code{spwb_ldrExploration} returns a list containing a list containing
+the explored RZ and V1 combinations as well as arrays with the values of average daily plant transpiration,
 average daily net photosynthesis and the minimum plant water potential for each cohort and parameter combination.
 
-Function \code{spwb_ldrOptimization}  returns a data frame with containing 
-the species index used in medfate, \code{psi_crit} and the optimized values of V1 
-and the LDR parameters Z50 and Z95 (see \code{\link{root_ldrDistribution}}) 
+Function \code{spwb_ldrOptimization}  returns a data frame with containing
+the species index used in medfate, \code{psi_crit} and the optimized values of V1
+and the LDR parameters Z50 and Z95 (see \code{\link{root_ldrDistribution}})
 and as many rows as the number of species.
 }
 \description{
-Functions \code{spwb_ldrExploration} and \code{spwb_ldrOptimization} are used to 
-find optimum the species root distribution within \code{spwb}, given the arguments 
+Functions \code{spwb_ldrExploration} and \code{spwb_ldrOptimization} are used to
+find optimum the species root distribution within \code{spwb}, given the arguments
 \code{x}, \code{meteo} and \code{psi_crit}.
 }
 \details{
-For each combination of the parameters RZ and V1 the function \code{spwb_ldrExploration} runs \code{spwb}, 
-setting the total soil depth equal to RZ. The root proportion in each soil layer is derived from V1, 
-the depth of the first soil layer and RZ using the LDR root distribution model (Schenk and Jackson, 2002) 
+For each combination of the parameters RZ and V1 the function \code{spwb_ldrExploration} runs \code{spwb},
+setting the total soil depth equal to RZ. The root proportion in each soil layer is derived from V1,
+the depth of the first soil layer and RZ using the LDR root distribution model (Schenk and Jackson, 2002)
 and assuming that the depth containing 95 percent of the roots is equal to RZ.
-Function \code{spwb_ldrOptimization} takes the result of the exploration and tries 
-to find optimum root distribution parameters. \code{psi_crit}, the species specific 
-water potential inducing hydraulic failure, can be approached by the water potential 
-inducing 50 percent of loss of conductance for the and gymnosperms and 88 percent for 
-the angiosperms (Urli et al., 2013, Brodribb et al., 2010). Details of the hypothesis 
+Function \code{spwb_ldrOptimization} takes the result of the exploration and tries
+to find optimum root distribution parameters. \code{psi_crit}, the species specific
+water potential inducing hydraulic failure, can be approached by the water potential
+inducing 50 percent of loss of conductance for the and gymnosperms and 88 percent for
+the angiosperms (Urli et al., 2013, Brodribb et al., 2010). Details of the hypothesis
 and limitations of the optimization method are given in Cabon et al. (2019).
 }
 \examples{
@@ -108,7 +130,7 @@ control <- defaultControl("Granier")
 x <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
 
 #Run exploration (weather subset for faster computation)
-y <- spwb_ldrExploration(x = x, meteo = examplemeteo[1:50,], 
+y <- spwb_ldrExploration(x = x, meteo = examplemeteo[1:50,],
                         elevation = 100, latitude = 41.82592)
 
 #Optimization under different modes
@@ -131,7 +153,9 @@ Urli, M., Porte, A.J., Cochard, H., Guengant, Y., Burlett, R., Delzon, S., 2013.
 \code{\link{spwb}}, \code{\link{soil}}, \code{\link{root_ldrDistribution}}
 }
 \author{
-Antoine Cabon, CREAF
+Antoine Cabon, WSL
+
+\enc{Arsène}{Arsene} Druel, INRAE
 
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 }
