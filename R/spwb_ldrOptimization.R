@@ -462,8 +462,8 @@ spwb_ldrOptimization<-function(y, psi_crit, opt_mode = 1) {
       } else  {
         slopeVal = -0.5
       }
-      model  =  try(nls(PLC90 ~ 100/(1+exp(slope/25*(P-RU))), data=ResAnalysis, start=c(slope=slopeVal,P=iPval)), silent = TRUE )
-      # model  =  try(nls(QPLCl9 ~ ((100-min(ResAnalysis[,2]))/(1+exp(slope/25*(P-RU)))+min(ResAnalysis[,2])), data=ResAnalysis, start=c(slope=-2,P=80)), silent = TRUE )
+      model  =  try(nls(PLC90 ~ 100/(1+exp(slope/25*(P-SEW))), data=ResAnalysis, start=c(slope=slopeVal,P=iPval)), silent = TRUE )
+      # model  =  try(nls(QPLCl9 ~ ((100-min(ResAnalysis[,2]))/(1+exp(slope/25*(P-SEW)))+min(ResAnalysis[,2])), data=ResAnalysis, start=c(slope=-2,P=80)), silent = TRUE )
       if ( class(model) != "try-error" ) modelOK = TRUE
     }
   }
@@ -496,7 +496,7 @@ spwb_ldrOptimization<-function(y, psi_crit, opt_mode = 1) {
         slopeVal = -0.4
         sigmoVal = 1
       }
-      model  =  try(nls(PLC90 ~ 100/(sigmo+exp(slope/25*(P-RU))), data=ResAnalysis, start=c(slope=slopeVal,P=iPval,sigmo=sigmoVal)), silent = TRUE )
+      model  =  try(nls(PLC90 ~ 100/(sigmo+exp(slope/25*(P-SEW))), data=ResAnalysis, start=c(slope=slopeVal,P=iPval,sigmo=sigmoVal)), silent = TRUE )
       if ( class(model) != "try-error" ) modelOK = TRUE
     }
   }
@@ -506,16 +506,16 @@ spwb_ldrOptimization<-function(y, psi_crit, opt_mode = 1) {
 
 .tryNLSmodel3 <- function(ResAnalysis) {
 
-  model = try(nls(PLC90 ~ slope/(RU+P), data=ResAnalysis, start=c(slope = 50, P=0.5)), silent = TRUE )
+  model = try(nls(PLC90 ~ slope/(SEW+P), data=ResAnalysis, start=c(slope = 50, P=0.5)), silent = TRUE )
 
-  # if ( class(model) != "try-error" && nrow(ResAnalysis)<=3 && summary(model)$sigma>0.5 ) model = try(nls(QPLCl9 ~ slope/(RU+P), data=ResAnalysis[1,], start=c(slope = 50, P=0.5)), silent = TRUE )
-  # if ( class(model) != "try-error" && summary(model)$sigma>50 ) model = try(nls(QPLCl9 ~ slope/(RU+P), data=ResAnalysis[1,], start=c(slope = 50, P=0.5)), silent = TRUE )
+  # if ( class(model) != "try-error" && nrow(ResAnalysis)<=3 && summary(model)$sigma>0.5 ) model = try(nls(QPLCl9 ~ slope/(SEW+P), data=ResAnalysis[1,], start=c(slope = 50, P=0.5)), silent = TRUE )
+  # if ( class(model) != "try-error" && summary(model)$sigma>50 ) model = try(nls(QPLCl9 ~ slope/(SEW+P), data=ResAnalysis[1,], start=c(slope = 50, P=0.5)), silent = TRUE )
 
   return(model)
 }
 
 .tryNLSmodel4 <- function(ResAnalysis) {
-  model4 = try(nls(PLC90 ~ slope/(RU+P) + offS, data=ResAnalysis, start=c(slope = 50, P=0.5, offS = 0)), silent = TRUE ) # add goffS
+  model4 = try(nls(PLC90 ~ slope/(SEW+P) + offS, data=ResAnalysis, start=c(slope = 50, P=0.5, offS = 0)), silent = TRUE ) # add goffS
   return(model4)
 }
 
@@ -610,11 +610,11 @@ spwb_rockOptimization<-function(x, meteo,
   illBeBack  <- FALSE
   model_Pval <- NULL
   model_Sval <- NULL
-  ResAnalysis <- data.frame( RU = 0 , PLC90 = 100 )
+  ResAnalysis <- data.frame( SEW = 0 , PLC90 = 100 )
   if (LAI_max ==0) fracFind <- TRUE else RU_cible   <- 200
   while( ( nrow(ResAnalysis) < (max_simu+1) && !fracFind ) || (( nrow(ResAnalysis) < (max_simu+2) && illBeBack) ) ) {
 
-    # Compute soil coarse fragment corresponding to target RU
+    # Compute soil coarse fragment corresponding to target SEW
     if ( RU_cible <= RU_vg_min ) { # limit of maximum coarse fragments
       listCoarseFragNew <- rep(max_rocks, nlayers)
     } else if ( RU_cible == RU_vg_ori ) { # When target is equal to original
@@ -643,7 +643,7 @@ spwb_rockOptimization<-function(x, meteo,
     PLC_av_new <- sum(PLC_new*LAI_max_coh)/LAI_max
 
     # Load result of simulation
-    ResAnalysis = rbind.data.frame(ResAnalysis, c(RU=round(RU_vg_new,2), PLC90=PLC_av_new))
+    ResAnalysis = rbind.data.frame(ResAnalysis, c(SEW=round(RU_vg_new,2), PLC90=PLC_av_new))
 
     if ( nrow(ResAnalysis)==2 ) {
       if ( ResAnalysis[2,2] > 50 ) {
@@ -688,7 +688,7 @@ spwb_rockOptimization<-function(x, meteo,
         }
       } else { # case: all((ResAnalysis[-1,2] > max(90, PLC90_target)) | (ResAnalysis[-1,2] < min(10, PLC90_target))) )
         RU_justabove = which(ResAnalysis$PLC90[order(ResAnalysis$PLC90)] > PLC90_target)[1]
-        RU_cible = mean(ResAnalysis$RU[order(ResAnalysis$PLC90)[c(RU_justabove-1,RU_justabove)]])
+        RU_cible = mean(ResAnalysis$SEW[order(ResAnalysis$PLC90)[c(RU_justabove-1,RU_justabove)]])
       }
       if ( !is.na(RU_cible) && min(abs(ResAnalysis[-1,1] - RU_cible)) < model_varLim ) {
         fracFind = TRUE # TOTO I'LL BE BACK (relancer une dernier fois ?)
@@ -728,13 +728,13 @@ spwb_rockOptimization<-function(x, meteo,
           res_justAbove = ResAnalysis[order(ResAnalysis$PLC90)[which(resOrder_above)[1]],]
           if ( resOrder_above[1] == FALSE ) { # case when there is a value above and a value below PLC90_target (which is above 10)
             res_justBelow = ResAnalysis[order(ResAnalysis$PLC90)[which(resOrder_above)[1]-1],]
-            if ( RU_cible > res_justBelow$RU || RU_cible < res_justAbove$RU ) {
-              aa = (res_justBelow$PLC90 - res_justAbove$PLC90) / (res_justBelow$RU- res_justAbove$RU)
-              bb = res_justAbove$PLC90 - res_justAbove$RU * aa
+            if ( RU_cible > res_justBelow$SEW || RU_cible < res_justAbove$SEW ) {
+              aa = (res_justBelow$PLC90 - res_justAbove$PLC90) / (res_justBelow$SEW- res_justAbove$SEW)
+              bb = res_justAbove$PLC90 - res_justAbove$SEW * aa
               RU_cible = ( PLC90_target - bb ) / aa # mean pondéré (régression linéaire)
               cat( "NB: The model give a not logical value. Try manually....\n ")
             }
-          } else if ( RU_cible < res_justAbove$RU ) { # Only value above target and RU_cible below maw RU compute
+          } else if ( RU_cible < res_justAbove$SEW ) { # Only value above target and RU_cible below maw SEW compute
             RU_cible = min(max(ResAnalysis[,1]) + (RU_vg_max-RU_vg_min)/3,RU_vg_max)
           }
 
@@ -756,33 +756,33 @@ spwb_rockOptimization<-function(x, meteo,
             #   fracFind = TRUE
             #   RU_cible = max(ResAnalysis[,1]) } else
             if ( min(ResAnalysis[,2])>PLC90_target && abs(max(ResAnalysis[,1])-RU_vg_max) < model_varLim ) { # Permet que si on est dans une simulation intermédiare, ça ne s'arrete pas
-              fracFind = TRUE # Si on est dans le cas de PLC > PLC_cible alors que RU ~= RU_max
+              fracFind = TRUE # Si on est dans le cas de PLC > PLC_cible alors que SEW ~= RU_max
               RU_cible = NA
-            } else if ( abs(max(ResAnalysis[,1])-RU_vg_max) < model_varLim ) { # une PLC <= PLC_cible et RU ~= RU_max (==> donc valeur 100 (au dessus) et au moins une valeur en dessous)
+            } else if ( abs(max(ResAnalysis[,1])-RU_vg_max) < model_varLim ) { # une PLC <= PLC_cible et SEW ~= RU_max (==> donc valeur 100 (au dessus) et au moins une valeur en dessous)
               resOrder_above = ResAnalysis$PLC90[order(ResAnalysis$PLC90)] > PLC90_target
               if ( resOrder_above[1] == FALSE ) { # case when there is a value above and a value below PLC90_target (which is above 10)
                 res_justAbove = ResAnalysis[order(ResAnalysis$PLC90)[which(resOrder_above)[1]],]
                 res_justBelow = ResAnalysis[order(ResAnalysis$PLC90)[which(resOrder_above)[1]-1],]
-                # RU_cible = mean(ResAnalysis$RU[order(ResAnalysis$PLC90)[c(which(resOrder_above)[1]-1,which(resOrder_above)[1])]])  # simple mean
-                aa = (res_justBelow$PLC90 - res_justAbove$PLC90) / (res_justBelow$RU- res_justAbove$RU)
-                bb = res_justAbove$PLC90 - res_justAbove$RU * aa
+                # RU_cible = mean(ResAnalysis$SEW[order(ResAnalysis$PLC90)[c(which(resOrder_above)[1]-1,which(resOrder_above)[1])]])  # simple mean
+                aa = (res_justBelow$PLC90 - res_justAbove$PLC90) / (res_justBelow$SEW- res_justAbove$SEW)
+                bb = res_justAbove$PLC90 - res_justAbove$SEW * aa
                 RU_cible = ( PLC90_target - bb ) / aa # mean pondéré (régression linéaire)
               } else { # seulement des valeurs au dessus de PLC90_target
                 RU_cible = min(max(ResAnalysis[,1]) + (RU_vg_max-RU_vg_min)/3,RU_vg_max)
               }
-              if ( abs(min(ResAnalysis$RU - RU_cible)) < model_varLim ) { # on vérifie que l'on a pas fait une simulation similaire....
+              if ( abs(min(ResAnalysis$SEW - RU_cible)) < model_varLim ) { # on vérifie que l'on a pas fait une simulation similaire....
                 fracFind  = TRUE   # else TOTO I'LL BE BACK (relancerune dernier fois ?)
                 if ( lastSimu ) illBeBack = TRUE
               }
             } else {
               RU_cible = min(max(ResAnalysis[,1]) + (RU_vg_max-RU_vg_min)/3,RU_vg_max)
             }
-          } else if (  max(ResAnalysis[-1,2]) < max(60,PLC90_target) && min(ResAnalysis[-1,1])> (RU_vg_min + model_varLim) ) { # Cas où on veut un point avec plus faible PLC (<60 ou < target) mais RU!=RU_min
+          } else if (  max(ResAnalysis[-1,2]) < max(60,PLC90_target) && min(ResAnalysis[-1,1])> (RU_vg_min + model_varLim) ) { # Cas où on veut un point avec plus faible PLC (<60 ou < target) mais SEW!=RU_min
             RU_cible = max(min(ResAnalysis[-1,1]) / 2, RU_vg_min)
             # } else if (  abs(max(ResAnalysis[-1,2])-(PLC90_target)) < PLC90_tol && min(ResAnalysis[-1,1])<20 ) {
             #   fracFind = TRUE
             #   RU_cible = min(ResAnalysis[-1,1])
-          } else if (  max(ResAnalysis[-1,2]) < PLC90_target && abs(min(ResAnalysis[-1,1])-RU_vg_min) < model_varLim ) { # Cas où on a pas de point possible (< target + RU = RU_min)
+          } else if (  max(ResAnalysis[-1,2]) < PLC90_target && abs(min(ResAnalysis[-1,1])-RU_vg_min) < model_varLim ) { # Cas où on a pas de point possible (< target + SEW = RU_min)
             fracFind = TRUE
             RU_cible = NA
           } else {
@@ -792,14 +792,14 @@ spwb_rockOptimization<-function(x, meteo,
             if ( resOrder_above[1] == FALSE ) { # case when there is a value above and a value below PLC90_target (which is above 10)
               res_justAbove = ResAnalysis[order(ResAnalysis$PLC90)[which(resOrder_above)[1]],]
               res_justBelow = ResAnalysis[order(ResAnalysis$PLC90)[which(resOrder_above)[1]-1],]
-              # RU_cible = mean(ResAnalysis$RU[order(ResAnalysis$PLC90)[c(which(resOrder_above)[1]-1,which(resOrder_above)[1])]])  # simple mean
-              aa = (res_justBelow$PLC90 - res_justAbove$PLC90) / (res_justBelow$RU- res_justAbove$RU)
-              bb = res_justAbove$PLC90 - res_justAbove$RU * aa
+              # RU_cible = mean(ResAnalysis$SEW[order(ResAnalysis$PLC90)[c(which(resOrder_above)[1]-1,which(resOrder_above)[1])]])  # simple mean
+              aa = (res_justBelow$PLC90 - res_justAbove$PLC90) / (res_justBelow$SEW- res_justAbove$SEW)
+              bb = res_justAbove$PLC90 - res_justAbove$SEW * aa
               RU_cible = ( PLC90_target - bb ) / aa # mean pondéré (régression linéaire)
             } else { # seulement des valeurs au dessus de PLC90_target / a priori pas possible
               RU_cible = min(max(ResAnalysis[,1]) + (RU_vg_max-RU_vg_min)/3,RU_vg_max)
             }
-            if ( abs(min(ResAnalysis$RU - RU_cible)) < model_varLim ) { # on vérifie que l'on a pas fait une simulation similaire....
+            if ( abs(min(ResAnalysis$SEW - RU_cible)) < model_varLim ) { # on vérifie que l'on a pas fait une simulation similaire....
               fracFind  = TRUE   # else TOTO I'LL BE BACK (relancerune dernier fois ?)
               if ( lastSimu ) illBeBack = TRUE
             }
