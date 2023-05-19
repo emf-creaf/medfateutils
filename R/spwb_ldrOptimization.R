@@ -702,7 +702,7 @@ spwb_rockOptimization<-function(x, meteo,
       # Try to create the model
       # Chose the value of P (and slope?)
       # model = tryNLSmodel(ResAnalysis)
-      RUmodel = .RUfromModels(ResAnalysis, PLC90_target, bavard = TRUE)
+      RUmodel = .RUfromModels(ResAnalysis, PLC90_target, bavard = verbose)
 
       if ( illBeBack && !is.null(RUmodel) ) {
         if ( abs(min(max(RUmodel,RU_vg_min), RU_vg_max) - RU_cible) > (model_varLim*2) ) { #  || abs( ResAnalysis[-1,][which.min(abs(ResAnalysis[-1,1]-RUmodel)),2] - PLC90_target) > (PLC90_tol*2) ) {
