@@ -26,8 +26,8 @@ spwb_ldrOptimization(y, psi_crit, opt_mode = 1)
 spwb_rockOptimization(
   x,
   meteo,
-  PLC_target = 12,
-  PLC_tol = 0.5,
+  PLC90_target = 12,
+  PLC90_tol = 0.5,
   max_simu = 7,
   model_varLim = 10,
   max_rocks = 99,
@@ -74,13 +74,13 @@ spwb_rockOptimization(
   \item{\code{opt_mode = 5} maximizes photosynthesis, subject to root construction constrains, among combinations with stress according to \code{psi_crit}).}
 }}
 
-\item{PLC_target}{Leaf PLC target (quantile 90)}
+\item{PLC90_target}{Leaf PLC target (quantile 90)}
 
-\item{PLC_tol}{Limit of the PLC target tolerance, only in some conditions}
+\item{PLC90_tol}{Limit of the PLC target tolerance, only in some conditions}
 
 \item{max_simu}{Maximum of simulation authorized before to stop}
 
-\item{model_varLim}{Limit of the RU variation of the model accepted}
+\item{model_varLim}{Limit of the soil extractable water (SEW) variation of the model accepted}
 
 \item{max_rocks}{Maximum content in coarse fragments}
 }
