@@ -539,23 +539,23 @@ spwb_ldrOptimization<-function(y, psi_crit, opt_mode = 1) {
 
   RU_cible = NULL
   if ( 2 %in% minSigmaModel ) {
-    if ( bavard ) cat("The model sigmoid NEW is selected for RU target. ")
+    if ( bavard ) cli::cli_li("The model sigmoid NEW is selected for RU target. ")
     model_Pval = summary(model2)$parameters['P',1]
     model_Sval = summary(model2)$parameters['slope',1]
     model_Sigval = summary(model2)$parameters['sigmo',1]
     RU_cible = model_Pval - log(100/PLC_target - model_Sigval) * 25/model_Sval
   } else if ( 1 %in% minSigmaModel ) {
-    if ( bavard ) cat("The model sigmoid original is selected for RU target. ")
+    if ( bavard ) cli::cli_li("The model sigmoid original is selected for RU target. ")
     model_Pval = summary(model1)$parameters['P',1]
     model_Sval = summary(model1)$parameters['slope',1]
     RU_cible = model_Pval - log(100/PLC_target - 1) * 25/model_Sval
   } else if ( 3 %in% minSigmaModel ) {
-    if ( bavard ) cat("The model 1/x is selected for RU target. ")
+    if ( bavard ) cli::cli_li("The model 1/x is selected for RU target. ")
     model_Pval = summary(model3)$parameters['P',1]
     model_Sval = summary(model3)$parameters['slope',1]
     RU_cible = model_Sval / PLC_target - model_Pval
   } else if ( 4 %in% minSigmaModel ) {
-    if ( bavard ) cat("The model 1/x+offs is selected for RU target. ")
+    if ( bavard ) cli::cli_li("The model 1/x+offs is selected for RU target. ")
     model_Pval = summary(model4)$parameters['P',1]
     model_Sval = summary(model4)$parameters['slope',1]
     model_Oval = summary(model4)$parameters['offS',1]
@@ -627,6 +627,8 @@ spwb_rockOptimization<-function(x, meteo,
       listCoarseFragNew <- pmax(pmin(listCoarseFragOri*r$root,max_rocks),0)
     }
 
+    if(verbose) cli::cli_li(paste0("Simulation #", nrow(ResAnalysis)))
+
     # Update soil for simulation
     soil_new <- soil
     soil_new$rfc <- round(listCoarseFragNew,4)
@@ -661,10 +663,11 @@ spwb_rockOptimization<-function(x, meteo,
         RU_cible = 100
       }
       RU_cible = min(max(RU_cible, RU_vg_min),RU_vg_max)
-      if(verbose) cli::cli_li(paste0('After the first similuation, the second is selected function of PLC value simulated:', ResAnalysis[2,2], ". New RU target = ",RU_cible))
+      if(verbose) cli::cli_li(paste0('After the first simulation, the second is selected function of PLC value simulated: ', round(ResAnalysis[2,2],4), ". New RU target = ", round(RU_cible)))
     } else if ( (all(ResAnalysis[-1,2] > 80) && min(ResAnalysis[  ,2])>PLC_target) ||
                 (all(ResAnalysis[-1,2] < 5 ) && min(ResAnalysis[-1,2])<PLC_target) ||
-                (all((ResAnalysis[-1,2] > max(90, PLC_target)) | (ResAnalysis[-1,2] < min(9, PLC_target))) && ( sum(ResAnalysis[-1,2] < min(9, PLC_target))<=1 || (max(ResAnalysis[-1,2][ResAnalysis[-1,2] < min(9, PLC_target)])-min(ResAnalysis[-1,2][ResAnalysis[-1,2] < min(9, PLC_target)])) ) ) )  {
+                (all((ResAnalysis[-1,2] > max(90, PLC_target)) | (ResAnalysis[-1,2] < min(9, PLC_target))) &&
+                 ( sum(ResAnalysis[-1,2] < min(9, PLC_target))<=1 || (max(ResAnalysis[-1,2][ResAnalysis[-1,2] < min(9, PLC_target)])-min(ResAnalysis[-1,2][ResAnalysis[-1,2] < min(9, PLC_target)])) ) ) )  {
       if(verbose) cli::cli_li("There is only extreme values (close to 100 pr close to 0). Try to find intermediate values if it's possible.")
       diffTarget = min(abs(ResAnalysis[-1,2]-PLC_target))
       if ( diffTarget < PLC_tol  ) {
@@ -740,7 +743,7 @@ spwb_rockOptimization<-function(x, meteo,
           # PLC_closest   = ResAnalysis[-1,][pt_closest,2]
           RU_target_closest = ResAnalysis[-1,][pt_closest,1]
 
-          if (verbose)  cat("For simu ", nrow(ResAnalysis)-1, " the difference with MODEL between target and closest is ",abs(RU_target_closest - RU_cible),"\n",sep="")
+          if (verbose)  cli::cli_li(paste0("For simulation #", nrow(ResAnalysis)-1, " the difference with MODEL between target and closest is ",abs(RU_target_closest - RU_cible)))
           if ( abs(RU_target_closest - RU_cible) < (model_varLim*2) ) {
             fracFind = TRUE
             if ( RU_cible != RUmodel && !(abs(RU_target_closest - RUmodel) < (model_varLim*2)) && (RU_cible>RUmodel || PLC_target<ResAnalysis[-1,][pt_closest,2]) ) { RU_cible = NA } else if ( lastSimu ) { illBeBack = TRUE } # else TOTO I'LL BE BACK (relancerune dernier fois)
