@@ -705,7 +705,7 @@ spwb_rockOptimization<-function(x, meteo,
       RUmodel = .RUfromModels(ResAnalysis, PLC_target, bavard = TRUE)
 
       if ( illBeBack && !is.null(RUmodel) ) {
-        if ( abs(min(max(RUmodel,RU_vg_min), RU_vg_max) - RU_cible) > (model_varLim*2) ) { #  || abs( ResAnalysis[-1,][which.min(abs(ResAnalysis[-1,1]-RUmodel)),2] - PLC_target) > (QPLCl9_target_tolerence*2) ) {
+        if ( abs(min(max(RUmodel,RU_vg_min), RU_vg_max) - RU_cible) > (model_varLim*2) ) { #  || abs( ResAnalysis[-1,][which.min(abs(ResAnalysis[-1,1]-RUmodel)),2] - PLC_target) > (PLC_tol*2) ) {
           cat("########################################################################\n# WARNING: with ILLBEBACK THE NEW VALUE IS FAR FROM TARGET VALUE !!!!! #\n########################################################################\n")
           illBeBack = FALSE
         }
@@ -742,17 +742,17 @@ spwb_rockOptimization<-function(x, meteo,
           # PLC_closest   = ResAnalysis[-1,][pt_closest,2]
           RU_target_closest = ResAnalysis[-1,][pt_closest,1]
 
-          if (verbose)  cli::cli_li(paste0("For simulation #", nrow(ResAnalysis)-1, " the difference with MODEL between target and closest is ",abs(RU_target_closest - RU_cible)))
+          if (verbose)  cli::cli_li(paste0("For simulation #", nrow(ResAnalysis)-1, " the difference with MODEL between target and closest is ",round(abs(RU_target_closest - RU_cible),3)))
           if ( abs(RU_target_closest - RU_cible) < (model_varLim*2) ) {
             fracFind = TRUE
             if ( RU_cible != RUmodel && !(abs(RU_target_closest - RUmodel) < (model_varLim*2)) && (RU_cible>RUmodel || PLC_target<ResAnalysis[-1,][pt_closest,2]) ) { RU_cible = NA } else if ( lastSimu ) { illBeBack = TRUE } # else TOTO I'LL BE BACK (relancerune dernier fois)
           }
         } else {
-          if (  min(abs(ResAnalysis[-1,2]-PLC_target)) < QPLCl9_target_tolerence  ) {
+          if (  min(abs(ResAnalysis[-1,2]-PLC_target)) < PLC_tol  ) {
             fracFind = TRUE
             RU_cible = ResAnalysis[which(abs(ResAnalysis[-1,2]-PLC_target)== min(abs(ResAnalysis[-1,2]-PLC_target)))+1,1]
           } else if ( min(ResAnalysis[,2]) > min(10,PLC_target) ) {
-            # if ( abs(min(ResAnalysis[,2])-(PLC_target)) < QPLCl9_target_tolerence && abs(max(ResAnalysis[,1])-RU_vg_max) < model_varLim ) {
+            # if ( abs(min(ResAnalysis[,2])-(PLC_target)) < PLC_tol && abs(max(ResAnalysis[,1])-RU_vg_max) < model_varLim ) {
             #   fracFind = TRUE
             #   RU_cible = max(ResAnalysis[,1]) } else
             if ( min(ResAnalysis[,2])>PLC_target && abs(max(ResAnalysis[,1])-RU_vg_max) < model_varLim ) { # Permet que si on est dans une simulation intermédiare, ça ne s'arrete pas
@@ -779,7 +779,7 @@ spwb_rockOptimization<-function(x, meteo,
             }
           } else if (  max(ResAnalysis[-1,2]) < max(60,PLC_target) && min(ResAnalysis[-1,1])> (RU_vg_min + model_varLim) ) { # Cas où on veut un point avec plus faible PLC (<60 ou < target) mais RU!=RU_min
             RU_cible = max(min(ResAnalysis[-1,1]) / 2, RU_vg_min)
-            # } else if (  abs(max(ResAnalysis[-1,2])-(PLC_target)) < QPLCl9_target_tolerence && min(ResAnalysis[-1,1])<20 ) {
+            # } else if (  abs(max(ResAnalysis[-1,2])-(PLC_target)) < PLC_tol && min(ResAnalysis[-1,1])<20 ) {
             #   fracFind = TRUE
             #   RU_cible = min(ResAnalysis[-1,1])
           } else if (  max(ResAnalysis[-1,2]) < PLC_target && abs(min(ResAnalysis[-1,1])-RU_vg_min) < model_varLim ) { # Cas où on a pas de point possible (< target + RU = RU_min)
