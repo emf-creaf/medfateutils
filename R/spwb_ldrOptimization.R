@@ -440,6 +440,130 @@ spwb_ldrOptimization<-function(y, psi_crit, opt_mode = 1) {
 #   return(p)
 # }
 
+# make nls model
+.tryNLSmodel <- function(ResAnalysis) {
+  if ( any(ResAnalysis[-1,2]>= 40 & ResAnalysis[-1,2] <= 60) ) {
+    Pval = ResAnalysis[-1,1][which(ResAnalysis[-1,2]>= 40 & ResAnalysis[-1,2] <= 60)[1]]
+  } else if ( any(ResAnalysis[-1,2]>= 15 & ResAnalysis[-1,2] < 40) && any(ResAnalysis[-1,2]> 60 & ResAnalysis[-1,2] <= 85) ) {
+    Pval = mean(max(ResAnalysis[-1,1][which(ResAnalysis[-1,2]>= 15 & ResAnalysis[-1,2] < 40)]),min(ResAnalysis[-1,1][which(ResAnalysis[-1,2]> 60 & ResAnalysis[-1,2] <= 85)]))
+  } else {
+    Pval = c(80,160,320,640,960,1280,40,20)
+  }
+
+  modelOK = FALSE
+  for ( iPval in Pval ) {
+    if ( !modelOK ) {
+      # if (iPval <50) {
+      #   slopeVal = -5
+      if (iPval <100) {
+        slopeVal = -2
+      } else if (iPval <200) {
+        slopeVal = -1
+      } else  {
+        slopeVal = -0.5
+      }
+      model  =  try(nls(QPLCl9 ~ 100/(1+exp(slope/25*(P-RU))), data=ResAnalysis, start=c(slope=slopeVal,P=iPval)), silent = TRUE )
+      # model  =  try(nls(QPLCl9 ~ ((100-min(ResAnalysis[,2]))/(1+exp(slope/25*(P-RU)))+min(ResAnalysis[,2])), data=ResAnalysis, start=c(slope=-2,P=80)), silent = TRUE )
+      if ( class(model) != "try-error" ) modelOK = TRUE
+    }
+  }
+
+  return(model)
+}
+
+.tryNLSmodel2 <- function(ResAnalysis) {
+  Pval = NULL
+  if ( any(ResAnalysis[-1,2]>= 40 & ResAnalysis[-1,2] <= 60) ) {
+    Pval = ResAnalysis[-1,1][which(ResAnalysis[-1,2]>= 40 & ResAnalysis[-1,2] <= 60)[1]]
+  } else if ( any(ResAnalysis[-1,2]>= 15 & ResAnalysis[-1,2] < 40) && any(ResAnalysis[-1,2]> 60 & ResAnalysis[-1,2] <= 85) ) {
+    Pval = mean(max(ResAnalysis[-1,1][which(ResAnalysis[-1,2]>= 15 & ResAnalysis[-1,2] < 40)]),min(ResAnalysis[-1,1][which(ResAnalysis[-1,2]> 60 & ResAnalysis[-1,2] <= 85)]))
+  }
+  Pval = c(Pval, 80, -30, 160, 320, 640, 960, 1280, 40, 20)
+
+  modelOK = FALSE
+  for ( iPval in Pval ) {
+    if ( !modelOK ) {
+      if (iPval <0) {
+        slopeVal = -0.75
+        sigmoVal = -2
+      } else if (iPval <100) {
+        slopeVal = -0.6
+        sigmoVal = 0.8
+      } else if (iPval <200) {
+        slopeVal = -0.4
+        sigmoVal = 0.8
+      } else  {
+        slopeVal = -0.4
+        sigmoVal = 1
+      }
+      model  =  try(nls(QPLCl9 ~ 100/(sigmo+exp(slope/25*(P-RU))), data=ResAnalysis, start=c(slope=slopeVal,P=iPval,sigmo=sigmoVal)), silent = TRUE )
+      # model  =  try(nls(QPLCl9 ~ ((100-min(ResAnalysis[,2]))/(1+exp(slope/25*(P-RU)))+min(ResAnalysis[,2])), data=ResAnalysis, start=c(slope=-2,P=80)), silent = TRUE )
+      if ( class(model) != "try-error" ) modelOK = TRUE
+    }
+  }
+
+  return(model)
+}
+
+.tryNLSmodel3 <- function(ResAnalysis) {
+
+  model = try(nls(QPLCl9 ~ slope/(RU+P), data=ResAnalysis, start=c(slope = 50, P=0.5)), silent = TRUE )
+
+  # if ( class(model) != "try-error" && nrow(ResAnalysis)<=3 && summary(model)$sigma>0.5 ) model = try(nls(QPLCl9 ~ slope/(RU+P), data=ResAnalysis[1,], start=c(slope = 50, P=0.5)), silent = TRUE )
+  # if ( class(model) != "try-error" && summary(model)$sigma>50 ) model = try(nls(QPLCl9 ~ slope/(RU+P), data=ResAnalysis[1,], start=c(slope = 50, P=0.5)), silent = TRUE )
+
+  return(model)
+}
+
+.tryNLSmodel4 <- function(ResAnalysis) {
+  model4 = try(nls(QPLCl9 ~ slope/(RU+P) + offS, data=ResAnalysis, start=c(slope = 50, P=0.5, offS = 0)), silent = TRUE ) # add goffS
+  return(model4)
+}
+.RUfromModels <- function(ResAnalysis, PLC_target, doModels = c(TRUE, TRUE, TRUE, TRUE), bavard = FALSE){
+  if (!any(doModels)) stop("You have to chose at least one model !")
+
+  if ( doModels[1] ) model1 = .tryNLSmodel(ResAnalysis)
+  if ( doModels[2] ) model2 = .tryNLSmodel2(ResAnalysis)
+  if ( doModels[3] ) model3 = .tryNLSmodel3(ResAnalysis)
+  if ( doModels[4] ) model4 = .tryNLSmodel4(ResAnalysis)
+
+
+  sigmaRes = rep(Inf,4)
+  if ( doModels[1] && class(model1) != "try-error" ) sigmaRes[1] = summary(model1)$sigma
+  if ( doModels[2] && class(model2) != "try-error" ) sigmaRes[2] = summary(model2)$sigma
+  if ( doModels[3] && class(model3) != "try-error" ) sigmaRes[3] = summary(model3)$sigma
+  if ( doModels[4] && class(model4) != "try-error" ) sigmaRes[4] = summary(model4)$sigma
+  if ( nrow(ResAnalysis)<=3 && min(sigmaRes)%in%sigmaRes[3:4] && all(sigmaRes[3:4] > 0.5) ) sigmaRes = sigmaRes*Inf # Remove choice on the sigmoide at simu 2 if there is an another choice with 1/x.... but to be confirmed
+  minSigmaModel = 0
+  if ( any(sigmaRes!=Inf) ) minSigmaModel = which(sigmaRes==min(sigmaRes))
+
+  RU_cible = NULL
+  if ( 2 %in% minSigmaModel ) {
+    if ( bavard ) cat("The model sigmoid NEW is selected for RU target. ")
+    model_Pval = summary(model2)$parameters['P',1]
+    model_Sval = summary(model2)$parameters['slope',1]
+    model_Sigval = summary(model2)$parameters['sigmo',1]
+    RU_cible = model_Pval - log(100/PLC_target - model_Sigval) * 25/model_Sval
+  } else if ( 1 %in% minSigmaModel ) {
+    if ( bavard ) cat("The model sigmoid original is selected for RU target. ")
+    model_Pval = summary(model1)$parameters['P',1]
+    model_Sval = summary(model1)$parameters['slope',1]
+    RU_cible = model_Pval - log(100/PLC_target - 1) * 25/model_Sval
+  } else if ( 3 %in% minSigmaModel ) {
+    if ( bavard ) cat("The model 1/x is selected for RU target. ")
+    model_Pval = summary(model3)$parameters['P',1]
+    model_Sval = summary(model3)$parameters['slope',1]
+    RU_cible = model_Sval / PLC_target - model_Pval
+  } else if ( 4 %in% minSigmaModel ) {
+    if ( bavard ) cat("The model 1/x+offs is selected for RU target. ")
+    model_Pval = summary(model4)$parameters['P',1]
+    model_Sval = summary(model4)$parameters['slope',1]
+    model_Oval = summary(model4)$parameters['offS',1]
+    RU_cible = model_Sval / (PLC_target-model_Oval) - model_Pval
+  }
+  return(RU_cible)
+}
+
 #' @rdname spwb_ldrOptimization
 #' @param PLC_target Leaf PLC target (quantile 90)
 #' @param PLC_tol Limit of the PLC target tolerance, only in some conditions
@@ -447,26 +571,39 @@ spwb_ldrOptimization<-function(y, psi_crit, opt_mode = 1) {
 #' @param model_varLim Limit of the RU variation of the model accepted
 #' @param max_rocks Maximum content in coarse fragments
 #'
-spwb_rockOptimization<-function(x, meteo, PLC_target = 12, PLC_tol = 0.5,
+spwb_rockOptimization<-function(x, meteo,
+                                PLC_target = 12, PLC_tol = 0.5,
                                 max_simu = 7, model_varLim = 10,
-                                max_rocks = 99, verbose = FALSE){
+                                max_rocks = 99, verbose = FALSE, lastSimu = FALSE, ...){
 
+  x$control$verbose = FALSE
+  x$control$cavitationRefill = "rate"
   soil <- x$soil
   nlayers <- length(soil$dVec)
-  control <- x$control
-  LAI_max <- sum(x$above$LAI_live, na.rm = TRUE)
+  LAI_max_coh <- x$above$LAI_live
+  LAI_max <- sum(LAI_max_coh, na.rm = TRUE)
 
   # Select non variable parameters
   coarseFragOri <- sum(soil$rfc*soil$dVec)/sum(soil$dVec)
-  RU_vg_ori <- sum(medfate::soil_waterExtractable(soil, model = control$soilFunctions))
+  listCoarseFragOri <- soil$rfc
+  orderCF <- order(listCoarseFragOri)
+  listDepth <- soil$dVec
+
+  RU_vg_ori <- sum(medfate::soil_waterExtractable(soil, model = x$control$soilFunctions))
 
   soil_max <- soil
   soil_max$rfc <- rep(0, nlayers)
   soil_min <- soil
   soil_min$rfc <- rep(max_rocks, nlayers)
-  RU_vg_max <- sum(medfate::soil_waterExtractable(soil_max, model = control$soilFunctions))
-  RU_vg_min <- sum(medfate::soil_waterExtractable(soil_min, model = control$soilFunctions))
+  RU_vg_max <- sum(medfate::soil_waterExtractable(soil_max, model = x$control$soilFunctions))
+  RU_vg_min <- sum(medfate::soil_waterExtractable(soil_min, model = x$control$soilFunctions))
 
+  f_ru_diff <- function(factor, ru_target) {
+    soil_tmp <- soil
+    soil_tmp$rfc <- pmax(pmin(soil_tmp$rfc*factor,max_rocks),0)
+    ru <- sum(medfate::soil_waterExtractable(soil_tmp, model = x$control$soilFunctions))
+    return(ru_target - ru)
+  }
 
   RU_cible   <- NA
   fracFind   <- FALSE
@@ -478,79 +615,38 @@ spwb_rockOptimization<-function(x, meteo, PLC_target = 12, PLC_tol = 0.5,
   while( ( nrow(ResAnalysis) < (max_simu+1) && !fracFind ) || (( nrow(ResAnalysis) < (max_simu+2) && illBeBack) ) ) {
 
     # Compute soil coarse fragment corresponding to target RU
-    if ( RU_cible <= RU_vg_min ) {
-      listCoarseFragNew <- rep(maxCoarseFrag, nlayers)
-    } else if ( RU_cible == RU_vg_ori ) {
-      listCoarseFragNew <- soil$rfc
-    } else if ( RU_cible >= RU_vg_max ) {
+    if ( RU_cible <= RU_vg_min ) { # limit of maximum coarse fragments
+      listCoarseFragNew <- rep(max_rocks, nlayers)
+    } else if ( RU_cible == RU_vg_ori ) { # When target is equal to original
+      listCoarseFragNew <- listCoarseFragOri
+    } else if ( RU_cible >= RU_vg_max ) { # Limit of 0 coarse fragments
       listCoarseFragNew <- rep(0, nlayers)
-    } else if ( RU_cible >= RU_vg_ori ) {
-      newcoarseFrag <- coarseFragOri + (RU_vg_ori - RU_cible)/RU_vg_ori*(100-coarseFragOri)
-      coarseFragCoef <- newcoarseFrag / coarseFragOri
-      listCoarseFragNew <-  soil$rfc * coarseFragCoef
-    } else  {
-      listCoarseFragOri <- soil$rfc
-      orderCF <- order(listCoarseFragOri)
+    } else {
 
-      newcoarseFrag  <- coarseFragOri + (RU_vg_ori-RU_cible)/RU_vg_ori*(100-coarseFragOri)
-      coarseFragCoef <- newcoarseFrag / coarseFragOri #selectPoints[iPts,paste0("coarseFrag_0-",profondeur_soil,"00_ori")]
-      if ( listCoarseFragOri[orderCF[nlayers]]*coarseFragCoef <= max_rocks ) {
-        # realnewcoarseFrag = (selectPoints[[SE_coarseFrag_1]][iPts]*coarseFragCoef*SE_depth1 + selectPoints[[SE_coarseFrag_2]][iPts]*coarseFragCoef*(SE_depth2-SE_depth1) + selectPoints[[SE_coarseFrag_3]][iPts]*coarseFragCoef*(SE_depth3-SE_depth2)) / SE_depth3
-        listCoarseFragNew <- listCoarseFragOri * coarseFragCoef
-      } else {
-        listDepth = c(SE_depth1,SE_depth2-SE_depth1,SE_depth3-SE_depth2)
-        whichFC = orderCF[3]
-
-        RU_vg_done          = RU_from_wp_fc(selectPoints[[SE_fieldCap]][iPts], selectPoints[[SE_wiltPoint]][iPts], maxCoarseFrag, listDepth[whichFC])
-        coarseFragOri_left  = (listCoarseFragOri[-whichFC][1]*listDepth[-whichFC][1] + listCoarseFragOri[-whichFC][2]*listDepth[-whichFC][2]) / sum(listDepth[-whichFC])
-        RU_vg_ori_left      = RU_from_wp_fc(selectPoints[[SE_fieldCap]][iPts], selectPoints[[SE_wiltPoint]][iPts], coarseFragOri_left, sum(listDepth[-whichFC]))
-
-        newcoarseFrag = coarseFragOri_left + (RU_vg_ori_left-(RU_cible-RU_vg_done))/RU_vg_ori_left*(100-coarseFragOri_left)
-        coarseFragCoef = newcoarseFrag / coarseFragOri_left #selectPoints[iPts,paste0("coarseFrag_0-",profondeur_soil,"00_ori")]
-
-        if ( listCoarseFragOri[orderCF[2]]*coarseFragCoef <= maxCoarseFrag ) {
-          # realnewcoarseFrag = ( maxCoarseFrag*coarseFragCoef*listDepth[whichFC] + listCoarseFragOri[-whichFC][1]*listDepth[-whichFC][1]*coarseFragCoef + listCoarseFragOri[-whichFC][2]*listDepth[-whichFC][2]*coarseFragCoef) / SE_depth3
-          listCoarseFragNew = listCoarseFragOri * coarseFragCoef
-          listCoarseFragNew[whichFC] = maxCoarseFrag
-        } else {
-          RU_vg_done          = RU_vg_done + RU_from_wp_fc(selectPoints[[SE_fieldCap]][iPts], selectPoints[[SE_wiltPoint]][iPts], maxCoarseFrag, listDepth[orderCF[2]])
-          coarseFragOri_left  = listCoarseFragOri[orderCF[1]]
-          RU_vg_ori_left      = RU_from_wp_fc(selectPoints[[SE_fieldCap]][iPts], selectPoints[[SE_wiltPoint]][iPts], coarseFragOri_left, listDepth[orderCF[1]])
-
-          newcoarseFrag = coarseFragOri_left + (RU_vg_ori_left-(RU_cible-RU_vg_done))/RU_vg_ori_left*(100-coarseFragOri_left)
-          coarseFragCoef = newcoarseFrag / coarseFragOri_left #selectPoints[iPts,paste0("coarseFrag_0-",profondeur_soil,"00_ori")]
-
-          listCoarseFragNew = listCoarseFragOri * coarseFragCoef
-          listCoarseFragNew[orderCF[2:3]] = maxCoarseFrag
-        }
-      }
+      r <- uniroot(f_ru_diff, c(0,10), RU_cible)
+      listCoarseFragNew <- pmax(pmin(listCoarseFragOri*r$root,max_rocks),0)
     }
-    # realnewcoarseFrag = (max(0,min(99,selectPoints[[SE_coarseFrag_1]][iPts]*coarseFragCoef))*SE_depth1 + max(0,min(99,selectPoints[[SE_coarseFrag_2]][iPts]*coarseFragCoef))*(SE_depth2-SE_depth1) + max(0,min(99,selectPoints[[SE_coarseFrag_3]][iPts]*coarseFragCoef))*(SE_depth3-SE_depth2)) / SE_depth3
-    # RU_vg_new = RU_from_wp_fc(selectPoints[iPts,SE_fieldCap], selectPoints[iPts,SE_wiltPoint], realnewcoarseFrag, SE_depth3)
-    listCoarseFragNew = round(listCoarseFragNew,4)
-    RU_vg_new = RU_from_wp_fc(selectPoints[[SE_fieldCap]][iPts], selectPoints[[SE_wiltPoint]][iPts], listCoarseFragNew[1], SE_depth1) + RU_from_wp_fc(selectPoints[[SE_fieldCap]][iPts], selectPoints[[SE_wiltPoint]][iPts], listCoarseFragNew[2], SE_depth2-SE_depth1) + RU_from_wp_fc(selectPoints[[SE_fieldCap]][iPts], selectPoints[[SE_wiltPoint]][iPts], listCoarseFragNew[3], SE_depth3-SE_depth2)
+
+    # Update soil for simulation
+    soil_new <- soil
+    soil_new$rfc <- round(listCoarseFragNew,4)
+    RU_vg_new <- sum(medfate::soil_waterExtractable(soil_new, model = x$control$soilFunctions))
+    x_new <- x
+    x_new$soil <- soil_new
 
     # Launch simulation
-    createSoilFileWithCF(selectPoints[iPts,], file.path(soil_files_folder,soilParameters_path[iPts]), listCoarseFragNew,
-                         SE_fieldCap, SE_wiltPoint, SE_vg_alpha, SE_vg_n, SE_vg_I, SE_vg_ksat,
-                         SE_vg_sat_cap, SE_vg_res_cap, SE_gsoil, SE_depth1, SE_depth2, SE_depth3, SE_offSetPsoil)
+    S_new <- spwb(x = x_new, meteo = meteo, ...)
 
-    SureauLauncher(selectPoints, selectPoints[["LAI_max"]], soilParameters_path, iPts, output_path_sureau,
-                   x_site, y_site, clim_site, startYear, simuNbYear, soil_files_folder, surEauClimate_path,
-                   outputType, SurEau_mainDir, resolutionOutput, overWriteOutput, modeling_options, vegetationParameters_path, methodPedoTransf)
-
-    # file.copy(output_path_sureau, file.path(output_Dir,paste0(outname_prefix,name_site,"_RU",round(RU_vg_new),'_',selectPoints[[clim_site]][iPts],'_',outputType,'_',methodPedoTransf,'.csv')))
+    # 90% quantile by species of annual maximum PLC
+    PLC_new <- 100*apply(summary(S_new, output="StemPLC", FUN = max),2,quantile, prob = 0.9)
+    PLC_av_new <- sum(PLC_new*LAI_max_coh)/LAI_max
 
     # Load result of simulation
-    ResAnalysis = rbind.data.frame(ResAnalysis, c(RU=round(RU_vg_new,2), Q90Stem=quantile(fread(output_path_sureau, sep=" ")$yearly_PLC_Stem_max, 0.9)))
-    #colnames(ResAnalysis) = c("RU","QPLCl9")
-
-    # ResAnalysis = ResAnalysis_save[1:7,] #ok6
+    ResAnalysis = rbind.data.frame(ResAnalysis, c(RU=round(RU_vg_new,2), Q90Stem=PLC_av_new))
 
     if ( nrow(ResAnalysis)==2 ) {
-      cat('After the first simiuation, the second is selected function of PLC value simulated:', ResAnalysis[2,2])
       if ( ResAnalysis[2,2] > 50 ) {
-        if ( abs(ResAnalysis[2,2]-(QPLCl9_target)) < QPLCl9_target_tolerence && abs(ResAnalysis[2,1]-RU_vg_max) < model_varLim ) {
+        if ( abs(ResAnalysis[2,2]-(PLC_target)) < PLC_tol && abs(ResAnalysis[2,1]-RU_vg_max) < model_varLim ) {
           fracFind = TRUE
           RU_cible = ResAnalysis[2,1]
         } else if ( abs(ResAnalysis[2,1]-RU_vg_max) < model_varLim ) {
@@ -565,50 +661,49 @@ spwb_rockOptimization<-function(x, meteo, PLC_target = 12, PLC_tol = 0.5,
         RU_cible = 100
       }
       RU_cible = min(max(RU_cible, RU_vg_min),RU_vg_max)
-      cat("new RU target =",RU_cible, '\n')
-    } else if ( (all(ResAnalysis[-1,2] > 80) && min(ResAnalysis[  ,2])>QPLCl9_target) ||
-                (all(ResAnalysis[-1,2] < 5 ) && min(ResAnalysis[-1,2])<QPLCl9_target) ||
-                (all((ResAnalysis[-1,2] > max(90, QPLCl9_target)) | (ResAnalysis[-1,2] < min(9, QPLCl9_target))) && ( sum(ResAnalysis[-1,2] < min(9, QPLCl9_target))<=1 || (max(ResAnalysis[-1,2][ResAnalysis[-1,2] < min(9, QPLCl9_target)])-min(ResAnalysis[-1,2][ResAnalysis[-1,2] < min(9, QPLCl9_target)])) ) ) )  {
-      cat("There is only extreme values (close to 100 pr close to 0). Try to find intermediate values if it's possible.\n")
-      diffTarget = min(abs(ResAnalysis[-1,2]-QPLCl9_target))
-      if ( diffTarget < QPLCl9_target_tolerence  ) {
+      if(verbose) cli::cli_li(paste0('After the first similuation, the second is selected function of PLC value simulated:', ResAnalysis[2,2], ". New RU target = ",RU_cible))
+    } else if ( (all(ResAnalysis[-1,2] > 80) && min(ResAnalysis[  ,2])>PLC_target) ||
+                (all(ResAnalysis[-1,2] < 5 ) && min(ResAnalysis[-1,2])<PLC_target) ||
+                (all((ResAnalysis[-1,2] > max(90, PLC_target)) | (ResAnalysis[-1,2] < min(9, PLC_target))) && ( sum(ResAnalysis[-1,2] < min(9, PLC_target))<=1 || (max(ResAnalysis[-1,2][ResAnalysis[-1,2] < min(9, PLC_target)])-min(ResAnalysis[-1,2][ResAnalysis[-1,2] < min(9, PLC_target)])) ) ) )  {
+      if(verbose) cli::cli_li("There is only extreme values (close to 100 pr close to 0). Try to find intermediate values if it's possible.")
+      diffTarget = min(abs(ResAnalysis[-1,2]-PLC_target))
+      if ( diffTarget < PLC_tol  ) {
         fracFind = TRUE
-        RU_cible = ResAnalysis[which(abs(ResAnalysis[-1,2]-QPLCl9_target) == diffTarget)+1,1]
-      } else if ( all(ResAnalysis[-1,2] > 80) && min(ResAnalysis[,2])>QPLCl9_target ) {
+        RU_cible = ResAnalysis[which(abs(ResAnalysis[-1,2]-PLC_target) == diffTarget)+1,1]
+      } else if ( all(ResAnalysis[-1,2] > 80) && min(ResAnalysis[,2])>PLC_target ) {
         if ( abs(max(ResAnalysis[,1])-RU_vg_max) < model_varLim ) {
           fracFind = TRUE
           RU_cible = NA
         } else {
           RU_cible = RU_vg_max
         }
-      } else if ( all(ResAnalysis[-1,2] < 5 ) && min(ResAnalysis[-1,2])<QPLCl9_target ) {
+      } else if ( all(ResAnalysis[-1,2] < 5 ) && min(ResAnalysis[-1,2])<PLC_target ) {
         if ( abs(min(ResAnalysis[-1,1])-RU_vg_min) < min(model_varLim,RU_vg_min/10) ) {
           fracFind = TRUE
           RU_cible = NA
         } else {
           RU_cible = RU_vg_min
         }
-      } else { # case: all((ResAnalysis[-1,2] > max(90, QPLCl9_target)) | (ResAnalysis[-1,2] < min(10, QPLCl9_target))) )
-        RU_justabove = which(ResAnalysis$QPLCl9[order(ResAnalysis$QPLCl9)] > QPLCl9_target)[1]
+      } else { # case: all((ResAnalysis[-1,2] > max(90, PLC_target)) | (ResAnalysis[-1,2] < min(10, PLC_target))) )
+        RU_justabove = which(ResAnalysis$QPLCl9[order(ResAnalysis$QPLCl9)] > PLC_target)[1]
         RU_cible = mean(ResAnalysis$RU[order(ResAnalysis$QPLCl9)[c(RU_justabove-1,RU_justabove)]])
       }
       if ( !is.na(RU_cible) && min(abs(ResAnalysis[-1,1] - RU_cible)) < model_varLim ) {
         fracFind = TRUE # TOTO I'LL BE BACK (relancer une dernier fois ?)
         if ( abs(min(ResAnalysis[-1,1])-RU_vg_min) < min(model_varLim,RU_vg_min/10) || abs(max(ResAnalysis[,1])-RU_vg_max) < model_varLim ) {
           RU_cible = NA
-          cat('==> fail. Too low or hight values. Stop here. \n')
+          stop('==> fail. Too low or hight values. Stop here. \n')
         } else if ( lastSimu ) illBeBack = TRUE
       }
-
     } else {
 
       # Try to create the model
       # Chose the value of P (and slope?)
       # model = tryNLSmodel(ResAnalysis)
-      RUmodel = RUfromModels(ResAnalysis, QPLCl9_target, bavard = TRUE)
+      RUmodel = .RUfromModels(ResAnalysis, PLC_target, bavard = TRUE)
 
       if ( illBeBack && !is.null(RUmodel) ) {
-        if ( abs(min(max(RUmodel,RU_vg_min), RU_vg_max) - RU_cible) > (model_varLim*2) ) { #  || abs( ResAnalysis[-1,][which.min(abs(ResAnalysis[-1,1]-RUmodel)),2] - QPLCl9_target) > (QPLCl9_target_tolerence*2) ) {
+        if ( abs(min(max(RUmodel,RU_vg_min), RU_vg_max) - RU_cible) > (model_varLim*2) ) { #  || abs( ResAnalysis[-1,][which.min(abs(ResAnalysis[-1,1]-RUmodel)),2] - PLC_target) > (QPLCl9_target_tolerence*2) ) {
           cat("########################################################################\n# WARNING: with ILLBEBACK THE NEW VALUE IS FAR FROM TARGET VALUE !!!!! #\n########################################################################\n")
           illBeBack = FALSE
         }
@@ -624,17 +719,17 @@ spwb_rockOptimization<-function(x, meteo, PLC_target = 12, PLC_tol = 0.5,
           RU_cible      = min(max(RUmodel,RU_vg_min), RU_vg_max)
           # model_Pval = summary(model)$parameters['P',1]
           # model_Sval = summary(model)$parameters['slope',1]
-          # RU_cible = model_Pval - log(100/QPLCl9_target - 1) * 25/model_Sval
+          # RU_cible = model_Pval - log(100/PLC_target - 1) * 25/model_Sval
 
           # Check if the model it's not wrong ==> we are on a wrong side of an existing value
-          resOrder_above = ResAnalysis$QPLCl9[order(ResAnalysis$QPLCl9)] > QPLCl9_target
+          resOrder_above = ResAnalysis$QPLCl9[order(ResAnalysis$QPLCl9)] > PLC_target
           res_justAbove = ResAnalysis[order(ResAnalysis$QPLCl9)[which(resOrder_above)[1]],]
-          if ( resOrder_above[1] == FALSE ) { # case when there is a value above and a value below QPLCl9_target (which is above 10)
+          if ( resOrder_above[1] == FALSE ) { # case when there is a value above and a value below PLC_target (which is above 10)
             res_justBelow = ResAnalysis[order(ResAnalysis$QPLCl9)[which(resOrder_above)[1]-1],]
             if ( RU_cible > res_justBelow$RU || RU_cible < res_justAbove$RU ) {
               aa = (res_justBelow$QPLCl9 - res_justAbove$QPLCl9) / (res_justBelow$RU- res_justAbove$RU)
               bb = res_justAbove$QPLCl9 - res_justAbove$RU * aa
-              RU_cible = ( QPLCl9_target - bb ) / aa # mean pondéré (régression linéaire)
+              RU_cible = ( PLC_target - bb ) / aa # mean pondéré (régression linéaire)
               cat( "NB: The model give a not logical value. Try manually....\n ")
             }
           } else if ( RU_cible < res_justAbove$RU ) { # Only value above target and RU_cible below maw RU compute
@@ -645,32 +740,32 @@ spwb_rockOptimization<-function(x, meteo, PLC_target = 12, PLC_tol = 0.5,
           # PLC_closest   = ResAnalysis[-1,][pt_closest,2]
           RU_target_closest = ResAnalysis[-1,][pt_closest,1]
 
-          if ( iPtsDiag )  cat("For simu ", nrow(ResAnalysis)-1, " the difference with MODEL between target and closest is ",abs(RU_target_closest - RU_cible),"\n",sep="")
+          if (verbose)  cat("For simu ", nrow(ResAnalysis)-1, " the difference with MODEL between target and closest is ",abs(RU_target_closest - RU_cible),"\n",sep="")
           if ( abs(RU_target_closest - RU_cible) < (model_varLim*2) ) {
             fracFind = TRUE
-            if ( RU_cible != RUmodel && !(abs(RU_target_closest - RUmodel) < (model_varLim*2)) && (RU_cible>RUmodel || QPLCl9_target<ResAnalysis[-1,][pt_closest,2]) ) { RU_cible = NA } else if ( lastSimu ) { illBeBack = TRUE } # else TOTO I'LL BE BACK (relancerune dernier fois)
+            if ( RU_cible != RUmodel && !(abs(RU_target_closest - RUmodel) < (model_varLim*2)) && (RU_cible>RUmodel || PLC_target<ResAnalysis[-1,][pt_closest,2]) ) { RU_cible = NA } else if ( lastSimu ) { illBeBack = TRUE } # else TOTO I'LL BE BACK (relancerune dernier fois)
           }
         } else {
-          if (  min(abs(ResAnalysis[-1,2]-QPLCl9_target)) < QPLCl9_target_tolerence  ) {
+          if (  min(abs(ResAnalysis[-1,2]-PLC_target)) < QPLCl9_target_tolerence  ) {
             fracFind = TRUE
-            RU_cible = ResAnalysis[which(abs(ResAnalysis[-1,2]-QPLCl9_target)== min(abs(ResAnalysis[-1,2]-QPLCl9_target)))+1,1]
-          } else if ( min(ResAnalysis[,2]) > min(10,QPLCl9_target) ) {
-            # if ( abs(min(ResAnalysis[,2])-(QPLCl9_target)) < QPLCl9_target_tolerence && abs(max(ResAnalysis[,1])-RU_vg_max) < model_varLim ) {
+            RU_cible = ResAnalysis[which(abs(ResAnalysis[-1,2]-PLC_target)== min(abs(ResAnalysis[-1,2]-PLC_target)))+1,1]
+          } else if ( min(ResAnalysis[,2]) > min(10,PLC_target) ) {
+            # if ( abs(min(ResAnalysis[,2])-(PLC_target)) < QPLCl9_target_tolerence && abs(max(ResAnalysis[,1])-RU_vg_max) < model_varLim ) {
             #   fracFind = TRUE
             #   RU_cible = max(ResAnalysis[,1]) } else
-            if ( min(ResAnalysis[,2])>QPLCl9_target && abs(max(ResAnalysis[,1])-RU_vg_max) < model_varLim ) { # Permet que si on est dans une simulation intermédiare, ça ne s'arrete pas
+            if ( min(ResAnalysis[,2])>PLC_target && abs(max(ResAnalysis[,1])-RU_vg_max) < model_varLim ) { # Permet que si on est dans une simulation intermédiare, ça ne s'arrete pas
               fracFind = TRUE # Si on est dans le cas de PLC > PLC_cible alors que RU ~= RU_max
               RU_cible = NA
             } else if ( abs(max(ResAnalysis[,1])-RU_vg_max) < model_varLim ) { # une PLC <= PLC_cible et RU ~= RU_max (==> donc valeur 100 (au dessus) et au moins une valeur en dessous)
-              resOrder_above = ResAnalysis$QPLCl9[order(ResAnalysis$QPLCl9)] > QPLCl9_target
-              if ( resOrder_above[1] == FALSE ) { # case when there is a value above and a value below QPLCl9_target (which is above 10)
+              resOrder_above = ResAnalysis$QPLCl9[order(ResAnalysis$QPLCl9)] > PLC_target
+              if ( resOrder_above[1] == FALSE ) { # case when there is a value above and a value below PLC_target (which is above 10)
                 res_justAbove = ResAnalysis[order(ResAnalysis$QPLCl9)[which(resOrder_above)[1]],]
                 res_justBelow = ResAnalysis[order(ResAnalysis$QPLCl9)[which(resOrder_above)[1]-1],]
                 # RU_cible = mean(ResAnalysis$RU[order(ResAnalysis$QPLCl9)[c(which(resOrder_above)[1]-1,which(resOrder_above)[1])]])  # simple mean
                 aa = (res_justBelow$QPLCl9 - res_justAbove$QPLCl9) / (res_justBelow$RU- res_justAbove$RU)
                 bb = res_justAbove$QPLCl9 - res_justAbove$RU * aa
-                RU_cible = ( QPLCl9_target - bb ) / aa # mean pondéré (régression linéaire)
-              } else { # seulement des valeurs au dessus de QPLCl9_target
+                RU_cible = ( PLC_target - bb ) / aa # mean pondéré (régression linéaire)
+              } else { # seulement des valeurs au dessus de PLC_target
                 RU_cible = min(max(ResAnalysis[,1]) + (RU_vg_max-RU_vg_min)/3,RU_vg_max)
               }
               if ( abs(min(ResAnalysis$RU - RU_cible)) < model_varLim ) { # on vérifie que l'on a pas fait une simulation similaire....
@@ -680,39 +775,32 @@ spwb_rockOptimization<-function(x, meteo, PLC_target = 12, PLC_tol = 0.5,
             } else {
               RU_cible = min(max(ResAnalysis[,1]) + (RU_vg_max-RU_vg_min)/3,RU_vg_max)
             }
-          } else if (  max(ResAnalysis[-1,2]) < max(60,QPLCl9_target) && min(ResAnalysis[-1,1])> (RU_vg_min + model_varLim) ) { # Cas où on veut un point avec plus faible PLC (<60 ou < target) mais RU!=RU_min
+          } else if (  max(ResAnalysis[-1,2]) < max(60,PLC_target) && min(ResAnalysis[-1,1])> (RU_vg_min + model_varLim) ) { # Cas où on veut un point avec plus faible PLC (<60 ou < target) mais RU!=RU_min
             RU_cible = max(min(ResAnalysis[-1,1]) / 2, RU_vg_min)
-            # } else if (  abs(max(ResAnalysis[-1,2])-(QPLCl9_target)) < QPLCl9_target_tolerence && min(ResAnalysis[-1,1])<20 ) {
+            # } else if (  abs(max(ResAnalysis[-1,2])-(PLC_target)) < QPLCl9_target_tolerence && min(ResAnalysis[-1,1])<20 ) {
             #   fracFind = TRUE
             #   RU_cible = min(ResAnalysis[-1,1])
-          } else if (  max(ResAnalysis[-1,2]) < QPLCl9_target && abs(min(ResAnalysis[-1,1])-RU_vg_min) < model_varLim ) { # Cas où on a pas de point possible (< target + RU = RU_min)
+          } else if (  max(ResAnalysis[-1,2]) < PLC_target && abs(min(ResAnalysis[-1,1])-RU_vg_min) < model_varLim ) { # Cas où on a pas de point possible (< target + RU = RU_min)
             fracFind = TRUE
             RU_cible = NA
           } else {
             # listeRU = c(200,150,250,100,300,50)
             # sort(listeRU)
-            resOrder_above = ResAnalysis$QPLCl9[order(ResAnalysis$QPLCl9)] > QPLCl9_target
-            if ( resOrder_above[1] == FALSE ) { # case when there is a value above and a value below QPLCl9_target (which is above 10)
+            resOrder_above = ResAnalysis$QPLCl9[order(ResAnalysis$QPLCl9)] > PLC_target
+            if ( resOrder_above[1] == FALSE ) { # case when there is a value above and a value below PLC_target (which is above 10)
               res_justAbove = ResAnalysis[order(ResAnalysis$QPLCl9)[which(resOrder_above)[1]],]
               res_justBelow = ResAnalysis[order(ResAnalysis$QPLCl9)[which(resOrder_above)[1]-1],]
               # RU_cible = mean(ResAnalysis$RU[order(ResAnalysis$QPLCl9)[c(which(resOrder_above)[1]-1,which(resOrder_above)[1])]])  # simple mean
               aa = (res_justBelow$QPLCl9 - res_justAbove$QPLCl9) / (res_justBelow$RU- res_justAbove$RU)
               bb = res_justAbove$QPLCl9 - res_justAbove$RU * aa
-              RU_cible = ( QPLCl9_target - bb ) / aa # mean pondéré (régression linéaire)
-            } else { # seulement des valeurs au dessus de QPLCl9_target / a priori pas possible
+              RU_cible = ( PLC_target - bb ) / aa # mean pondéré (régression linéaire)
+            } else { # seulement des valeurs au dessus de PLC_target / a priori pas possible
               RU_cible = min(max(ResAnalysis[,1]) + (RU_vg_max-RU_vg_min)/3,RU_vg_max)
             }
             if ( abs(min(ResAnalysis$RU - RU_cible)) < model_varLim ) { # on vérifie que l'on a pas fait une simulation similaire....
               fracFind  = TRUE   # else TOTO I'LL BE BACK (relancerune dernier fois ?)
               if ( lastSimu ) illBeBack = TRUE
             }
-            # RU_justabove = which(ResAnalysis$QPLCl9[order(ResAnalysis$QPLCl9)] > QPLCl9_target)[1]
-            # RU_cible = mean(ResAnalysis$RU[order(ResAnalysis$QPLCl9)[c(RU_justabove-1,RU_justabove)]])
-            # if ( abs(RU_justabove - RU_cible) < model_varLim ) {
-            #   fracFind = TRUE # TOTO I'LL BE BACK (relancer une dernier fois ?)
-            #   if ( lastSimu ) illBeBack = TRUE
-            # }
-            if ( iPtsDiag )  cat("For simu ", nrow(ResAnalysis)-1, " the difference between target is ",min(abs(ResAnalysis$RU-RU_cible)),"mm.\n",sep="")
           }
         }
 
@@ -721,8 +809,11 @@ spwb_rockOptimization<-function(x, meteo, PLC_target = 12, PLC_tol = 0.5,
       }
     }
     if ( illBeBack && min(abs(ResAnalysis[-1,1] - RU_cible)) <  (model_varLim/4) ) illBeBack = FALSE
+
   }
-  if ( fracFind == FALSE )  RU_cible = NA
 
 
+  r <- uniroot(f_ru_diff, c(0,10), RU_cible)
+  listCoarseFragNew <- pmax(pmin(listCoarseFragOri*r$root,max_rocks),0)
+  return(list("SoilWaterExtractable" = RU_cible, "RFC" = listCoarseFragNew, "SimulationTable" = ResAnalysis))
 }
