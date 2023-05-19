@@ -621,8 +621,7 @@ spwb_rockOptimization<-function(x, meteo,
       listCoarseFragNew <- listCoarseFragOri
     } else if ( RU_cible >= RU_vg_max ) { # Limit of 0 coarse fragments
       listCoarseFragNew <- rep(0, nlayers)
-    } else {
-
+    } else { # Find the the coarse fragment values corresponding to RU_cible
       r <- uniroot(f_ru_diff, c(0,10), RU_cible)
       listCoarseFragNew <- pmax(pmin(listCoarseFragOri*r$root,max_rocks),0)
     }
