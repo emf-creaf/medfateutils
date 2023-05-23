@@ -159,7 +159,9 @@ Urli, M., Porte, A.J., Cochard, H., Guengant, Y., Burlett, R., Delzon, S., 2013.
 \author{
 Antoine Cabon, WSL
 
-\enc{Arsène}{Arsene} Druel, INRAE
+\enc{Arsène}{Arsene} Druel, URFM-INRAE
+
+Nicolas Martin-StPaul, URFM-INRAE
 
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 }

@@ -252,7 +252,9 @@ spwb_ldrExploration<-function(x, meteo, cohorts = NULL,
 #' @author
 #' Antoine Cabon, WSL
 #'
-#' \enc{Arsène}{Arsene} Druel, INRAE
+#' \enc{Arsène}{Arsene} Druel, URFM-INRAE
+#'
+#' Nicolas Martin-StPaul, URFM-INRAE
 #'
 #' Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 #'
