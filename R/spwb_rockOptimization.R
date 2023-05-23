@@ -128,8 +128,8 @@
 #' Optimization of rock fragment content
 #'
 #' Function \code{spwb_rockOptimization} finds optimum rock fragment content in the soil
-#' corresponding to a given arguments \code{x}, \code{meteo} and \code{PLC90_target},
-#' following the method described in Druel et al. (2023).
+#' corresponding to given vegetation, weather and target percent loss
+#' of conductance (PLC), following the method described in Druel et al. (2023).
 #'
 #' @param x An object of class \code{\link{spwbInput}}.
 #' @param meteo A data frame with daily meteorological data series (see \code{\link{spwb}}).
@@ -142,7 +142,11 @@
 #' @param ... Additional parameters to function \code{\link{spwb}}.
 #'
 #' @details
-#' TO BE WRITTEN
+#' The function performs a model inversion based on an ecohydrological assumption,
+#' consisting in that forest leaf area index is in equilibrium with a low embolism
+#' rate under normal conditions. This is translated in that the 90\% interannual quantile of
+#' the maximum annual percent loss of conductance (PLC), averaged over plant cohorts,
+#' should be close to a target PLC value (by default 12\%).
 #'
 #' @return
 #' Function \code{spwb_rockOptimization} returns a list containing the estimated rock fragment content,
