@@ -79,7 +79,7 @@ spwb_rockOptimization(
 
 \item{max_simu}{Maximum of simulation authorized before stopping.}
 
-\item{model_varLim}{Limit of the soil extractable water (SEW) variation of the model accepted}
+\item{model_varLim}{Limit of the soil extractable water (SEW) variation of the model accepted.}
 
 \item{max_rocks}{Maximum content in coarse fragments allowed for any soil layer.}
 }

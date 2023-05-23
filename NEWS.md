@@ -8,6 +8,7 @@
 - Rewriting IFN2forest function
 - Species mapping table for IFN
 - Functions spwb_ldrOptimization, spwb_ldrCalibration and spwb_sensitivity moved from medfate
+- New function spwb_rockOptimization, by Arsene Druel & Nico MartinStPaul
 
 # Version 0.1.4
 - Names changed for IFN example datasets
