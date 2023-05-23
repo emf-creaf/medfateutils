@@ -3,8 +3,7 @@
 \name{spwb_ldrExploration}
 \alias{spwb_ldrExploration}
 \alias{spwb_ldrOptimization}
-\alias{spwb_rockOptimization}
-\title{Optimization of rock fragment content and root distribution}
+\title{Optimization of root distribution}
 \usage{
 spwb_ldrExploration(
   x,
@@ -22,18 +21,6 @@ spwb_ldrExploration(
 )
 
 spwb_ldrOptimization(y, psi_crit, opt_mode = 1)
-
-spwb_rockOptimization(
-  x,
-  meteo,
-  PLC90_target = 12,
-  PLC90_tol = 0.5,
-  max_simu = 7,
-  model_varLim = 10,
-  max_rocks = 99,
-  verbose = FALSE,
-  ...
-)
 }
 \arguments{
 \item{x}{An object of class \code{\link{spwbInput}}.}
@@ -72,21 +59,8 @@ spwb_rockOptimization(
   \item{\code{opt_mode = 4} maximizes transpiration, subject to root construction constrains, among combinations with stress according to \code{psi_crit}).}
   \item{\code{opt_mode = 5} maximizes photosynthesis, subject to root construction constrains, among combinations with stress according to \code{psi_crit}).}
 }}
-
-\item{PLC90_target}{Stem PLC target (quantile 90).}
-
-\item{PLC90_tol}{Limit of the PLC target tolerance, only in some conditions.}
-
-\item{max_simu}{Maximum of simulation authorized before stopping.}
-
-\item{model_varLim}{Limit of the soil extractable water (SEW) variation of the model accepted.}
-
-\item{max_rocks}{Maximum content in coarse fragments allowed for any soil layer.}
 }
 \value{
-Function \code{spwb_rockOptimization} returns a list containing the estimated rock fragment content,
-the corresponding soil extractable water and a dataframe of simulation results needed for the estimation.
-
 Function \code{spwb_ldrExploration} returns a list containing a list containing
 the explored RZ and V1 combinations as well as arrays with the values of average daily plant transpiration,
 average daily net photosynthesis and the minimum plant water potential for each cohort and parameter combination.
@@ -97,8 +71,6 @@ and the LDR parameters Z50 and Z95 (see \code{\link{root_ldrDistribution}})
 and as many rows as the number of species.
 }
 \description{
-Function \code{spwb_rockOptimization} finds optimum rock fragment content in the soil
-corresponding to a given arguments \code{x}, \code{meteo} and \code{PLC90_target}.
 Functions \code{spwb_ldrExploration} and \code{spwb_ldrOptimization} are used to
 find optimum the species root distribution within \code{spwb}, given the arguments
 \code{x}, \code{meteo} and \code{psi_crit}.
@@ -142,9 +114,6 @@ y <- spwb_ldrExploration(x = x, meteo = examplemeteo[1:50,],
 #Optimization under different modes
 spwb_ldrOptimization(y = y, psi_crit = c(-2,-3,-4), opt_mode = 1)
 
-#Rock fragment content optimization
-spwb_rockOptimization(x, meteo = examplemeteo,
-                      elevation = 100, latitude = 41.82592)
 }
 
 }
@@ -152,8 +121,6 @@ spwb_rockOptimization(x, meteo = examplemeteo,
 Brodribb, T.J., Bowman, D.J.M.S., Nichols, S., Delzon, S., Burlett, R., 2010. Xylem function and growth rate interact to determine recovery rates after exposure to extreme water deficit. New Phytol. 188, 533–542. doi:10.1111/j.1469-8137.2010.03393.x
 
 Cabon, A., \enc{Martínez-Vilalta}{Martinez-Vilalta}, J., Poyatos, R., \enc{Martínez de Aragón}{Martinez de Aragon}, J., De \enc{Cáceres}{Caceres}, M. (2018) Applying the eco-hydrological equilibrium hypothesis to estimate root ditribution in water-limited forests. Ecohydrology 11: e2015.
-
-Druel, A., Martins, N., Cochard, H., De Caceres, M., Delzon, S., Mencuccini, M., Torres-Ruiz, J., and Ruffault, J.: European forest vulnerability to hydraulic failure: an ecohydrological approach, EGU General Assembly 2023, Vienna, Austria, 24–28 Apr 2023, EGU23-17068, https://doi.org/10.5194/egusphere-egu23-17068, 2023.
 
 Eagleson, P.S., 1982. Ecological optimality in water-limited natural soil-vegetation systems: 1. Theory and hypothesis. Water Resour. Res. 18, 325–340. doi:10.1029/WR018i002p00325
 
@@ -166,10 +133,6 @@ Urli, M., Porte, A.J., Cochard, H., Guengant, Y., Burlett, R., Delzon, S., 2013.
 }
 \author{
 Antoine Cabon, WSL
-
-\enc{Arsène}{Arsene} Druel, URFM-INRAE
-
-Nicolas Martin-StPaul, URFM-INRAE
 
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 }
