@@ -196,8 +196,10 @@ spwb_ldrExploration<-function(x, meteo, cohorts = NULL,
   return(res)
 }
 
-#' Optimization of root distribution
+#' Optimization of rock fragment content and root distribution
 #'
+#' Function \code{spwb_rockOptimization} finds optimum rock fragment content in the soil
+#' corresponding to a given arguments \code{x}, \code{meteo} and \code{PLC90_target}.
 #' Functions \code{spwb_ldrExploration} and \code{spwb_ldrOptimization} are used to
 #' find optimum the species root distribution within \code{spwb}, given the arguments
 #' \code{x}, \code{meteo} and \code{psi_crit}.
@@ -227,6 +229,9 @@ spwb_ldrExploration<-function(x, meteo, cohorts = NULL,
 #' and limitations of the optimization method are given in Cabon et al. (2019).
 #'
 #' @return
+#' Function \code{spwb_rockOptimization} returns a list containing the estimated rock fragment content,
+#' the corresponding soil extractable water and a dataframe of simulation results needed for the estimation.
+#'
 #' Function \code{spwb_ldrExploration} returns a list containing a list containing
 #' the explored RZ and V1 combinations as well as arrays with the values of average daily plant transpiration,
 #' average daily net photosynthesis and the minimum plant water potential for each cohort and parameter combination.
@@ -571,16 +576,16 @@ spwb_ldrOptimization<-function(y, psi_crit, opt_mode = 1) {
 }
 
 #' @rdname spwb_ldrOptimization
-#' @param PLC90_target Leaf PLC target (quantile 90)
-#' @param PLC90_tol Limit of the PLC target tolerance, only in some conditions
-#' @param max_simu Maximum of simulation authorized before to stop
-#' @param model_varLim Limit of the soil extractable water (SEW) variation of the model accepted
-#' @param max_rocks Maximum content in coarse fragments
+#' @param PLC90_target Stem PLC target (quantile 90).
+#' @param PLC90_tol Limit of the PLC target tolerance, only in some conditions.
+#' @param max_simu Maximum of simulation authorized before stopping.
+#' @param model_varLim Limit of the soil extractable water (SEW) variation of the model accepted.
+#' @param max_rocks Maximum content in coarse fragments allowed for any soil layer.
 #'
 spwb_rockOptimization<-function(x, meteo,
                                 PLC90_target = 12, PLC90_tol = 0.5,
                                 max_simu = 7, model_varLim = 10,
-                                max_rocks = 99, verbose = FALSE, lastSimu = FALSE, ...){
+                                max_rocks = 99, verbose = FALSE, ...){
 
   x$control$verbose = FALSE
   x$control$cavitationRefill = "rate"
@@ -619,8 +624,7 @@ spwb_rockOptimization<-function(x, meteo,
   model_Sval <- NULL
   ResAnalysis <- data.frame( SEW = 0 , PLC90 = 100 )
   if (LAI_max ==0) fracFind <- TRUE else SEW_target   <- 200
-  while( ( nrow(ResAnalysis) < (max_simu+1) && !fracFind ) || (( nrow(ResAnalysis) < (max_simu+2) && illBeBack) ) ) {
-
+  while( (nrow(ResAnalysis) < (max_simu+1) && !fracFind ) && (nrow(ResAnalysis) < (max_simu+2)) ) {
     # Compute soil coarse fragment corresponding to target SEW
     if ( SEW_target <= SEW_min ) { # limit of maximum coarse fragments
       listCoarseFragNew <- rep(max_rocks, nlayers)
@@ -655,168 +659,140 @@ spwb_rockOptimization<-function(x, meteo,
     if ( nrow(ResAnalysis)==2 ) {
       if ( ResAnalysis[2,2] > 50 ) {
         if ( abs(ResAnalysis[2,2]-(PLC90_target)) < PLC90_tol && abs(ResAnalysis[2,1]-SEW_max) < model_varLim ) {
-          fracFind = TRUE
-          SEW_target = ResAnalysis[2,1]
+          fracFind <- TRUE
+          SEW_target <- ResAnalysis[2,1]
         } else if ( abs(ResAnalysis[2,1]-SEW_max) < model_varLim ) {
-          fracFind = TRUE
-          SEW_target = NA
+          fracFind <- TRUE
+          SEW_target <- NA
         } else {
-          SEW_target = 350
+          SEW_target <- 350
         }
       } else if ( ResAnalysis[2,2] < 10 ) {
-        SEW_target = 50
+        SEW_target <- 50
       } else {
-        SEW_target = 100
+        SEW_target <- 100
       }
-      SEW_target = min(max(SEW_target, SEW_min),SEW_max)
+      SEW_target <- min(max(SEW_target, SEW_min),SEW_max)
       if(verbose) cli::cli_li(paste0('After the first simulation, the second is function of simulated PLC90 value: ', round(ResAnalysis[2,2],4), ". New SEW target = ", round(SEW_target)))
     } else if ( (all(ResAnalysis[-1,2] > 80) && min(ResAnalysis[  ,2])>PLC90_target) ||
                 (all(ResAnalysis[-1,2] < 5 ) && min(ResAnalysis[-1,2])<PLC90_target) ||
                 (all((ResAnalysis[-1,2] > max(90, PLC90_target)) | (ResAnalysis[-1,2] < min(9, PLC90_target))) &&
                  ( sum(ResAnalysis[-1,2] < min(9, PLC90_target))<=1 || (max(ResAnalysis[-1,2][ResAnalysis[-1,2] < min(9, PLC90_target)])-min(ResAnalysis[-1,2][ResAnalysis[-1,2] < min(9, PLC90_target)])) ) ) )  {
       if(verbose) cli::cli_li("There is only extreme PLC90 values (close to 100 pr close to 0). Try to find intermediate values if it's possible.")
-      diffTarget = min(abs(ResAnalysis[-1,2]-PLC90_target))
+      diffTarget <- min(abs(ResAnalysis[-1,2]-PLC90_target))
       if ( diffTarget < PLC90_tol  ) {
-        fracFind = TRUE
-        SEW_target = ResAnalysis[which(abs(ResAnalysis[-1,2]-PLC90_target) == diffTarget)+1,1]
+        fracFind <- TRUE
+        SEW_target <- ResAnalysis[which(abs(ResAnalysis[-1,2]-PLC90_target) == diffTarget)+1,1]
       } else if ( all(ResAnalysis[-1,2] > 80) && min(ResAnalysis[,2])>PLC90_target ) {
         if ( abs(max(ResAnalysis[,1])-SEW_max) < model_varLim ) {
-          fracFind = TRUE
-          SEW_target = NA
+          fracFind <- TRUE
+          SEW_target <- NA
         } else {
-          SEW_target = SEW_max
+          SEW_target <- SEW_max
         }
       } else if ( all(ResAnalysis[-1,2] < 5 ) && min(ResAnalysis[-1,2])<PLC90_target ) {
         if ( abs(min(ResAnalysis[-1,1])-SEW_min) < min(model_varLim,SEW_min/10) ) {
-          fracFind = TRUE
-          SEW_target = NA
+          fracFind <- TRUE
+          SEW_target <- NA
         } else {
-          SEW_target = SEW_min
+          SEW_target <- SEW_min
         }
-      } else { # case: all((ResAnalysis[-1,2] > max(90, PLC90_target)) | (ResAnalysis[-1,2] < min(10, PLC90_target))) )
-        RU_justabove = which(ResAnalysis$PLC90[order(ResAnalysis$PLC90)] > PLC90_target)[1]
-        SEW_target = mean(ResAnalysis$SEW[order(ResAnalysis$PLC90)[c(RU_justabove-1,RU_justabove)]])
+      } else {
+        SEW_justabove <- which(ResAnalysis$PLC90[order(ResAnalysis$PLC90)] > PLC90_target)[1]
+        SEW_target <- mean(ResAnalysis$SEW[order(ResAnalysis$PLC90)[c(SEW_justabove-1,SEW_justabove)]])
       }
       if ( !is.na(SEW_target) && min(abs(ResAnalysis[-1,1] - SEW_target)) < model_varLim ) {
-        fracFind = TRUE # TOTO I'LL BE BACK (relancer une dernier fois ?)
+        fracFind <- TRUE
         if ( abs(min(ResAnalysis[-1,1])-SEW_min) < min(model_varLim,SEW_min/10) || abs(max(ResAnalysis[,1])-SEW_max) < model_varLim ) {
-          SEW_target = NA
+          SEW_target <- NA
           stop('==> fail. Too low or high values. Stop here. \n')
-        } else if ( lastSimu ) illBeBack = TRUE
+        }
       }
     } else {
-
       # Try to create the model
-      # Chose the value of P (and slope?)
-      # model = tryNLSmodel(ResAnalysis)
-      RUmodel = .SEWfromModels(ResAnalysis, PLC90_target, bavard = verbose)
+      SEW_model <- .SEWfromModels(ResAnalysis, PLC90_target, bavard = verbose)
 
-      if ( illBeBack && !is.null(RUmodel) ) {
-        if ( abs(min(max(RUmodel,SEW_min), SEW_max) - SEW_target) > (model_varLim*2) ) { #  || abs( ResAnalysis[-1,][which.min(abs(ResAnalysis[-1,1]-RUmodel)),2] - PLC90_target) > (PLC90_tol*2) ) {
-          cat("########################################################################\n# WARNING: with ILLBEBACK THE NEW VALUE IS FAR FROM TARGET VALUE !!!!! #\n########################################################################\n")
-          illBeBack = FALSE
+      if ( !is.null(SEW_model) ) {
+        SEW_target <- min(max(SEW_model,SEW_min), SEW_max)
+
+        # Check if the model it's not wrong ==> we are on a wrong side of an existing value
+        resOrder_above <- ResAnalysis$PLC90[order(ResAnalysis$PLC90)] > PLC90_target
+        res_justAbove <- ResAnalysis[order(ResAnalysis$PLC90)[which(resOrder_above)[1]],]
+        if ( resOrder_above[1] == FALSE ) { # case when there is a value above and a value below PLC90_target (which is above 10)
+          res_justBelow <- ResAnalysis[order(ResAnalysis$PLC90)[which(resOrder_above)[1]-1],]
+          if ( SEW_target > res_justBelow$SEW || SEW_target < res_justAbove$SEW ) {
+            aa <- (res_justBelow$PLC90 - res_justAbove$PLC90) / (res_justBelow$SEW- res_justAbove$SEW)
+            bb <- res_justAbove$PLC90 - res_justAbove$SEW * aa
+            SEW_target <- ( PLC90_target - bb ) / aa # mean pondéré (régression linéaire)
+            if(verbose) cli::cli_li( "NB: The model give a not logical value. Try manually....\n ")
+          }
+        } else if ( SEW_target < res_justAbove$SEW ) { # Only value above target and SEW_target below maw SEW compute
+          SEW_target <- min(max(ResAnalysis[,1]) + (SEW_max-SEW_min)/3,SEW_max)
         }
-      }
 
-      if ( !illBeBack ) {
+        pt_closest <- which.min(abs(ResAnalysis[-1,1]-SEW_target) )
+        SEW_target_closest <- ResAnalysis[-1,][pt_closest,1]
 
-        #if ( class(model) != "try-error" ) {
-        if ( !is.null(RUmodel) ) {
-          SEW_target      = min(max(RUmodel,SEW_min), SEW_max)
-
-          # Check if the model it's not wrong ==> we are on a wrong side of an existing value
-          resOrder_above = ResAnalysis$PLC90[order(ResAnalysis$PLC90)] > PLC90_target
-          res_justAbove = ResAnalysis[order(ResAnalysis$PLC90)[which(resOrder_above)[1]],]
-          if ( resOrder_above[1] == FALSE ) { # case when there is a value above and a value below PLC90_target (which is above 10)
-            res_justBelow = ResAnalysis[order(ResAnalysis$PLC90)[which(resOrder_above)[1]-1],]
-            if ( SEW_target > res_justBelow$SEW || SEW_target < res_justAbove$SEW ) {
-              aa = (res_justBelow$PLC90 - res_justAbove$PLC90) / (res_justBelow$SEW- res_justAbove$SEW)
-              bb = res_justAbove$PLC90 - res_justAbove$SEW * aa
-              SEW_target = ( PLC90_target - bb ) / aa # mean pondéré (régression linéaire)
-              cat( "NB: The model give a not logical value. Try manually....\n ")
-            }
-          } else if ( SEW_target < res_justAbove$SEW ) { # Only value above target and SEW_target below maw SEW compute
-            SEW_target = min(max(ResAnalysis[,1]) + (SEW_max-SEW_min)/3,SEW_max)
-          }
-
-          pt_closest    = which.min(abs(ResAnalysis[-1,1]-SEW_target) )
-          # PLC_closest   = ResAnalysis[-1,][pt_closest,2]
-          RU_target_closest = ResAnalysis[-1,][pt_closest,1]
-
-          if (verbose)  cli::cli_li(paste0("For simulation #", nrow(ResAnalysis)-1, " the SEW difference between target and model closest value is ",round(abs(RU_target_closest - SEW_target),3)))
-          if ( abs(RU_target_closest - SEW_target) < (model_varLim*2) ) {
-            fracFind = TRUE
-            if ( SEW_target != RUmodel && !(abs(RU_target_closest - RUmodel) < (model_varLim*2)) && (SEW_target>RUmodel || PLC90_target<ResAnalysis[-1,][pt_closest,2]) ) { SEW_target = NA } else if ( lastSimu ) { illBeBack = TRUE } # else TOTO I'LL BE BACK (relancerune dernier fois)
-          }
-        } else {
-          if (  min(abs(ResAnalysis[-1,2]-PLC90_target)) < PLC90_tol  ) {
-            fracFind = TRUE
-            SEW_target = ResAnalysis[which(abs(ResAnalysis[-1,2]-PLC90_target)== min(abs(ResAnalysis[-1,2]-PLC90_target)))+1,1]
-          } else if ( min(ResAnalysis[,2]) > min(10,PLC90_target) ) {
-            # if ( abs(min(ResAnalysis[,2])-(PLC90_target)) < PLC90_tol && abs(max(ResAnalysis[,1])-SEW_max) < model_varLim ) {
-            #   fracFind = TRUE
-            #   SEW_target = max(ResAnalysis[,1]) } else
-            if ( min(ResAnalysis[,2])>PLC90_target && abs(max(ResAnalysis[,1])-SEW_max) < model_varLim ) { # Permet que si on est dans une simulation intermédiare, ça ne s'arrete pas
-              fracFind = TRUE # Si on est dans le cas de PLC > PLC_cible alors que SEW ~= RU_max
-              SEW_target = NA
-            } else if ( abs(max(ResAnalysis[,1])-SEW_max) < model_varLim ) { # une PLC <= PLC_cible et SEW ~= RU_max (==> donc valeur 100 (au dessus) et au moins une valeur en dessous)
-              resOrder_above = ResAnalysis$PLC90[order(ResAnalysis$PLC90)] > PLC90_target
-              if ( resOrder_above[1] == FALSE ) { # case when there is a value above and a value below PLC90_target (which is above 10)
-                res_justAbove = ResAnalysis[order(ResAnalysis$PLC90)[which(resOrder_above)[1]],]
-                res_justBelow = ResAnalysis[order(ResAnalysis$PLC90)[which(resOrder_above)[1]-1],]
-                # SEW_target = mean(ResAnalysis$SEW[order(ResAnalysis$PLC90)[c(which(resOrder_above)[1]-1,which(resOrder_above)[1])]])  # simple mean
-                aa = (res_justBelow$PLC90 - res_justAbove$PLC90) / (res_justBelow$SEW- res_justAbove$SEW)
-                bb = res_justAbove$PLC90 - res_justAbove$SEW * aa
-                SEW_target = ( PLC90_target - bb ) / aa # mean pondéré (régression linéaire)
-              } else { # seulement des valeurs au dessus de PLC90_target
-                SEW_target = min(max(ResAnalysis[,1]) + (SEW_max-SEW_min)/3,SEW_max)
-              }
-              if ( abs(min(ResAnalysis$SEW - SEW_target)) < model_varLim ) { # on vérifie que l'on a pas fait une simulation similaire....
-                fracFind  = TRUE   # else TOTO I'LL BE BACK (relancerune dernier fois ?)
-                if ( lastSimu ) illBeBack = TRUE
-              }
-            } else {
-              SEW_target = min(max(ResAnalysis[,1]) + (SEW_max-SEW_min)/3,SEW_max)
-            }
-          } else if (  max(ResAnalysis[-1,2]) < max(60,PLC90_target) && min(ResAnalysis[-1,1])> (SEW_min + model_varLim) ) { # Cas où on veut un point avec plus faible PLC (<60 ou < target) mais SEW!=RU_min
-            SEW_target = max(min(ResAnalysis[-1,1]) / 2, SEW_min)
-            # } else if (  abs(max(ResAnalysis[-1,2])-(PLC90_target)) < PLC90_tol && min(ResAnalysis[-1,1])<20 ) {
-            #   fracFind = TRUE
-            #   SEW_target = min(ResAnalysis[-1,1])
-          } else if (  max(ResAnalysis[-1,2]) < PLC90_target && abs(min(ResAnalysis[-1,1])-SEW_min) < model_varLim ) { # Cas où on a pas de point possible (< target + SEW = RU_min)
-            fracFind = TRUE
-            SEW_target = NA
-          } else {
-            # listeRU = c(200,150,250,100,300,50)
-            # sort(listeRU)
-            resOrder_above = ResAnalysis$PLC90[order(ResAnalysis$PLC90)] > PLC90_target
+        if (verbose)  cli::cli_li(paste0("The SEW difference between target and model closest value is ",round(abs(SEW_target_closest - SEW_target),3)))
+        if ( abs(SEW_target_closest - SEW_target) < (model_varLim*2) ) {
+          fracFind <- TRUE
+          if ( SEW_target != SEW_model && !(abs(SEW_target_closest - SEW_model) < (model_varLim*2)) && (SEW_target>SEW_model || PLC90_target<ResAnalysis[-1,][pt_closest,2]) ) { SEW_target = NA }
+        }
+      } else {
+        if (  min(abs(ResAnalysis[-1,2]-PLC90_target)) < PLC90_tol  ) {
+          fracFind <- TRUE
+          SEW_target <- ResAnalysis[which(abs(ResAnalysis[-1,2]-PLC90_target)== min(abs(ResAnalysis[-1,2]-PLC90_target)))+1,1]
+        } else if ( min(ResAnalysis[,2]) > min(10,PLC90_target) ) {
+          if ( min(ResAnalysis[,2])>PLC90_target && abs(max(ResAnalysis[,1])-SEW_max) < model_varLim ) { # Permet que si on est dans une simulation intermédiare, ça ne s'arrete pas
+            fracFind <- TRUE # Si on est dans le cas de PLC > PLC_cible alors que SEW ~= RU_max
+            SEW_target <- NA
+          } else if ( abs(max(ResAnalysis[,1])-SEW_max) < model_varLim ) { # une PLC <= PLC_cible et SEW ~= RU_max (==> donc valeur 100 (au dessus) et au moins une valeur en dessous)
+            resOrder_above <- ResAnalysis$PLC90[order(ResAnalysis$PLC90)] > PLC90_target
             if ( resOrder_above[1] == FALSE ) { # case when there is a value above and a value below PLC90_target (which is above 10)
-              res_justAbove = ResAnalysis[order(ResAnalysis$PLC90)[which(resOrder_above)[1]],]
-              res_justBelow = ResAnalysis[order(ResAnalysis$PLC90)[which(resOrder_above)[1]-1],]
-              # SEW_target = mean(ResAnalysis$SEW[order(ResAnalysis$PLC90)[c(which(resOrder_above)[1]-1,which(resOrder_above)[1])]])  # simple mean
-              aa = (res_justBelow$PLC90 - res_justAbove$PLC90) / (res_justBelow$SEW- res_justAbove$SEW)
-              bb = res_justAbove$PLC90 - res_justAbove$SEW * aa
-              SEW_target = ( PLC90_target - bb ) / aa # mean pondéré (régression linéaire)
-            } else { # seulement des valeurs au dessus de PLC90_target / a priori pas possible
-              SEW_target = min(max(ResAnalysis[,1]) + (SEW_max-SEW_min)/3,SEW_max)
+              res_justAbove <- ResAnalysis[order(ResAnalysis$PLC90)[which(resOrder_above)[1]],]
+              res_justBelow <- ResAnalysis[order(ResAnalysis$PLC90)[which(resOrder_above)[1]-1],]
+              aa <- (res_justBelow$PLC90 - res_justAbove$PLC90) / (res_justBelow$SEW- res_justAbove$SEW)
+              bb <- res_justAbove$PLC90 - res_justAbove$SEW * aa
+              SEW_target <- ( PLC90_target - bb ) / aa # mean pondéré (régression linéaire)
+            } else { # seulement des valeurs au dessus de PLC90_target
+              SEW_target <- min(max(ResAnalysis[,1]) + (SEW_max-SEW_min)/3,SEW_max)
             }
             if ( abs(min(ResAnalysis$SEW - SEW_target)) < model_varLim ) { # on vérifie que l'on a pas fait une simulation similaire....
-              fracFind  = TRUE   # else TOTO I'LL BE BACK (relancerune dernier fois ?)
-              if ( lastSimu ) illBeBack = TRUE
+              fracFind <- TRUE
             }
+          } else {
+            SEW_target <- min(max(ResAnalysis[,1]) + (SEW_max-SEW_min)/3,SEW_max)
+          }
+        } else if (  max(ResAnalysis[-1,2]) < max(60,PLC90_target) && min(ResAnalysis[-1,1])> (SEW_min + model_varLim) ) { # Cas où on veut un point avec plus faible PLC (<60 ou < target) mais SEW!=RU_min
+          SEW_target <- max(min(ResAnalysis[-1,1]) / 2, SEW_min)
+        } else if (  max(ResAnalysis[-1,2]) < PLC90_target && abs(min(ResAnalysis[-1,1])-SEW_min) < model_varLim ) { # Cas où on a pas de point possible (< target + SEW = RU_min)
+          fracFind <- TRUE
+          SEW_target <- NA
+        } else {
+          resOrder_above <- ResAnalysis$PLC90[order(ResAnalysis$PLC90)] > PLC90_target
+          if ( resOrder_above[1] == FALSE ) { # case when there is a value above and a value below PLC90_target (which is above 10)
+            res_justAbove <- ResAnalysis[order(ResAnalysis$PLC90)[which(resOrder_above)[1]],]
+            res_justBelow <- ResAnalysis[order(ResAnalysis$PLC90)[which(resOrder_above)[1]-1],]
+            aa <- (res_justBelow$PLC90 - res_justAbove$PLC90) / (res_justBelow$SEW- res_justAbove$SEW)
+            bb <- res_justAbove$PLC90 - res_justAbove$SEW * aa
+            SEW_target <- ( PLC90_target - bb ) / aa # mean pondéré (régression linéaire)
+          } else { # seulement des valeurs au dessus de PLC90_target / a priori pas possible
+            SEW_target <- min(max(ResAnalysis[,1]) + (SEW_max-SEW_min)/3,SEW_max)
+          }
+          if ( abs(min(ResAnalysis$SEW - SEW_target)) < model_varLim ) { # on vérifie que l'on a pas fait une simulation similaire....
+            fracFind <- TRUE
           }
         }
-
-      } else {
-        illBeBack = FALSE
       }
     }
-    if ( illBeBack && min(abs(ResAnalysis[-1,1] - SEW_target)) <  (model_varLim/4) ) illBeBack = FALSE
-
   }
-
-
-  r <- uniroot(f_sew_diff, c(0,10), SEW_target)
-  listCoarseFragNew <- pmax(pmin(listCoarseFragOri*r$root,max_rocks),0)
-  return(list(SEW = SEW_target, RFC = listCoarseFragNew, SimulationTable = ResAnalysis))
+  if(fracFind) {
+    r <- uniroot(f_sew_diff, c(0,10), SEW_target)
+    listCoarseFragNew <- pmax(pmin(listCoarseFragOri*r$root,max_rocks),0)
+    res <- list(SEW = SEW_target, RFC = listCoarseFragNew, SimulationTable = ResAnalysis)
+  } else {
+    if (verbose)  cli::cli_warn(paste0("Valid SEW estimates could not be found given the input parameters"))
+    res <- list(SEW = NA, RFC = NA, SimulationTable = ResAnalysis)
+  }
+  return(res)
 }

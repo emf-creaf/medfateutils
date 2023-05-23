@@ -4,7 +4,7 @@
 \alias{spwb_ldrExploration}
 \alias{spwb_ldrOptimization}
 \alias{spwb_rockOptimization}
-\title{Optimization of root distribution}
+\title{Optimization of rock fragment content and root distribution}
 \usage{
 spwb_ldrExploration(
   x,
@@ -32,7 +32,6 @@ spwb_rockOptimization(
   model_varLim = 10,
   max_rocks = 99,
   verbose = FALSE,
-  lastSimu = FALSE,
   ...
 )
 }
@@ -74,17 +73,20 @@ spwb_rockOptimization(
   \item{\code{opt_mode = 5} maximizes photosynthesis, subject to root construction constrains, among combinations with stress according to \code{psi_crit}).}
 }}
 
-\item{PLC90_target}{Leaf PLC target (quantile 90)}
+\item{PLC90_target}{Stem PLC target (quantile 90).}
 
-\item{PLC90_tol}{Limit of the PLC target tolerance, only in some conditions}
+\item{PLC90_tol}{Limit of the PLC target tolerance, only in some conditions.}
 
-\item{max_simu}{Maximum of simulation authorized before to stop}
+\item{max_simu}{Maximum of simulation authorized before stopping.}
 
 \item{model_varLim}{Limit of the soil extractable water (SEW) variation of the model accepted}
 
-\item{max_rocks}{Maximum content in coarse fragments}
+\item{max_rocks}{Maximum content in coarse fragments allowed for any soil layer.}
 }
 \value{
+Function \code{spwb_rockOptimization} returns a list containing the estimated rock fragment content,
+the corresponding soil extractable water and a dataframe of simulation results needed for the estimation.
+
 Function \code{spwb_ldrExploration} returns a list containing a list containing
 the explored RZ and V1 combinations as well as arrays with the values of average daily plant transpiration,
 average daily net photosynthesis and the minimum plant water potential for each cohort and parameter combination.
@@ -95,6 +97,8 @@ and the LDR parameters Z50 and Z95 (see \code{\link{root_ldrDistribution}})
 and as many rows as the number of species.
 }
 \description{
+Function \code{spwb_rockOptimization} finds optimum rock fragment content in the soil
+corresponding to a given arguments \code{x}, \code{meteo} and \code{PLC90_target}.
 Functions \code{spwb_ldrExploration} and \code{spwb_ldrOptimization} are used to
 find optimum the species root distribution within \code{spwb}, given the arguments
 \code{x}, \code{meteo} and \code{psi_crit}.
