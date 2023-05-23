@@ -54,13 +54,13 @@ root_ldrDistribution."><!-- mathjax --><script src="https://cdnjs.cloudflare.com
 
     <div class="ref-description">
     <p>The function <code>spwb_ldrCalibration</code> calibrates the species root
-distribution within <code><a href="https://emf-creaf.github.io/medfate/reference/spwb.html" class="external-link">spwb</a></code>, given the arguments <code>x</code>, <code>meteo</code>,
+distribution within <code>spwb</code>, given the arguments <code>x</code>, <code>meteo</code>,
 <code>psi_crit</code>, <code>obs</code> and <code>calibVar</code>. This calibration
 is based on reference measured values. These reference measured values can be
 <code>Soil water content</code>, <code>Total tranpiration</code> or <code>Transpiration by
 cohort</code>. Return the calibrated root distribution for each tree species (no
 shrub calibration is done), expressed as parameters of the function
-<code><a href="https://emf-creaf.github.io/medfate/reference/root.html" class="external-link">root_ldrDistribution</a></code>.</p>
+<code>root_ldrDistribution</code>.</p>
     </div>
 
     <div id="ref-usage">
@@ -83,7 +83,7 @@ shrub calibration is done), expressed as parameters of the function
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>x</dt>
-<dd><p>An object of class <code><a href="https://emf-creaf.github.io/medfate/reference/modelInput.html" class="external-link">spwbInput</a></code>.</p></dd>
+<dd><p>An object of class <code>spwbInput</code>.</p></dd>
 
 
 <dt>meteo</dt>
@@ -148,7 +148,7 @@ calibrated values for Z50, Z95 and V1 and the MAE value for that combination.</p
     <p>This function performs three different kinds of calibration, selecting those
 root distribution parameters that minimize the MAE between the predicted values
 and the measured values provided in <code>obs</code> argument. If <code>calibVar = "SWC"</code> different
-V1 values are tested running <code><a href="https://emf-creaf.github.io/medfate/reference/spwb.html" class="external-link">spwb</a></code> maintaining the total soil depth
+V1 values are tested running <code>spwb</code> maintaining the total soil depth
 provided in <code>x</code> and assuming that value is also the depth containing 95 percent of the
 roots. If <code>calibVar = "Eplanttot"</code> or <code>calibVar = 'Cohorts'</code> different 
 combinations of RZ and V1 values are tested for each tree cohort and the root
@@ -158,7 +158,7 @@ cohort transpiration.</p>
     <div id="see-also">
     <h2>See also</h2>
     <div class="dont-index"><p><code><a href="spwb_ldrOptimization.html">spwb_ldrOptimization</a></code> for when no measured data is available,
- <code><a href="https://emf-creaf.github.io/medfate/reference/spwb.html" class="external-link">spwb</a></code>, <code><a href="https://emf-creaf.github.io/medfate/reference/soil.html" class="external-link">soil</a></code>, <code><a href="https://emf-creaf.github.io/medfate/reference/root.html" class="external-link">root_ldrDistribution</a></code></p></div>
+ <code>spwb</code>, <code>soil</code>, <code>root_ldrDistribution</code></p></div>
     </div>
     <div id="author">
     <h2>Author</h2>

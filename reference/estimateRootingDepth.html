@@ -72,11 +72,11 @@
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>forest</dt>
-<dd><p>An object of class <code><a href="https://emf-creaf.github.io/medfate/reference/forest.html" class="external-link">forest</a></code>.</p></dd>
+<dd><p>An object of class <code>forest</code>.</p></dd>
 
 
 <dt>soil</dt>
-<dd><p>An object of class <code><a href="https://emf-creaf.github.io/medfate/reference/soil.html" class="external-link">soil</a></code> or a data frame with soil parameters.</p></dd>
+<dd><p>An object of class <code>soil</code> or a data frame with soil parameters.</p></dd>
 
 
 <dt>PET_summer</dt>
@@ -88,7 +88,7 @@
 
 
 <dt>SpParams</dt>
-<dd><p>A data frame with species parameters (see <code><a href="https://emf-creaf.github.io/medfate/reference/SpParams.html" class="external-link">SpParamsMED</a></code>).</p></dd>
+<dd><p>A data frame with species parameters (see <code>SpParamsMED</code>).</p></dd>
 
 
 <dt>fillMissing</dt>
@@ -96,22 +96,22 @@
 
 
 <dt>forestlist</dt>
-<dd><p>A list of objects of class <code><a href="https://emf-creaf.github.io/medfate/reference/forest.html" class="external-link">forest</a></code>.</p></dd>
+<dd><p>A list of objects of class <code>forest</code>.</p></dd>
 
 
 <dt>soillist</dt>
-<dd><p>A list with objects of class <code><a href="https://emf-creaf.github.io/medfate/reference/soil.html" class="external-link">soil</a></code> or data frames with soil parameters.</p></dd>
+<dd><p>A list with objects of class <code>soil</code> or data frames with soil parameters.</p></dd>
 
 </dl></div>
     <div id="value">
     <h2>Value</h2>
     
 
-<p>Function <code>estimateRootingDepth</code> returns object of class <code><a href="https://emf-creaf.github.io/medfate/reference/forest.html" class="external-link">forest</a></code> with modified values for <code>Z50</code> and <code>Z95</code>. Function <code>estimateRootingDepthList</code> returns a list of forest objects with modified root distribution parameters.</p>
+<p>Function <code>estimateRootingDepth</code> returns object of class <code>forest</code> with modified values for <code>Z50</code> and <code>Z95</code>. Function <code>estimateRootingDepthList</code> returns a list of forest objects with modified root distribution parameters.</p>
     </div>
     <div id="details">
     <h2>Details</h2>
-    <p>If <code>PET_summer</code> or <code>P_summer</code> are of length one, their elements are repeated for all elements in <code>forestlist</code>. Similarly, if <code>soillist</code> is an object of class <code><a href="https://emf-creaf.github.io/medfate/reference/soil.html" class="external-link">soil</a></code> or a data frame with soil parameters, the same soil parameters are repeated for all elements in <code>forestlist</code>.</p>
+    <p>If <code>PET_summer</code> or <code>P_summer</code> are of length one, their elements are repeated for all elements in <code>forestlist</code>. Similarly, if <code>soillist</code> is an object of class <code>soil</code> or a data frame with soil parameters, the same soil parameters are repeated for all elements in <code>forestlist</code>.</p>
     </div>
     <div id="references">
     <h2>References</h2>
@@ -146,7 +146,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> done.</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Estimate rooting depth</span></span></span>
-<span class="r-in"><span><span class="va">soilpar</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://emf-creaf.github.io/medfate/reference/defaultSoilParams.html" class="external-link">defaultSoilParams</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">soilpar</span> <span class="op">&lt;-</span> <span class="fu">defaultSoilParams</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">l2</span> <span class="op">&lt;-</span> <span class="fu">estimateRootingDepthList</span><span class="op">(</span><span class="va">l1</span>, <span class="va">soilpar</span>, <span class="fl">300</span>, <span class="fl">100</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Compare tree rooting depths</span></span></span>
