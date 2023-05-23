@@ -38,6 +38,7 @@ populateGrowthForm<-function(SpParams,
   ntrees <- sum(is_tree && !is_shrub)
   nshrubs <- sum(!is_tree && is_shrub)
   ntreeshrubs <- sum(is_tree && is_shrub)
+  notfound <- sum(!is_tree && !is_shrub)
 
   message(paste0(" Tree: ", ntrees, " shrub: ", nshrubs, " tree/shrub: ", ntreeshrubs, " not found: ", notfound))
   if(sum(!tree_inSpParams)>0) message(paste0(" Tree input names not in SpParams: ", paste0(tree_names[!tree_inSpParams], collapse=",")))

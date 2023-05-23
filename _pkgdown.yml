@@ -37,9 +37,11 @@ reference:
   - starts_with("soilgrids")
   - starts_with("redefineSoil")
   - starts_with("modifySoil")
+  - starts_with("spwb_rock")
 
 - title: Root parameters
   desc:  Belowground structure
   contents:
   - starts_with("estimateRooting")
+  - starts_with("spwb_ldr")
 
