@@ -58,6 +58,12 @@
     <loc>/reference/soilgridsParams.html</loc>
   </url>
   <url>
+    <loc>/reference/spwb_ldrCalibration.html</loc>
+  </url>
+  <url>
+    <loc>/reference/spwb_ldrOptimization.html</loc>
+  </url>
+  <url>
     <loc>/reference/translateSpeciesCodes.html</loc>
   </url>
 </urlset>
