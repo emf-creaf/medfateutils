@@ -137,6 +137,10 @@ y <- spwb_ldrExploration(x = x, meteo = examplemeteo[1:50,],
 
 #Optimization under different modes
 spwb_ldrOptimization(y = y, psi_crit = c(-2,-3,-4), opt_mode = 1)
+
+#Rock fragment content optimization
+spwb_rockOptimization(x, meteo = examplemeteo,
+                      elevation = 100, latitude = 41.82592)
 }
 
 }
