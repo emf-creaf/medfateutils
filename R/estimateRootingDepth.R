@@ -61,7 +61,13 @@ estimateRootingDepth<-function(forest, soil, PET_summer, P_summer, SpParams,
 
   if(lai>0) {
     psiE = abs(plant_parameter(forest, SpParams, "Psi_Extract"))*1000 ## from MPa to Pa
-    psiC = pmax(1.5*psiE, abs(plant_parameter(forest, SpParams, "Psi_Critic"))*1000) ## from MPa to Pa
+    if(fillMissing) psiC[is.na(psiE)] = mean(psiE, na.rm=T)
+    # Water potential corresponding to 50% PLC
+    VCstem_c = plant_parameter(forest, SpParams, "VCstem_c")
+    VCstem_d = plant_parameter(forest, SpParams, "VCstem_d")
+    psi_critic = rep(NA, length(VCstem_c))
+    for(i in 1:length(VCstem_c)) psi_critic[i] = hydraulics_xylemPsi(0.5, 1.0, VCstem_c[i], VCstem_d[i])
+    psiC = pmax(1.5*psiE, abs(psi_critic)*1000) ## from MPa to Pa
     if(fillMissing) psiC[is.na(psiC)] = mean(psiC, na.rm=T)
     newDF = data.frame(psi_extr = psiE, psi_crit = psiC, rock = rfc, LAI = lai,
                        summerPET = PET_summer,
