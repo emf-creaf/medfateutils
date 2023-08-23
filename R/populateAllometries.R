@@ -23,7 +23,7 @@ populateTreeAllometries<-function(SpParams,
   allom_type <- match.arg(allom_type, c("foliarbiomass", "barkthickness","crownratio","crownwidth"))
   if(allom_type=="foliarbiomass") {
     allom_vars <- c("a_fbt","b_fbt","c_fbt")
-  } else if(allom_type=="crownratio") {
+  } else if(allom_type=="barkthickness") {
     allom_vars <- c("a_bt","b_bt")
   } else if(allom_type=="crownratio") {
     allom_vars <- c("a_cr","b_1cr","b_2cr","b_3cr","c_1cr","c_2cr")
