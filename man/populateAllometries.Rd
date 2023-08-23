@@ -27,7 +27,7 @@ populateShrubAllometriesFromMedfuels(
 
 \item{allom_table}{A data frame of allometric parameters in columns and taxonomic entities (from species to group) as row names.}
 
-\item{allom_type}{A string with the type of allometry to be filled, either "foliarbiomass", "crownwidth" or "crownratio".}
+\item{allom_type}{A string with the type of allometry to be filled, either "foliarbiomass", "barkthickness", "crownwidth" or "crownratio".}
 
 \item{erase_previous}{A boolean flag to indicate that values should be set to NA before populating with data}
 
