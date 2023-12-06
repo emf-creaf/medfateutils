@@ -8,16 +8,22 @@
 initSpParams(
   sp_names,
   SpParamsDefinition,
+  accepted_names = NULL,
   fill_taxonomic = TRUE,
+  sort = TRUE,
   verbose = FALSE
 )
 }
 \arguments{
-\item{sp_names}{Vector of species names, taxon names or arbitrary species group names}
+\item{sp_names}{Vector of plant names, either taxon names or arbitrary species group names}
 
-\item{SpParamsDefinition}{Data frame of species parameter definition from package 'medfate'}
+\item{SpParamsDefinition}{Data frame of species parameter definition from package medfate}
+
+\item{accepted_names}{Vector of accepted taxon names of the same length of `sp_names`}
 
 \item{fill_taxonomic}{Boolean flag to indicate that taxonomic information should be filled (retrieved from GBIF using package 'taxize')}
+
+\item{sort}{Boolean flag to force sorting in ascending order by `Name`}
 
 \item{verbose}{A boolean flag to indicate extra console output}
 }
@@ -25,7 +31,7 @@ initSpParams(
 A data frame with empty species parameter values suitable for medfate simulations
 }
 \description{
-Creates an empty species parameter table for medfate, populating taxonomic information if desired.
+Creates an empty plant parameter table for medfate, populating taxonomic information if desired.
 }
 \details{
 Taxonomic information is retrieved using functions in package taxize and GBIF as data source.
@@ -38,6 +44,11 @@ data(SpParamsDefinition)
 # Simple example with two species
 sp_names = c("Salvia rosmarinifolia", "Pinus contorta")
 initSpParams(sp_names, SpParamsDefinition)
+
+# Simple example with three species using synonyms and subspecies
+sp_names = c("Rosmarinus officinalis", "Pinus contorta", "Quercus ilex subsp. ilex")
+accepted_names = c("Salvia rosmarinifolia", "Pinus contorta", "Quercus ilex subsp. ilex")
+initSpParams(sp_names, SpParamsDefinition, accepted_names)
 
 # Initialisation with IFN species mapping
 data(IFN_species_mapping)
