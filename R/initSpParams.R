@@ -5,7 +5,8 @@
 #' @param sp_names Vector of plant names, either taxon names or arbitrary species group names
 #' @param accepted_names Vector of accepted taxon names of the same length of `sp_names`
 #' @param SpParamsDefinition Data frame of species parameter definition from package medfate
-#' @param fill_taxonomic Boolean flag to indicate that taxonomic information should be filled (retrieved from GBIF using package 'taxize')
+#' @param fill_taxonomy Boolean flag to indicate that taxonomic information should be filled (retrieved from GBIF using package 'taxize')
+#' @param complete_rows Boolean flag to indicate that extra rows should be added for cited species/genera (if `fill_taxonomy = TRUE`)
 #' @param sort Boolean flag to force sorting in ascending order by `Name`
 #' @param verbose A boolean flag to indicate extra console output
 #'
@@ -45,7 +46,8 @@
 #' }
 initSpParams<-function(sp_names, SpParamsDefinition,
                        accepted_names = NULL,
-                       fill_taxonomic = TRUE,
+                       fill_taxonomy = TRUE,
+                       complete_rows = TRUE,
                        sort = TRUE,
                        verbose = FALSE) {
 
@@ -63,7 +65,7 @@ initSpParams<-function(sp_names, SpParamsDefinition,
   } else {
     SpParams$AcceptedName <- SpParams$Name
   }
-  if(fill_taxonomic) {
+  if(fill_taxonomy) {
     if(verbose) cat(paste0("Retrieving taxonomic data: \n"))
     if(verbose) pb = txtProgressBar(0, nrow(SpParams), style=3)
     for(i in 1:nrow(SpParams)) {
@@ -92,6 +94,28 @@ initSpParams<-function(sp_names, SpParamsDefinition,
             }
           }
         }
+      }
+    }
+    if(complete_rows) {
+      if(verbose) cat(paste0("Completing rows... \n"))
+      genera <- unique(SpParams$Genus)
+      species <- unique(SpParams$Species)
+      genera <- genera[!(genera %in% SpParams$AcceptedName)]
+      species <- species[!(species %in% SpParams$AcceptedName)]
+      genera <- genera[!is.na(genera)]
+      species <- species[!is.na(species)]
+      for(g in genera) {
+        row_g <- SpParams[SpParams$Genus == g,][1,, drop = FALSE]
+        row_g$Name <- g
+        row_g$AcceptedName <- g
+        row_g$Species <- NA
+        SpParams <- rbind(SpParams, row_g)
+      }
+      for(s in species) {
+        row_s <- SpParams[SpParams$Species == s,][1,, drop = FALSE]
+        row_s$Name <- s
+        row_s$AcceptedName <- s
+        SpParams <- rbind(SpParams, row_s)
       }
     }
   }

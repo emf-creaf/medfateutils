@@ -9,7 +9,8 @@ initSpParams(
   sp_names,
   SpParamsDefinition,
   accepted_names = NULL,
-  fill_taxonomic = TRUE,
+  fill_taxonomy = TRUE,
+  complete_rows = TRUE,
   sort = TRUE,
   verbose = FALSE
 )
@@ -21,7 +22,9 @@ initSpParams(
 
 \item{accepted_names}{Vector of accepted taxon names of the same length of `sp_names`}
 
-\item{fill_taxonomic}{Boolean flag to indicate that taxonomic information should be filled (retrieved from GBIF using package 'taxize')}
+\item{fill_taxonomy}{Boolean flag to indicate that taxonomic information should be filled (retrieved from GBIF using package 'taxize')}
+
+\item{complete_rows}{Boolean flag to indicate that extra rows should be added for cited species/genera (if `fill_taxonomy = TRUE`)}
 
 \item{sort}{Boolean flag to force sorting in ascending order by `Name`}
 
