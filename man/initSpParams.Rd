@@ -55,8 +55,11 @@ initSpParams(sp_names, SpParamsDefinition, accepted_names)
 
 # Initialisation with Spanish NFI species mapping
 data(NFI_SP_mapping)
-NFI_SP_mapping_red <- NFI_SP_mapping[!is.na(NFI_SP_mapping$originalName),]
-SpParams <- initSpParams(sp_names = NFI_SP_mapping_red$originalName[1:20],
+# Remove species that are not mapped
+NFI_SP_mapping_red <- NFI_SP_mapping[!is.na(NFI_SP_mapping$acceptedName),]
+# Names in SpParams will be the original NFI names but accepted names
+# will be used for parameter estimation
+SpParams <- initSpParams(sp_names = NFI_SP_mapping_red$NFIName[1:20],
                         SpParamsDefinition = SpParamsDefinition,
                         accepted_names = NFI_SP_mapping_red$acceptedName[1:20],
                         verbose = TRUE)

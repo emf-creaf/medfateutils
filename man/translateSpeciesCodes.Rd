@@ -22,14 +22,14 @@ A string vector with the length of \code{x} and translated species names
 Maps a vector of species codes from forest inventory data to medfate species names
 }
 \examples{
-data(IFN_species_mapping)
+data(NFI_SP_mapping)
 data(piesMayoresIFN2)
 
 piesMayoresIFN2$Especie
 
 translateSpeciesCodes(x = piesMayoresIFN2$Especie,
-                      species_names = IFN_species_mapping$Name,
-                      species_codes = IFN_species_mapping$Codes)
+                      species_names = NFI_SP_mapping$NFIName,
+                      species_codes = NFI_SP_mapping$NFICode)
 
 }
 \seealso{

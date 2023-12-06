@@ -16,14 +16,14 @@
 #' @seealso \code{\link{IFN2forest}}
 #'
 #' @examples
-#' data(IFN_species_mapping)
+#' data(NFI_SP_mapping)
 #' data(piesMayoresIFN2)
 #'
 #' piesMayoresIFN2$Especie
 #'
 #' translateSpeciesCodes(x = piesMayoresIFN2$Especie,
-#'                       species_names = IFN_species_mapping$Name,
-#'                       species_codes = IFN_species_mapping$Codes)
+#'                       species_names = NFI_SP_mapping$NFIName,
+#'                       species_codes = NFI_SP_mapping$NFICode)
 #'
 translateSpeciesCodes<-function(x, species_names, species_codes) {
   if(length(species_codes)!=length(species_names)) stop("Vectors 'species_codes' and 'species_names' must have the same length")

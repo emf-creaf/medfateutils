@@ -6,12 +6,15 @@ IFN_species_mapping <- read.table("data-raw/IFN_species_mapping.csv", sep="\t", 
 usethis::use_data(IFN_species_mapping, overwrite = T)
 
 NFI_SP_mapping <- read.table("data-raw/NFI_SP_mapping.csv", sep=";", header=TRUE, na.strings = "")
+NFI_SP_mapping$NFICode <- as.character(NFI_SP_mapping$NFICode)
 usethis::use_data(NFI_SP_mapping, overwrite = T)
 
 NFI_FR_mapping <- read.table("data-raw/NFI_FR_mapping.csv", sep=";", header=TRUE, na.strings = "")
+NFI_FR_mapping$NFICode <- as.character(NFI_FR_mapping$NFICode)
 usethis::use_data(NFI_FR_mapping, overwrite = T)
 
 NFI_US_mapping <- read.table("data-raw/NFI_US_mapping.csv", sep=";", header=TRUE, na.strings = "")
+NFI_US_mapping$NFICode <- as.character(NFI_US_mapping$NFICode)
 usethis::use_data(NFI_US_mapping, overwrite = T)
 
 # Read IFN2 data
