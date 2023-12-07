@@ -55,24 +55,25 @@ initSpParams<-function(sp_names, SpParamsDefinition,
                        verbose = FALSE) {
 
   if(length(sp_names)==0) stop("Please, supply at least one species name")
+  if(length(sp_names) !=length(unique(sp_names))) stop("Plant names should be unique!")
+  if(!is.null(accepted_names)) {
+    if(length(accepted_names) != length(sp_names)) stop("The vector of accepted names has to be of the same length as the vector of species names")
+  }
+  if(verbose) cli::cli_progress_step("Initializing parameter table")
   SpParams <- data.frame(Name = as.character(sp_names))
-  if(length(SpParams$Name) !=length(unique(SpParams$Name))) warning("Final species/group names should be unique!")
   for(cn in SpParamsDefinition$ParameterName) {
     if(!(cn %in% names(SpParams))) {
       SpParams[[cn]] = NA
     }
   }
   if(!is.null(accepted_names)) {
-    if(length(accepted_names) != length(sp_names)) stop("The vector of accepted names has to be of the same length as the vector of species names")
     SpParams$AcceptedName <- accepted_names
   } else {
     SpParams$AcceptedName <- SpParams$Name
   }
   if(fill_taxonomy) {
-    if(verbose) cat(paste0("Retrieving taxonomic data: \n"))
-    if(verbose) pb = txtProgressBar(0, nrow(SpParams), style=3)
+    if(verbose) cli::cli_progress_step("Retrieving taxonomy data")
     for(i in 1:nrow(SpParams)) {
-      if(verbose) setTxtProgressBar(pb, i)
       s = strsplit(SpParams$AcceptedName[i]," ")[[1]]
       SpParams$Genus[i] = s[1] # Genus always first word
       if(length(s)>1) SpParams$Species[i] = paste0(s[1], " ", s[2])
@@ -96,35 +97,56 @@ initSpParams<-function(sp_names, SpParamsDefinition,
               SpParams$Group[i] = "Angiosperm"
             }
           }
+        } else {
+          warning(paste0("Taxonomy could not be retrieved for taxon '", SpParams$AcceptedName[i],"'"))
         }
+      } else {
+        warning(paste0("Taxon '", SpParams$AcceptedName[i],"' could not be identified"))
       }
     }
     if(complete_rows) {
-      if(verbose) cat(paste0("Completing rows... \n"))
       genera <- unique(SpParams$Genus)
-      species <- unique(SpParams$Species)
-      genera <- genera[!(genera %in% SpParams$AcceptedName)]
-      species <- species[!(species %in% SpParams$AcceptedName)]
       genera <- genera[!is.na(genera)]
-      species <- species[!is.na(species)]
-      for(g in genera) {
-        row_g <- SpParams[SpParams$Genus == g,][1,, drop = FALSE]
-        row_g$Name <- g
-        row_g$AcceptedName <- g
-        row_g$Species <- NA
-        SpParams <- rbind(SpParams, row_g)
+      genera <- genera[!(genera %in% SpParams$AcceptedName)]
+      if(length(genera)>0) {
+        if(verbose) cli::cli_progress_step(paste0("Completing rows with ", length(genera), " genera"))
+        gen_vec <- vector("list", length(genera))
+        SpParams_filt <- SpParams[!is.na(SpParams$Genus),, drop = FALSE]
+        for(i in 1:length(genera)) {
+          g <- genera[i]
+          row_g <- SpParams_filt[SpParams_filt$Genus == g,][1,, drop = FALSE]
+          row_g$Name <- g
+          row_g$AcceptedName <- g
+          row_g$Species <- NA
+          gen_vec[[i]] <- row_g
+        }
+        SpParams <- dplyr::bind_rows(SpParams, gen_vec)
       }
-      for(s in species) {
-        row_s <- SpParams[SpParams$Species == s,][1,, drop = FALSE]
-        row_s$Name <- s
-        row_s$AcceptedName <- s
-        SpParams <- rbind(SpParams, row_s)
+      species <- unique(SpParams$Species)
+      species <- species[!is.na(species)]
+      species <- species[!(species %in% SpParams$AcceptedName)]
+      species <- species[!(species %in% genera)]
+      species <- species[!endsWith(species, "x")]
+      species <- species[!endsWith(species, "×")]
+      if(length(species)>0) {
+        if(verbose) cli::cli_progress_step(paste0("Completing rows with ", length(species), " species"))
+        sp_vec <- vector("list", length(species))
+        SpParams_filt <- SpParams[!is.na(SpParams$Species),, drop = FALSE]
+        for(i in 1:length(species)) {
+          s <- species[i]
+          row_s <- SpParams_filt[SpParams_filt$Species == s,][1,, drop = FALSE]
+          row_s$Name <- s
+          row_s$AcceptedName <- s
+          sp_vec[[i]] <- row_s
+        }
+        SpParams <- dplyr::bind_rows(SpParams, sp_vec)
       }
     }
   }
-
+  if(verbose) cli::cli_progress_step("Finalizing")
   if(sort) SpParams<- SpParams[order(SpParams$Name),, drop = FALSE]
   row.names(SpParams) <- NULL
   SpParams$SpIndex <- 0:(nrow(SpParams)-1)
+  if(verbose) cli::cli_process_done()
   return(SpParams)
 }
