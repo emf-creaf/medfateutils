@@ -76,7 +76,13 @@ initSpParams<-function(sp_names, SpParamsDefinition,
     for(i in 1:nrow(SpParams)) {
       s = strsplit(SpParams$AcceptedName[i]," ")[[1]]
       SpParams$Genus[i] = s[1] # Genus always first word
-      if(length(s)>1) SpParams$Species[i] = paste0(s[1], " ", s[2])
+      if(length(s)>1) {
+        if(length(s)>2 && (s[2] %in% c("x", "×"))) {
+          SpParams$Species[i] = paste0(s[1], " ", s[2], " ", s[3])
+        } else {
+          SpParams$Species[i] = paste0(s[1], " ", s[2])
+        }
+      }
       id_df<-taxize::get_gbifid_(s[1], messages = FALSE)[[1]]
       gbif_id<-numeric(0)
       if(nrow(id_df)>0) {

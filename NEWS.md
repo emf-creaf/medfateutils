@@ -2,6 +2,9 @@
  NEWS for R Package "medfateutils"
 -----------------------------------
 
+# Version 0.2.0
+- Revision of trait parsing
+
 # Version 0.1.7
 - Compliance with medfate ver. 2.9.0
 - Warning raised when taxon names do not match

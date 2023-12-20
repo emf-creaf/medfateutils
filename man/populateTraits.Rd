@@ -9,9 +9,10 @@ populateTraits(
   SpParams,
   trait_table,
   trait_mapping,
+  taxon_column,
+  genus_column = NULL,
   character_traits = FALSE,
-  taxon_column = NULL,
-  summary_function = "mean",
+  summary_function = "median",
   summary_params = list(na.rm = TRUE),
   scalar_functions = NULL,
   replace_previous = FALSE,
@@ -22,15 +23,19 @@ populateTraits(
 \arguments{
 \item{SpParams}{A data frame of medfate species parameters to be populated.}
 
-\item{trait_table}{A data frame with species traits in columns and row.names corresponding to taxonomic entities.}
+\item{trait_table}{A data frame with functional traits in columns and plants in rows.}
 
-\item{trait_mapping}{A named string vector specifying which trait data column should used to populate each medfate param. Elements are data base columns and names are medfate params.}
+\item{trait_mapping}{A named string vector specifying which trait data column should be used
+to populate each medfate param. Elements are data base columns and names are medfate params.}
+
+\item{taxon_column}{A string identifying the column in \code{trait_table} that identifies taxon names).}
+
+\item{genus_column}{A string identifying the column in \code{trait_table} that identifies genus. If \code{NULL} then genus are taken from first word of taxon names.}
 
 \item{character_traits}{Boolean flag to treat traits as character-valued}
 
-\item{taxon_column}{A string identifying the column in \code{trait_table} that identifies taxa (normally species). If \code{taxon_column = NULL} then taxon names are taken from row.names.}
-
-\item{summary_function}{A function to summarize multiple values for the same taxonomic entity. By default, arithmetic averages are used, excluding missing values.}
+\item{summary_function}{A function to summarize multiple values for the same taxonomic entity. By default,
+median values are taken for quantitative traits and the most frequent value is taken for qualitative traits.}
 
 \item{summary_params}{A list of summary function params (by default \code{na.rm=TRUE}).}
 
@@ -47,6 +52,10 @@ A modified data frame of medfate species parameters
 }
 \description{
 Generic function to fill medfate species trait parameters from a data table of species traits
+}
+\details{
+If the target taxon is a species, values are taken from those rows in trait_table where species names match.
+If the target taxon is a genus, then values are taken from those rows where genus is the same.
 }
 \seealso{
 \code{\link{initSpParams}}
