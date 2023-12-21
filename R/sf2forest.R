@@ -417,22 +417,15 @@ forestplotlist <- function(id, year = NA, country, version = NA, tree, regen, sh
   }else {regen = tibble::tibble()}
 
 
-  if(nrow(tree)>0 & nrow(regen)>0){
-    intersect<-intersect(names(tree), names(regen))
+  if(nrow(tree)>0 && nrow(regen)>0){
 
+    intersect <- intersect(names(tree), names(regen))
     tree <- tree[, intersect]
     regen <- regen[, intersect]
+    tree <- rbind(tree,regen)
 
-    tree<- rbind(tree,regen)
-  }else{
-    if (nrow(tree)>0 & !nrow(regen)>0){
-      tree<-tree
-    }else{
-      if  (nrow(regen)>0 & !nrow(tree)>0){
-        tree<-regen
-      }
-    }
-
+  } else if (nrow(regen) > 0) {
+    tree <- regen
   }
 
 
