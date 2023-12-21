@@ -111,13 +111,15 @@ populateTraits<-function(SpParams,
         }
       }
     }
-    message(paste0("Mapping [",trait_mapping[j]," -> ",trait_params[j],
-                   "] species: ", nsp, " genus: ", ngen))
-    nmis <- sum(is.na(SpParams[[param]]))
-    if(nmis>0) message(paste0(nmis,
-                              " missing trait values (",
-                              round(100*nmis/nrow(SpParams),1),
-                              " %) after populating with input data.\n"))
+    if(verbose) {
+      message(paste0("Mapping [",trait_mapping[j]," -> ",trait_params[j],
+                     "] species: ", nsp, " genus: ", ngen))
+      nmis <- sum(is.na(SpParams[[param]]))
+      if(nmis>0) message(paste0(nmis,
+                                " missing trait values (",
+                                round(100*nmis/nrow(SpParams),1),
+                                " %) after populating with input data.\n"))
+    }
   }
   return(SpParams)
 }
