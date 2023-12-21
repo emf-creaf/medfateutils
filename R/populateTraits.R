@@ -21,6 +21,7 @@
 #' @export
 #'
 #' @details
+#' Matches column 'AcceptedName' of SpParams with trait parameter sources.
 #' If the target taxon is a species, values are taken from those rows in trait_table where species names match.
 #' If the target taxon is a genus, then values are taken from those rows where genus is the same.
 #'
@@ -65,7 +66,7 @@ populateTraits<-function(SpParams,
       #Should we replace current value (only if is NA or we are to replace values)
       can_replace <- (is.na(SpParams[i,param]) || replace_previous)
       if(can_replace) {
-        nm <-  SpParams$Name[i]
+        nm <-  SpParams$AcceptedName[i]
         species <-  SpParams$Species[i]
         genus <-  SpParams$Genus[i]
         family <-  SpParams$Family[i]

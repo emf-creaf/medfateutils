@@ -54,6 +54,7 @@ A modified data frame of medfate species parameters
 Generic function to fill medfate species trait parameters from a data table of species traits
 }
 \details{
+Matches column 'AcceptedName' of SpParams with trait parameter sources.
 If the target taxon is a species, values are taken from those rows in trait_table where species names match.
 If the target taxon is a genus, then values are taken from those rows where genus is the same.
 }
