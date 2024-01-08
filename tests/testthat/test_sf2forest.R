@@ -2,17 +2,12 @@
 
 
 
-test_file_ifn<-standard_ifn[5,]
-test_file_ffi <- standard_ffi[41,]
-test_file_fia<-standard_fia[46,]
 
 test_that("forestplotlist_es  works as intended", {
 
+
 #buscar uno que tenga shrub data
-
-
-#hacer pruebas con ausencias de parametros y modificar la funcion para warnings
-
+  test_file_ifn<-standard_ifn[5,]
 
 expected_names <- c(
   "ID",
@@ -64,7 +59,7 @@ expect_identical(unique(test_res$version) , test_file_ifn[["version"]])
 test_that("forestplotlist_fr  works as intended", {
 
   #buscar uno que tenga shrub data
-
+  test_file_ffi <- standard_ffi[41,]
 
   #hacer pruebas con ausencias de parametros y modificar la funcion para warnings
 
@@ -118,7 +113,7 @@ test_that("forestplotlist_fr  works as intended", {
 test_that("forestplotlist_us  works as intended", {
 
   #buscar uno que tenga shrub data
-
+  test_file_fia<-standard_fia[46,]
 
   #hacer pruebas con ausencias de parametros y modificar la funcion para warnings
 
@@ -170,8 +165,31 @@ test_that("forestplotlist_us  works as intended", {
 })
 
 
-test_that("sf2forest  works as intended", {
+test_that("sf2forest  works as intended  for ES", {
 
+
+
+  #hacer pruebas con ausencias de parametros y modificar la funcion para warnings
+
+
+
+  test_input_ifn<-standard_ifn
+  # test_file_ffi <- standard_ffi
+  # test_file_fia<-standard_fia
+
+  expect_true(
+    is.list(
+      test_res<-suppressWarnings(sf2forest(
+        input_df = test_input_ifn,
+        country = "ES",
+        filterNA = TRUE,
+        filterDead = TRUE,
+        minDBH = 30,
+        filterminDBH = TRUE,
+        setDefaults = TRUE,
+        .verbose = TRUE)
+      ))
+  )
 
 
 
