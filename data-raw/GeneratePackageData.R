@@ -89,9 +89,9 @@ poblet_trees = openxlsx::read.xlsx("data-raw/PobletData.xlsx", sheet="TreeData")
 usethis::use_data(poblet_trees, overwrite = T)
 
 #test data for forest
-load(prova2_ffi)
-load(prova2_fia)
-load(prov2_ifn)
+load("data-raw/prova2_ffi.RData")
+load("data-raw/prova2_fia.RData")
+load("data-raw/prov2_ifn.RData")
 standard_ifn<-prov2_ifn
 standard_ffi<-prova2_ffi
 standard_fia<-prova2_fia

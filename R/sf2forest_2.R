@@ -904,7 +904,7 @@ forestplotlist_us <- function(id, year, country,  tree, regen, shrub, herbs, fil
 sf2forest <- function(input_df,country, filterNA, filterDead, minDBH,filterminDBH, setDefaults, .verbose = TRUE) {
 
   assertthat::assert_that(
-    is.character(country), length(country) > 0,
+    is.character(country), length(country) > 0, country %in% c("ES", "US", "FR"),
     msg = cli::cli_abort("Country must be especified as a character vector either ES, US or FR")
   )
 
@@ -914,25 +914,23 @@ sf2forest <- function(input_df,country, filterNA, filterDead, minDBH,filterminDB
     msg = cli::cli_abort("minDBH must be a numeric and positive value ")
   )
 
+  assertthat::assert_that(
+    !is.null(input_df),
+    msg = cli::cli_abort("The input is empty. Please specified an input that follows the stand data frame structure.")
 
-  if (is.null(input_df)) {
-    if (interactive()) {
-      cli::cli_inform(c(
-        "You have not specified an input. Please specified an input that follows the stand data frame structure"
-      ))
-    }
-  }
-
-  if (nrow(input_df)>1) {
-    if (interactive()) {
-      cli::cli_inform(c(
-        "The input is empty"
-      ))
-    }
-  }
+  )
 
   assertthat::assert_that(
-    !any(is.null(input_df[c("ID_UNIQUE_PLOT", "tree" ,"regen","understory")])),
+    nrow(input_df)>1,
+    msg = cli::cli_abort("The input is empty. Please specified an input that follows the stand data frame structure.")
+
+  )
+
+
+  assertthat::assert_that(
+    # !any(is.null(input_df[c("ID_UNIQUE_PLOT", "tree" ,"regen","understory")])),
+
+    all(c("ID_UNIQUE_PLOT", "tree" ,"regen","understory") %in% names(input_df)),
     msg = cli::cli_abort("Some columns are missing. Check that all of these are present: ID_UNIQUE_PLOT, tree, regen, understory)"
     )
   )
@@ -940,13 +938,13 @@ sf2forest <- function(input_df,country, filterNA, filterDead, minDBH,filterminDB
   if (country != "ES"){
     input_df$version = NA
     assertthat::assert_that(
-      !is.null(input_df["YEAR"]),
+      all(c("YEAR") %in% names(input_df)),
       msg = cli::cli_abort("Column YEAR is missing."
       )
     )
   } else{
     assertthat::assert_that(
-      !is.null(input_df["version"]),
+      all(c("version") %in% names(input_df)),
       msg = cli::cli_abort("Column version is missing."
       )
     )
