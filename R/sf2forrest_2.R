@@ -2,7 +2,7 @@
 #' This function takes row of a standard data frame of FIA, FR or ES and creates a list following the format of a forest object
 #'
 #' @param id id code for plot
-#' @param year year of samplig , NA as deault for ES
+#' @param year year of sampling , NA as default for ES
 #' @param country country code "FR" "ES" or "US"
 #' @param version NA as default, enter "ifn2" "ifn3" OR "ifn4" only for SPAIN
 #' @param tree standard data frame with tree info
@@ -17,7 +17,7 @@
 #' @param verbose A boolean flag to indicate console output
 
 
-forestplotlist_es <- function(id,  country, version , tree, regen, shrub, filterNA, filterDead, minDBH,filterminDBH, setDefaults, .verbose = TRUE){
+forestplotlist_es <- function(id,version, country, tree, regen, shrub, filterNA, filterDead, minDBH,filterminDBH, setDefaults, .verbose = TRUE){
 
 
   # browser()
@@ -32,7 +32,9 @@ forestplotlist_es <- function(id,  country, version , tree, regen, shrub, filter
 
   if (nrow(treeData)>0){
 
-    if(.verbose) cat("Processing tree data...\n")
+  cli::cli_inform("Processing tree data...")
+
+
 
     tree <- treeData |>
       dplyr::select(any_of(c(
@@ -81,7 +83,7 @@ forestplotlist_es <- function(id,  country, version , tree, regen, shrub, filter
 
     if (filterDead) {
 
-      if(.verbose) cat("Filtering missing and zero values...\n")
+      cli::cli_inform("Filtering missing and zero values..." )
 
 
         if ("OrdenIf3" %in% names(tree)) {
@@ -103,7 +105,7 @@ forestplotlist_es <- function(id,  country, version , tree, regen, shrub, filter
 
     if (filterNA ){
 
-      if(.verbose) cat("Filtering NAs...\n")
+      cli::cli_inform("Filtering NAs..." )
 
 
 
@@ -118,7 +120,7 @@ forestplotlist_es <- function(id,  country, version , tree, regen, shrub, filter
 
     if (filterminDBH) {
 
-      if(.verbose) cat("Filtering minDBH...\n")
+      cli::cli_inform("Filtering minDBH..." )
 
       tree<-tree|>
         dplyr::filter(DBH > minDBH)
@@ -126,7 +128,7 @@ forestplotlist_es <- function(id,  country, version , tree, regen, shrub, filter
 
     if(setDefaults) {
 
-      if(.verbose) cat("Establishing setdefaults...\n")
+      cli::cli_inform("Establishing setdefaults..." )
 
 
       tree$Z95[is.na(tree$Z95)] <- 1000
@@ -140,7 +142,7 @@ forestplotlist_es <- function(id,  country, version , tree, regen, shrub, filter
 
   if (nrow(regenData)>0) {
 
-    if(.verbose) cat("Processing regen data...\n")
+    cli::cli_inform("Processing regen data..." )
 
       if  ( version %in% c("ifn3", "ifn4")){
 
@@ -243,7 +245,7 @@ forestplotlist_es <- function(id,  country, version , tree, regen, shrub, filter
 
   if (nrow(shrubData) > 0) {
 
-    if(.verbose) cat("Processing shrub data..\n")
+    cli::cli_inform("Processing shrub data.." )
 
       shrub <- shrubData |>
         dplyr::select(
@@ -312,7 +314,7 @@ forestplotlist_fr <- function(id, year , country, tree, regen, shrub, herbs, fil
 
   if (nrow(treeData)>0){
 
-    if(.verbose) cat("Processing tree data...\n")
+    cli::cli_inform("Processing tree data..." )
 
     tree <- treeData |>
       dplyr::select(any_of(c(
@@ -357,7 +359,7 @@ forestplotlist_fr <- function(id, year , country, tree, regen, shrub, herbs, fil
 
     if (filterDead) {
 
-      if(.verbose) cat("Filtering missing and zero values...\n")
+      cli::cli_inform("Filtering missing and zero values..." )
 
 
 
@@ -381,7 +383,7 @@ forestplotlist_fr <- function(id, year , country, tree, regen, shrub, herbs, fil
 
     if (filterNA == TRUE){
 
-      if (.verbose) cat("Filtering NAs...\n")
+      if (.verbose) cat("Filtering NAs..." )
 
         if (!is.na(tree$STATUS[1])){
 
@@ -407,7 +409,7 @@ forestplotlist_fr <- function(id, year , country, tree, regen, shrub, herbs, fil
 
     if (filterminDBH) {
 
-      if (.verbose) cat("Filtering minDBH...\n")
+      if (.verbose) cat("Filtering minDBH..." )
 
       tree <- tree |>
         dplyr::filter(DBH > minDBH)
@@ -415,7 +417,7 @@ forestplotlist_fr <- function(id, year , country, tree, regen, shrub, herbs, fil
 
     if (setDefaults) {
 
-      if (.verbose) cat("Establishing setdefaults...\n")
+      if (.verbose) cat("Establishing setdefaults..." )
 
 
       tree$Z95[is.na(tree$Z95)] <- 1000
@@ -428,7 +430,7 @@ forestplotlist_fr <- function(id, year , country, tree, regen, shrub, herbs, fil
 
   if (nrow(regenData)>0) {
 
-    if(.verbose) cat("Processing regendata...\n")
+    cli::cli_inform("Processing regendata..." )
 
       regen <- regenData |>
         dplyr::select(
@@ -486,7 +488,7 @@ forestplotlist_fr <- function(id, year , country, tree, regen, shrub, herbs, fil
 
   if (nrow(shrubData)>0) {
 
-    if(.verbose) cat("Processing shrub data..\n")
+    cli::cli_inform("Processing shrub data.." )
 
       shrub<- shrubData|>
         dplyr::select(
@@ -524,7 +526,7 @@ forestplotlist_fr <- function(id, year , country, tree, regen, shrub, herbs, fil
   forest_list$shrubData <- shrub
 
   if (nrow(herbsData)>0){
-    if (.verbose) cat("Processing herbs data..\n")
+    if (.verbose) cat("Processing herbs data.." )
 
     forest_list$herbCover <- herbsData$HERB*10
     forest_list$herbHeight <- NA
@@ -557,7 +559,7 @@ forestplotlist_us <- function(id, year, country,  tree, regen, shrub, herbs, fil
 
   if (nrow(treeData)>0){
 
-    if(.verbose) cat("Processing tree data...\n")
+    cli::cli_inform("Processing tree data..." )
 
     tree <- treeData |>
       dplyr::select(any_of(c(
@@ -600,7 +602,7 @@ forestplotlist_us <- function(id, year, country,  tree, regen, shrub, herbs, fil
 
     if (filterDead) {
 
-      if(.verbose) cat("Filtering missing and zero values...\n")
+      cli::cli_inform("Filtering missing and zero values..." )
 
         tree <- tree |>
           dplyr::filter(
@@ -633,7 +635,7 @@ forestplotlist_us <- function(id, year, country,  tree, regen, shrub, herbs, fil
 
     if (setDefaults) {
 
-      if(.verbose) cat("Establishing setdefaults...\n")
+      cli::cli_inform("Establishing setdefaults...\n")
 
 
       tree$Z95[is.na(tree$Z95)] <- 1000
@@ -647,7 +649,7 @@ forestplotlist_us <- function(id, year, country,  tree, regen, shrub, herbs, fil
 
   if (nrow(regenData)>0) {
 
-    if(.verbose) cat("Processing regendata...\n")
+    cli::cli_inform("Processing regendata...\n")
 
           regen <- regenData |>
         dplyr::select(
@@ -734,7 +736,8 @@ forestplotlist_us <- function(id, year, country,  tree, regen, shrub, herbs, fil
 
   if (nrow(shrubData)>0) {
 
-    if (.verbose) cat("Processing shrub data..\n")
+    cli::cli_inform("Processing shrub data..." )
+
       shrub <- shrubData |>
         dplyr::select(
           ID = ID_UNIQUE_PLOT,
@@ -822,7 +825,7 @@ forestplotlist_us <- function(id, year, country,  tree, regen, shrub, herbs, fil
   forest_list$shrubData<-shrub
 
   if (nrow(herbsData)>0){
-    if(.verbose) cat("Processing herbs data..\n")
+    cli::cli_inform("Processing herbs data.." )
 
       herbs <- herbsData |>
         dplyr::select(
@@ -905,10 +908,17 @@ sf2forest <- function(input_df,country, filterNA, filterDead, minDBH,filterminDB
     msg = cli::cli_abort("Country must be especified as a character vector either ES, US or FR")
   )
 
+
+  assertthat::assert_that(
+    is.numeric(minDBH), minDBH > 0,
+    msg = cli::cli_abort("minDBH must be a numeric and positive value ")
+  )
+
+
   if (is.null(input_df)) {
     if (interactive()) {
       cli::cli_inform(c(
-        "You have not specified an input"
+        "You have not specified an input. Please specified an input that follows the stand data frame structure"
       ))
     }
   }
@@ -931,7 +941,7 @@ sf2forest <- function(input_df,country, filterNA, filterDead, minDBH,filterminDB
     input_df$version = NA
     assertthat::assert_that(
       !is.null(input_df["YEAR"]),
-      msg = cli::cli_abort("Column year is missing."
+      msg = cli::cli_abort("Column YEAR is missing."
       )
     )
   } else{
@@ -963,7 +973,7 @@ sf2forest <- function(input_df,country, filterNA, filterDead, minDBH,filterminDB
 
     ) {
 
-      cat("Processing ID:", id,  "\n")
+      cat("Processing ID:", id)
 
 
       # browser()
