@@ -1,4 +1,137 @@
 
+#' This function takes a standard  frame and generates an object with all plots and years
+#'
+#' @param input_df standard data frame
+#' @param country country code "FR" "ES" or "US"
+#' @param version NA as default, enter "ifn2" "ifn3" OR "ifn4" only for SPAIN
+#' @param tree standard data frame with tree info
+#' @param regen  standard data frame with regen info
+#' @param understory standard data frame with understory info
+#' @param herbs standard data frame with herbs info
+#' @param filterNA if TRUE records with NA for DBH or HT  are eliminated
+#' @param filterDead if TRUE only records of live tree are conserved
+#' @param minDBH  min DBH value
+#' @param filterminDBH if TRUE records are eliminated below minDBH
+#' @param setDefaults set defaults param for roots
+#'
+sf2forest <- function(input_df,country, filterNA, filterDead, minDBH,filterminDBH, setDefaults, .verbose = TRUE) {
+
+  assertthat::assert_that(
+    is.character(country), length(country) > 0, country %in% c("ES", "US", "FR"),
+    msg = cli::cli_abort("Country must be especified as a character vector either ES, US or FR")
+  )
+
+
+  assertthat::assert_that(
+    is.numeric(minDBH), minDBH > 0,
+    msg = cli::cli_abort("minDBH must be a numeric and positive value ")
+  )
+
+  assertthat::assert_that(
+    !is.null(input_df),
+    msg = cli::cli_abort("The input is empty. Please specified an input that follows the stand data frame structure.")
+
+  )
+
+  assertthat::assert_that(
+    nrow(input_df)>1,
+    msg = cli::cli_abort("The input is empty. Please specified an input that follows the stand data frame structure.")
+
+  )
+
+
+  assertthat::assert_that(
+    # !any(is.null(input_df[c("ID_UNIQUE_PLOT", "tree" ,"regen","understory")])),
+
+    all(c("ID_UNIQUE_PLOT", "tree" ,"regen","understory") %in% names(input_df)),
+    msg = cli::cli_abort("Some columns are missing. Check that all of these are present: ID_UNIQUE_PLOT, tree, regen, understory)"
+    )
+  )
+
+  if (country != "ES"){
+    input_df$version = NA
+    assertthat::assert_that(
+      all(c("YEAR") %in% names(input_df)),
+      msg = cli::cli_abort("Column YEAR is missing."
+      )
+    )
+  } else{
+    assertthat::assert_that(
+      all(c("version") %in% names(input_df)),
+      msg = cli::cli_abort("Column version is missing."
+      )
+    )
+
+  }
+
+
+
+  purrr::pmap(
+    .l = list(
+      id = input_df[["ID_UNIQUE_PLOT"]],
+      year = input_df[["YEAR"]],
+      version = input_df[["version"]],
+      tree = input_df[["tree"]],
+      regen = input_df[["regen"]],
+      understory = input_df[["understory"]]
+    ),
+    .f = \(id,
+           year,
+           version,
+           tree,
+           regen,
+           understory
+
+    ) {
+
+      cat("Processing ID:", id)
+
+
+      # browser()
+      understory<-data.frame(understory)
+
+      #seleccionar herbs y shrub ( si los hay)
+      if (is.null(understory[["shrub"]]) == TRUE) {
+        shrub <- tibble::tibble()
+      } else{
+        shrub = understory[["shrub"]]
+      }
+
+      if (is.null(understory[["herbs"]])) {
+        herbs <- tibble::tibble()
+      }else{
+        herbs = understory[["herbs"]]
+      }
+
+      if (is.null(regen) == TRUE) {
+        regen <- tibble::tibble()}
+
+      if (country == "FR"){
+        forest<- forestplotlist_fr(id,year,country, tree, regen, shrub, herbs, filterNA, filterDead,  minDBH, filterminDBH, setDefaults, .verbose)
+      }
+
+      if (country == "ES"){
+        forest<- forestplotlist_es(id, version, country, tree, regen, shrub, filterNA, filterDead,  minDBH, filterminDBH, setDefaults, .verbose)
+      }
+      if (country == "US"){
+        forest <- forestplotlist_us(id, year, country, tree, regen, shrub,herbs, filterNA, filterDead,  minDBH, filterminDBH, setDefaults, .verbose)
+      }
+
+      return(forest)
+
+
+    } |>
+      purrr::list_rbind()
+
+
+  )
+
+
+
+}
+
+
+
 #' This function takes row of a standard data frame of FIA, FR or ES and creates a list following the format of a forest object
 #'
 #' @param id id code for plot
@@ -885,136 +1018,4 @@ forestplotlist_us <- function(id, year, country,  tree, regen, shrub, herbs, fil
 
 
 }
-
-
-#' This function takes a standard  frame and generates an object with all plots and years
-#'
-#' @param input_df standard data frame
-#' @param country country code "FR" "ES" or "US"
-#' @param version NA as default, enter "ifn2" "ifn3" OR "ifn4" only for SPAIN
-#' @param tree standard data frame with tree info
-#' @param regen  standard data frame with regen info
-#' @param understory standard data frame with understory info
-#' @param herbs standard data frame with herbs info
-#' @param filterNA if TRUE records with NA for DBH or HT  are eliminated
-#' @param filterDead if TRUE only records of live tree are conserved
-#' @param minDBH  min DBH value
-#' @param filterminDBH if TRUE records are eliminated below minDBH
-#' @param setDefaults set defaults param for roots
-sf2forest <- function(input_df,country, filterNA, filterDead, minDBH,filterminDBH, setDefaults, .verbose = TRUE) {
-
-  assertthat::assert_that(
-    is.character(country), length(country) > 0, country %in% c("ES", "US", "FR"),
-    msg = cli::cli_abort("Country must be especified as a character vector either ES, US or FR")
-  )
-
-
-  assertthat::assert_that(
-    is.numeric(minDBH), minDBH > 0,
-    msg = cli::cli_abort("minDBH must be a numeric and positive value ")
-  )
-
-  assertthat::assert_that(
-    !is.null(input_df),
-    msg = cli::cli_abort("The input is empty. Please specified an input that follows the stand data frame structure.")
-
-  )
-
-  assertthat::assert_that(
-    nrow(input_df)>1,
-    msg = cli::cli_abort("The input is empty. Please specified an input that follows the stand data frame structure.")
-
-  )
-
-
-  assertthat::assert_that(
-    # !any(is.null(input_df[c("ID_UNIQUE_PLOT", "tree" ,"regen","understory")])),
-
-    all(c("ID_UNIQUE_PLOT", "tree" ,"regen","understory") %in% names(input_df)),
-    msg = cli::cli_abort("Some columns are missing. Check that all of these are present: ID_UNIQUE_PLOT, tree, regen, understory)"
-    )
-  )
-
-  if (country != "ES"){
-    input_df$version = NA
-    assertthat::assert_that(
-      all(c("YEAR") %in% names(input_df)),
-      msg = cli::cli_abort("Column YEAR is missing."
-      )
-    )
-  } else{
-    assertthat::assert_that(
-      all(c("version") %in% names(input_df)),
-      msg = cli::cli_abort("Column version is missing."
-      )
-    )
-
-  }
-
-
-
-  purrr::pmap(
-    .l = list(
-      id = input_df[["ID_UNIQUE_PLOT"]],
-      year = input_df[["YEAR"]],
-      version = input_df[["version"]],
-      tree = input_df[["tree"]],
-      regen = input_df[["regen"]],
-      understory = input_df[["understory"]]
-    ),
-    .f = \(id,
-           year,
-           version,
-           tree,
-           regen,
-           understory
-
-    ) {
-
-      cat("Processing ID:", id)
-
-
-      # browser()
-      understory<-data.frame(understory)
-
-      #seleccionar herbs y shrub ( si los hay)
-      if (is.null(understory[["shrub"]]) == TRUE) {
-        shrub <- tibble::tibble()
-      } else{
-        shrub = understory[["shrub"]]
-      }
-
-      if (is.null(understory[["herbs"]])) {
-        herbs <- tibble::tibble()
-      }else{
-        herbs = understory[["herbs"]]
-      }
-
-      if (is.null(regen) == TRUE) {
-        regen <- tibble::tibble()}
-
-      if (country == "FR"){
-        forest<- forestplotlist_fr(id,year,country, tree, regen, shrub, herbs, filterNA, filterDead,  minDBH, filterminDBH, setDefaults, .verbose)
-      }
-
-      if (country == "ES"){
-        forest<- forestplotlist_es(id, version, country, tree, regen, shrub, filterNA, filterDead,  minDBH, filterminDBH, setDefaults, .verbose)
-      }
-      if (country == "US"){
-        forest <- forestplotlist_us(id, year, country, tree, regen, shrub,herbs, filterNA, filterDead,  minDBH, filterminDBH, setDefaults, .verbose)
-      }
-
-      return(forest)
-
-
-    } |>
-      purrr::list_rbind()
-
-
-  )
-
-
-
-}
-
 
