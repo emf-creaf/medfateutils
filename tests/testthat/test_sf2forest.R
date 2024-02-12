@@ -51,7 +51,23 @@ expect_identical(unique(test_res$ID),  test_file_ifn[["ID_UNIQUE_PLOT"]])
 expect_identical(unique(test_res$version) , test_file_ifn[["version"]])
 
 
-
+expect_error(
+  test_res<-suppressWarnings(forestplotlist_es(
+    test_file_ifn[["ID_UNIQUE_PLOT"]],
+    test_file_ifn[["version"]] ,
+    "TURURU",
+    test_file_ifn[["tree"]],
+    test_file_ifn[["regen"]],
+    test_file_ifn[["understory"]][[1]][["shrub"]],
+    filterNA =TRUE,
+    filterDead=TRUE,
+    minDBH = 30,
+    filterminDBH =TRUE,
+    setDefaults=TRUE,
+    .verbose = TRUE
+  )),
+  "Country must be especified as a character vector either ES, US or FR"
+)
 
 })
 
@@ -105,7 +121,24 @@ test_that("forestplotlist_fr  works as intended", {
 
   expect_identical(unique(test_res$YEAR) , test_file_ffi[["YEAR"]])
 
-
+  #COUNTRY
+  expect_error(
+    test_res<-suppressWarnings(forestplotlist_fr(
+      test_file_ffi[["ID_UNIQUE_PLOT"]],
+      test_file_ffi[["version"]] ,
+      "TURURU",
+      test_file_ffi[["tree"]],
+      test_file_ffi[["regen"]],
+      test_file_ffi[["understory"]][[1]][["shrub"]],
+      filterNA =TRUE,
+      filterDead=TRUE,
+      minDBH = 30,
+      filterminDBH =TRUE,
+      setDefaults=TRUE,
+      .verbose = TRUE
+    )),
+    "Country must be especified as a character vector either ES, US or FR"
+  )
 
 
 })
@@ -160,7 +193,23 @@ test_that("forestplotlist_us  works as intended", {
   expect_identical(unique(test_res$YEAR) , test_file_fia[["YEAR"]])
 
 
-
+  expect_error(
+    test_res<-suppressWarnings(forestplotlist_us(
+      test_file_fia[["ID_UNIQUE_PLOT"]],
+      test_file_fia[["version"]] ,
+      "TURURU",
+      test_file_fia[["tree"]],
+      test_file_fia[["regen"]],
+      test_file_fia[["understory"]][[1]][["shrub"]],
+      filterNA =TRUE,
+      filterDead=TRUE,
+      minDBH = 30,
+      filterminDBH =TRUE,
+      setDefaults=TRUE,
+      .verbose = TRUE
+    )),
+    "Country must be especified as a character vector either ES, US or FR"
+  )
 
 })
 
@@ -173,13 +222,12 @@ test_that("sf2forest  works as intended  for ES", {
 
 
 
-  test_input_ifn <-standard_ifn
+ test_input_ifn <-standard_ifn
 
   expect_true(
     is.list(
       test_res<-suppressWarnings(sf2forest(
         input_df = test_input_ifn,
-        country = "ES",
         filterNA = TRUE,
         filterDead = TRUE,
         minDBH = 30,
@@ -192,25 +240,11 @@ test_that("sf2forest  works as intended  for ES", {
   expect_identical(length(test_res), 61L)
 
 
-  expect_error(
-    test_res<-sf2forest(
-      input_df = test_input_ifn,
-      country = "TURURU",
-      filterNA = TRUE,
-      filterDead = TRUE,
-      minDBH = 30,
-      filterminDBH = TRUE,
-      setDefaults = TRUE,
-      .verbose = TRUE)
-    ,
-    "Country must be especified as a character vector either ES, US or FR"
-  )
 
 
   expect_error(
     test_res<-sf2forest(
       input_df = test_input_ifn,
-      country = "ES",
       filterNA = TRUE,
       filterDead = TRUE,
       minDBH = "-30",
@@ -224,7 +258,6 @@ test_that("sf2forest  works as intended  for ES", {
   expect_error(
     test_res<-sf2forest(
       input_df = NULL,
-      country = "ES",
       filterNA = TRUE,
       filterDead = TRUE,
       minDBH = 30,
@@ -232,13 +265,12 @@ test_that("sf2forest  works as intended  for ES", {
       setDefaults = TRUE,
       .verbose = TRUE)
     ,
-    "The input is empty. Please specified an input that follows the stand data frame structure."
+    "The input is empty. Please specified an input that follows the standard data frame structure."
   )
 
   expect_error(
     test_res<-sf2forest(
       input_df = tibble::tibble(),
-      country = "ES",
       filterNA = TRUE,
       filterDead = TRUE,
       minDBH = 30,
@@ -246,14 +278,13 @@ test_that("sf2forest  works as intended  for ES", {
       setDefaults = TRUE,
       .verbose = TRUE)
     ,
-    "The input is empty. Please specified an input that follows the stand data frame structure."
+    "The input is empty. Please specified an input that follows the standard data frame structure."
   )
 
 
   expect_error(
     test_res<-sf2forest(
       input_df = test_input_ifn[-1],
-      country = "ES",
       filterNA = TRUE,
       filterDead = TRUE,
       minDBH = 30,
@@ -261,13 +292,12 @@ test_that("sf2forest  works as intended  for ES", {
       setDefaults = TRUE,
       .verbose = TRUE)
     ,
-    "Some columns are missing. Check that all of these are present: ID_UNIQUE_PLOT, tree, regen, understory)"
+    "Some columns are missing. Check that all of these are present: ID_UNIQUE_PLOT,COUNTRY, tree, regen, understory)"
   )
 
   expect_error(
     test_res<-sf2forest(
       input_df = test_input_ifn[-8],
-      country = "ES",
       filterNA = TRUE,
       filterDead = TRUE,
       minDBH = 30,
@@ -294,7 +324,6 @@ test_that("sf2forest  works as intended  for US", {
     is.list(
       test_res<-suppressWarnings(sf2forest(
         input_df = test_input_fia,
-        country = "US",
         filterNA = TRUE,
         filterDead = TRUE,
         minDBH = 30,
@@ -309,25 +338,10 @@ test_that("sf2forest  works as intended  for US", {
 
 
 
-  expect_error(
-    test_res<-sf2forest(
-      input_df = test_input_fia,
-      country = "TURURU",
-      filterNA = TRUE,
-      filterDead = TRUE,
-      minDBH = 30,
-      filterminDBH = TRUE,
-      setDefaults = TRUE,
-      .verbose = TRUE)
-    ,
-    "Country must be especified as a character vector either ES, US or FR"
-  )
-
 
   expect_error(
     test_res<-sf2forest(
       input_df = test_input_fia,
-      country = "US",
       filterNA = TRUE,
       filterDead = TRUE,
       minDBH = "-30",
@@ -341,7 +355,6 @@ test_that("sf2forest  works as intended  for US", {
   expect_error(
     test_res<-sf2forest(
       input_df = NULL,
-      country = "US",
       filterNA = TRUE,
       filterDead = TRUE,
       minDBH = 30,
@@ -349,13 +362,12 @@ test_that("sf2forest  works as intended  for US", {
       setDefaults = TRUE,
       .verbose = TRUE)
     ,
-    "The input is empty. Please specified an input that follows the stand data frame structure."
+    "The input is empty. Please specified an input that follows the standard data frame structure."
   )
 
   expect_error(
     test_res<-sf2forest(
       input_df = tibble::tibble(),
-      country = "US",
       filterNA = TRUE,
       filterDead = TRUE,
       minDBH = 30,
@@ -363,14 +375,13 @@ test_that("sf2forest  works as intended  for US", {
       setDefaults = TRUE,
       .verbose = TRUE)
     ,
-    "The input is empty. Please specified an input that follows the stand data frame structure."
+    "The input is empty. Please specified an input that follows the standard data frame structure."
   )
 
 
   expect_error(
     test_res<-sf2forest(
       input_df = test_input_fia[-2],
-      country = "US",
       filterNA = TRUE,
       filterDead = TRUE,
       minDBH = 30,
@@ -378,12 +389,11 @@ test_that("sf2forest  works as intended  for US", {
       setDefaults = TRUE,
       .verbose = TRUE)
     ,
-    "Some columns are missing. Check that all of these are present: ID_UNIQUE_PLOT, tree, regen, understory)"
+    "Some columns are missing. Check that all of these are present: ID_UNIQUE_PLOT,COUNTRY, tree, regen, understory)"
   )
   expect_error(
     test_res<-sf2forest(
       input_df = test_input_fia[-1],
-      country = "US",
       filterNA = TRUE,
       filterDead = TRUE,
       minDBH = 30,
@@ -410,7 +420,6 @@ test_that("sf2forest  works as intended  for FR", {
     is.list(
       test_res<-suppressWarnings(sf2forest(
         input_df = test_input_ffi,
-        country = "FR",
         filterNA = TRUE,
         filterDead = TRUE,
         minDBH = 30,
@@ -428,22 +437,6 @@ test_that("sf2forest  works as intended  for FR", {
   expect_error(
     test_res<-sf2forest(
       input_df = test_input_ffi,
-      country = "TURURU",
-      filterNA = TRUE,
-      filterDead = TRUE,
-      minDBH = 30,
-      filterminDBH = TRUE,
-      setDefaults = TRUE,
-      .verbose = TRUE)
-    ,
-    "Country must be especified as a character vector either ES, US or FR"
-  )
-
-
-  expect_error(
-    test_res<-sf2forest(
-      input_df = test_input_ffi,
-      country = "FR",
       filterNA = TRUE,
       filterDead = TRUE,
       minDBH = "-30",
@@ -457,7 +450,6 @@ test_that("sf2forest  works as intended  for FR", {
   expect_error(
     test_res<-sf2forest(
       input_df = NULL,
-      country = "FR",
       filterNA = TRUE,
       filterDead = TRUE,
       minDBH = 30,
@@ -465,13 +457,12 @@ test_that("sf2forest  works as intended  for FR", {
       setDefaults = TRUE,
       .verbose = TRUE)
     ,
-    "The input is empty. Please specified an input that follows the stand data frame structure."
+    "The input is empty. Please specified an input that follows the standard data frame structure."
   )
 
   expect_error(
     test_res<-sf2forest(
       input_df = tibble::tibble(),
-      country = "FR",
       filterNA = TRUE,
       filterDead = TRUE,
       minDBH = 30,
@@ -479,14 +470,13 @@ test_that("sf2forest  works as intended  for FR", {
       setDefaults = TRUE,
       .verbose = TRUE)
     ,
-    "The input is empty. Please specified an input that follows the stand data frame structure."
+    "The input is empty. Please specified an input that follows the standard data frame structure."
   )
 
 
   expect_error(
     test_res<-sf2forest(
       input_df = test_input_ffi[-1],
-      country = "FR",
       filterNA = TRUE,
       filterDead = TRUE,
       minDBH = 30,
@@ -494,7 +484,7 @@ test_that("sf2forest  works as intended  for FR", {
       setDefaults = TRUE,
       .verbose = TRUE)
     ,
-    "Some columns are missing. Check that all of these are present: ID_UNIQUE_PLOT, tree, regen, understory)"
+    "Some columns are missing. Check that all of these are present: ID_UNIQUE_PLOT,COUNTRY, tree, regen, understory)"
   )
 
 

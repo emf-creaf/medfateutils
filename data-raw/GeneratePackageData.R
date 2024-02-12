@@ -91,7 +91,7 @@ usethis::use_data(poblet_trees, overwrite = T)
 #test data for forest
 load("data-raw/prova2_ffi.RData")
 load("data-raw/prova2_fia.RData")
-load("data-raw/prov2_ifn.RData")
+load("data-raw/prova2_ifn.RData")
 standard_ifn<-prov2_ifn
 standard_ffi<-prova2_ffi
 standard_fia<-prova2_fia
