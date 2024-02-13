@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfateutils</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
       </span>
     </div>
 
@@ -66,7 +66,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Cáceres</h4>
             
-            <h4 data-toc-skip class="date">2023-08-23</h4>
+            <h4 data-toc-skip class="date">2024-02-13</h4>
       
       
       <div class="hidden name"><code>SpeciesMappingIFN.Rmd</code></div>
@@ -109,6 +109,8 @@ that we will employ in this vignette:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://emf-creaf.github.io/medfate/" class="external-link">medfate</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">medfateutils</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Warning: replacing previous import 'dplyr::filter' by 'stats::filter' when</span></span>
+<span><span class="co">## loading 'medfateutils'</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="source-data-paths">Source data paths<a class="anchor" aria-label="anchor" href="#source-data-paths"></a>
@@ -116,7 +118,7 @@ that we will employ in this vignette:</p>
 <p>Befores starting, we define file paths (in my computer) to access
 source data for parameter filling. Source data includes forest inventory
 (i.e. IFN) data as well as plant trait and allometric data bases:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">IFN_path</span> <span class="op">=</span> <span class="st">"/home/miquel/OneDrive/EMF_datasets/ForestInventories/IFN/"</span></span></code></pre></div>
 </div>
 </div>
@@ -131,7 +133,7 @@ are treated as distinct in the forest inventory.</p>
 <p>In our case, we begin by loading shrub and tree species codes used in
 the second, third, and fourth editions of IFN, i.e. IFN2, IFN3 and
 IFN4:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">IFN23_species_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">IFN_path</span>,<span class="st">"Sources/SpeciesCodesIFN23.txt"</span><span class="op">)</span>, </span>
 <span>                             sep<span class="op">=</span><span class="st">"\t"</span><span class="op">)</span></span>
 <span><span class="va">IFN23_species_data</span><span class="op">&lt;-</span><span class="va">IFN23_species_data</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span><span class="op">)</span><span class="op">]</span></span>
@@ -146,7 +148,7 @@ IFN4:</p>
 <span><span class="va">IFN4_tree_species_data</span><span class="op">&lt;-</span><span class="va">IFN4_tree_species_data</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span><span class="op">)</span><span class="op">]</span></span></code></pre></div>
 <p>Merge the two code data sets by adding to the codes of IFN2-3 those
 species codes that were new in IFN4:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">newShrubs</span> <span class="op">&lt;-</span> <span class="op">!</span><span class="op">(</span><span class="va">IFN4_shrub_species_data</span><span class="op">$</span><span class="va">IFNCODE</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">IFN23_species_data</span><span class="op">$</span><span class="va">IFNCODE</span><span class="op">)</span></span>
 <span><span class="va">newTrees</span> <span class="op">&lt;-</span> <span class="op">!</span><span class="op">(</span><span class="va">IFN4_tree_species_data</span><span class="op">$</span><span class="va">IFNCODE</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">IFN23_species_data</span><span class="op">$</span><span class="va">IFNCODE</span><span class="op">)</span></span>
 <span><span class="va">IFN_species_data</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows</a></span><span class="op">(</span><span class="va">IFN23_species_data</span>, </span>
@@ -154,12 +156,12 @@ species codes that were new in IFN4:</p>
 <span>                              <span class="va">IFN4_tree_species_data</span><span class="op">[</span><span class="va">newTrees</span>,<span class="op">]</span><span class="op">)</span></span>
 <span><span class="va">IFN_species_data</span> <span class="op">&lt;-</span> <span class="va">IFN_species_data</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">IFN_species_data</span><span class="op">$</span><span class="va">IFNCODE</span><span class="op">)</span><span class="op">)</span>,<span class="op">]</span></span></code></pre></div>
 <p>Check uniqueness of codes:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">IFN_species_data</span><span class="op">$</span><span class="va">IFNCODE</span><span class="op">)</span><span class="op">)</span> <span class="op">==</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">IFN_species_data</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] TRUE</span></span></code></pre>
 <p>The final table of species names and codes has 469 rows and looks
 like:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">IFN_species_data</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##   IFNCODE               IFNNAME</span></span>
 <span><span class="co">## 1       1 Heberdenia bahamensis</span></span>
@@ -181,7 +183,7 @@ following two sections.</p>
 <p>We need to manually define a set of entities (IFN codes) to be
 excluded because they have low taxonomic information, refer to habitat
 descriptions or to undesired growth forms (e.g. vines):</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">codesOut</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"19"</span>, <span class="co"># Otras coniferas </span></span>
 <span>              <span class="st">"10"</span>, <span class="co"># Sin asignar</span></span>
 <span>              <span class="st">"20"</span>, <span class="co"># Pinos</span></span>
@@ -205,7 +207,7 @@ descriptions or to undesired growth forms (e.g. vines):</p>
 <span>              <span class="st">"104"</span> <span class="co">#Otras papilionoideas bajas</span></span>
 <span>              <span class="op">)</span></span></code></pre></div>
 <p>We remove taxa from the IFN taxonomic definition data frame:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">IFN_species_data</span> <span class="op">&lt;-</span> <span class="va">IFN_species_data</span><span class="op">[</span><span class="op">!</span><span class="op">(</span><span class="va">IFN_species_data</span><span class="op">$</span><span class="va">IFNCODE</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">codesOut</span><span class="op">)</span>, <span class="op">]</span></span></code></pre></div>
 <p>so that we are left with 448 taxa.</p>
 </div>
@@ -217,7 +219,7 @@ of entities to be treated together in <strong>medfate</strong>. In our
 case, we need to define some genus-level groups because the forest
 inventory records do not always have identifications at species-level
 resolution:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">genus_level</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Acacia spp.:7/207/307"</span>,</span>
 <span>                 <span class="st">"Adenocarpus spp.:1163/2163/2103/3163/10103"</span>,</span>
 <span>                 <span class="st">"Anagyris spp.:175/1175"</span>,</span>
@@ -296,7 +298,7 @@ separate the group name from the set of codes forming the group, which
 were separated using ‘/’. We also define groups of taxa at species
 level, where different synonyms are merged, different codes have been
 used for the same species, or to merge sub-specific records:</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">assimilated_species</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Acer campestre:76/776/976"</span>,</span>
 <span>                       <span class="st">"Amelanchier ovalis:2/200"</span>,</span>
 <span>                       <span class="st">"Buxus sempervirens:91/291/2910/9071/9100"</span>,</span>
@@ -325,7 +327,7 @@ used for the same species, or to merge sub-specific records:</p>
 information of these two groups of taxa. We also separate group names
 from the set of codes defining the group into columns of a data
 frame:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">groups_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="st">"Groups"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">genus_level</span>,</span>
 <span>                                     <span class="va">assimilated_species</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/separate.html" class="external-link">separate</a></span><span class="op">(</span><span class="st">"Groups"</span>, into<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"group_names"</span>, <span class="st">"group_codes"</span><span class="op">)</span>, sep<span class="op">=</span><span class="st">":"</span><span class="op">)</span></span>
@@ -339,12 +341,12 @@ frame:</p>
 <span><span class="co">## 6   Asparagus spp.             138/1138/2138</span></span></code></pre>
 <p>We now filter out from the species data frame those that are already
 included as part of species groups</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">in_groups</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/strsplit.html" class="external-link">strsplit</a></span><span class="op">(</span><span class="va">groups_df</span><span class="op">$</span><span class="va">group_codes</span>, split<span class="op">=</span><span class="st">"/"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">sel</span> <span class="op">=</span> <span class="op">!</span><span class="op">(</span><span class="va">IFN_species_data</span><span class="op">$</span><span class="va">IFNCODE</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">in_groups</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="op">!</span><span class="va">sel</span><span class="op">)</span>, <span class="st">" codes found in groups.\n"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## 327 codes found in groups.</span></span></code></pre>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">IFN_species_unique</span> <span class="op">&lt;-</span> <span class="va">IFN_species_data</span><span class="op">[</span><span class="va">sel</span>, <span class="op">]</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -353,12 +355,12 @@ included as part of species groups</p>
 <p>Once we have IFN species names and codes, as well as the definition
 of the IFN biological entities to merge, we can create the mapping data
 frame using:</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">IFN_species_mapping</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>Name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">IFN_species_unique</span><span class="op">$</span><span class="va">IFNNAME</span>, <span class="va">groups_df</span><span class="op">$</span><span class="va">group_names</span><span class="op">)</span>,</span>
 <span>                                  Codes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">IFN_species_unique</span><span class="op">$</span><span class="va">IFNCODE</span>, <span class="va">groups_df</span><span class="op">$</span><span class="va">group_codes</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">IFN_species_mapping</span> <span class="op">&lt;-</span> <span class="va">IFN_species_mapping</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="va">IFN_species_mapping</span><span class="op">$</span><span class="va">Name</span><span class="op">)</span>,, drop <span class="op">=</span> <span class="cn">FALSE</span><span class="op">]</span></span></code></pre></div>
 <p>The resulting data frame has 217 entities and looks like:</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">IFN_species_mapping</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##                    Name      Codes</span></span>
 <span><span class="co">## 16           Abies alba         31</span></span>
@@ -382,7 +384,7 @@ frame using:</p>
 
       <footer><div class="copyright">
   <p></p>
-<p>Developed by Miquel De Cáceres, Víctor Granda, Antoine Cabon, Nicolas Martin-StPaul, Arsène Druel.</p>
+<p>Developed by Miquel De Cáceres, Víctor Granda, Adriana Tovar, Antoine Cabon, Nicolas Martin-StPaul, Arsène Druel.</p>
 </div>
 
 <div class="pkgdown">

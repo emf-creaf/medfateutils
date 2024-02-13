@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfateutils</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
       </span>
     </div>
 
@@ -54,9 +54,10 @@
 <span>  <span class="va">SpParams</span>,</span>
 <span>  <span class="va">trait_table</span>,</span>
 <span>  <span class="va">trait_mapping</span>,</span>
+<span>  <span class="va">taxon_column</span>,</span>
+<span>  genus_column <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  character_traits <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  taxon_column <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  summary_function <span class="op">=</span> <span class="st">"mean"</span>,</span>
+<span>  summary_function <span class="op">=</span> <span class="st">"median"</span>,</span>
 <span>  summary_params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
 <span>  scalar_functions <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  replace_previous <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -72,23 +73,29 @@
 
 
 <dt>trait_table</dt>
-<dd><p>A data frame with species traits in columns and row.names corresponding to taxonomic entities.</p></dd>
+<dd><p>A data frame with functional traits in columns and plants in rows.</p></dd>
 
 
 <dt>trait_mapping</dt>
-<dd><p>A named string vector specifying which trait data column should used to populate each medfate param. Elements are data base columns and names are medfate params.</p></dd>
+<dd><p>A named string vector specifying which trait data column should be used
+to populate each medfate param. Elements are data base columns and names are medfate params.</p></dd>
+
+
+<dt>taxon_column</dt>
+<dd><p>A string identifying the column in <code>trait_table</code> that identifies taxon names).</p></dd>
+
+
+<dt>genus_column</dt>
+<dd><p>A string identifying the column in <code>trait_table</code> that identifies genus. If <code>NULL</code> then genus are taken from first word of taxon names.</p></dd>
 
 
 <dt>character_traits</dt>
 <dd><p>Boolean flag to treat traits as character-valued</p></dd>
 
 
-<dt>taxon_column</dt>
-<dd><p>A string identifying the column in <code>trait_table</code> that identifies taxa (normally species). If <code>taxon_column = NULL</code> then taxon names are taken from row.names.</p></dd>
-
-
 <dt>summary_function</dt>
-<dd><p>A function to summarize multiple values for the same taxonomic entity. By default, arithmetic averages are used, excluding missing values.</p></dd>
+<dd><p>A function to summarize multiple values for the same taxonomic entity. By default,
+median values are taken for quantitative traits and the most frequent value is taken for qualitative traits.</p></dd>
 
 
 <dt>summary_params</dt>
@@ -117,6 +124,12 @@
 
 <p>A modified data frame of medfate species parameters</p>
     </div>
+    <div id="details">
+    <h2>Details</h2>
+    <p>Matches column 'AcceptedName' of SpParams with trait parameter sources.
+If the target taxon is a species, values are taken from those rows in trait_table where species names match.
+If the target taxon is a genus, then values are taken from those rows where genus is the same.</p>
+    </div>
     <div id="see-also">
     <h2>See also</h2>
     <div class="dont-index"><p><code><a href="initSpParams.html">initSpParams</a></code></p></div>
@@ -134,7 +147,7 @@
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Miquel De Cáceres, Víctor Granda, Antoine Cabon, Nicolas Martin-StPaul, Arsène Druel.</p>
+  <p></p><p>Developed by Miquel De Cáceres, Víctor Granda, Adriana Tovar, Antoine Cabon, Nicolas Martin-StPaul, Arsène Druel.</p>
 </div>
 
 <div class="pkgdown">

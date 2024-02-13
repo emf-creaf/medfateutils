@@ -40,6 +40,9 @@
     <loc>/reference/initSpParams.html</loc>
   </url>
   <url>
+    <loc>/reference/medfateutils-package.html</loc>
+  </url>
+  <url>
     <loc>/reference/modifySoilParams.html</loc>
   </url>
   <url>
@@ -53,6 +56,9 @@
   </url>
   <url>
     <loc>/reference/redefineSoilLayers.html</loc>
+  </url>
+  <url>
+    <loc>/reference/sf2forest.html</loc>
   </url>
   <url>
     <loc>/reference/soilgridsParams.html</loc>

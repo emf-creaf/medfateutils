@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfateutils</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
       </span>
     </div>
 
@@ -85,7 +85,7 @@ Each string may contain different coma-separated codes in order to map different
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">IFN_species_mapping</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">NFI_SP_mapping</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">piesMayoresIFN2</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">piesMayoresIFN2</span><span class="op">$</span><span class="va">Especie</span></span></span>
@@ -99,28 +99,48 @@ Each string may contain different coma-separated codes in order to map different
 <span class="r-out co"><span class="r-pr">#&gt;</span> [71] "0025" "0025" "0025" "0025" "0025" "0025" "0025" "0025" "0025"</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">translateSpeciesCodes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">piesMayoresIFN2</span><span class="op">$</span><span class="va">Especie</span>,</span></span>
-<span class="r-in"><span>                      species_names <span class="op">=</span> <span class="va">IFN_species_mapping</span><span class="op">$</span><span class="va">Name</span>,</span></span>
-<span class="r-in"><span>                      species_codes <span class="op">=</span> <span class="va">IFN_species_mapping</span><span class="op">$</span><span class="va">Codes</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "Pinus nigra"      "Pinus nigra"      "Pinus halepensis" "Pinus nigra"     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "Quercus faginea"  "Pinus nigra"      "Pinus nigra"      "Pinus nigra"     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "Pinus nigra"      "Pinus nigra"      "Pinus nigra"      "Pinus nigra"     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "Pinus nigra"      "Quercus ilex"     "Pinus nigra"      "Pinus nigra"     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [17] "Pinus nigra"      "Quercus ilex"     "Pinus nigra"      "Quercus ilex"    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [21] "Pinus nigra"      "Pinus nigra"      "Quercus faginea"  "Pinus nigra"     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [25] "Pinus nigra"      "Pinus sylvestris" "Pinus nigra"      "Pinus nigra"     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [29] "Pinus nigra"      "Pinus nigra"      "Pinus sylvestris" "Pinus nigra"     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [33] "Pinus sylvestris" "Pinus nigra"      "Pinus nigra"      "Pinus sylvestris"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [37] "Pinus nigra"      "Pinus nigra"      "Pinus nigra"      "Quercus faginea" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [41] "Pinus nigra"      "Pinus nigra"      "Pinus nigra"      "Pinus halepensis"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [45] "Pinus nigra"      "Pinus halepensis" "Pinus nigra"      "Pinus halepensis"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [49] "Pinus halepensis" "Pinus halepensis" "Pinus nigra"      "Pinus nigra"     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [53] "Pinus nigra"      "Pinus nigra"      "Pinus nigra"      "Pinus nigra"     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [57] "Pinus nigra"      "Pinus halepensis" "Pinus nigra"      "Pinus nigra"     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [61] "Pinus nigra"      "Pinus nigra"      "Pinus nigra"      "Pinus nigra"     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [65] "Pinus nigra"      "Pinus nigra"      "Pinus nigra"      "Pinus nigra"     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [69] "Pinus nigra"      "Pinus nigra"      "Pinus nigra"      "Pinus nigra"     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [73] "Pinus nigra"      "Pinus nigra"      "Pinus nigra"      "Pinus nigra"     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [77] "Pinus nigra"      "Pinus nigra"      "Pinus nigra"     </span>
+<span class="r-in"><span>                      species_names <span class="op">=</span> <span class="va">NFI_SP_mapping</span><span class="op">$</span><span class="va">NFIName</span>,</span></span>
+<span class="r-in"><span>                      species_codes <span class="op">=</span> <span class="va">NFI_SP_mapping</span><span class="op">$</span><span class="va">NFICode</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "Pinus nigra"               "Pinus nigra"              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [3] "Pinus halepensis"          "Pinus nigra"              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "Quercus faginea"           "Pinus nigra"              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] "Pinus nigra"               "Pinus nigra"              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "Pinus nigra"               "Pinus nigra"              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [11] "Pinus nigra"               "Pinus nigra"              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "Pinus nigra"               "Quercus ilex ssp. ballota"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [15] "Pinus nigra"               "Pinus nigra"              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [17] "Pinus nigra"               "Quercus ilex ssp. ballota"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [19] "Pinus nigra"               "Quercus ilex ssp. ballota"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [21] "Pinus nigra"               "Pinus nigra"              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [23] "Quercus faginea"           "Pinus nigra"              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [25] "Pinus nigra"               "Pinus sylvestris"         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [27] "Pinus nigra"               "Pinus nigra"              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [29] "Pinus nigra"               "Pinus nigra"              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [31] "Pinus sylvestris"          "Pinus nigra"              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [33] "Pinus sylvestris"          "Pinus nigra"              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [35] "Pinus nigra"               "Pinus sylvestris"         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [37] "Pinus nigra"               "Pinus nigra"              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [39] "Pinus nigra"               "Quercus faginea"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [41] "Pinus nigra"               "Pinus nigra"              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [43] "Pinus nigra"               "Pinus halepensis"         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [45] "Pinus nigra"               "Pinus halepensis"         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [47] "Pinus nigra"               "Pinus halepensis"         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [49] "Pinus halepensis"          "Pinus halepensis"         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [51] "Pinus nigra"               "Pinus nigra"              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [53] "Pinus nigra"               "Pinus nigra"              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [55] "Pinus nigra"               "Pinus nigra"              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [57] "Pinus nigra"               "Pinus halepensis"         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [59] "Pinus nigra"               "Pinus nigra"              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [61] "Pinus nigra"               "Pinus nigra"              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [63] "Pinus nigra"               "Pinus nigra"              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [65] "Pinus nigra"               "Pinus nigra"              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [67] "Pinus nigra"               "Pinus nigra"              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [69] "Pinus nigra"               "Pinus nigra"              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [71] "Pinus nigra"               "Pinus nigra"              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [73] "Pinus nigra"               "Pinus nigra"              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [75] "Pinus nigra"               "Pinus nigra"              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [77] "Pinus nigra"               "Pinus nigra"              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [79] "Pinus nigra"              </span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
@@ -132,7 +152,7 @@ Each string may contain different coma-separated codes in order to map different
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Miquel De Cáceres, Víctor Granda, Antoine Cabon, Nicolas Martin-StPaul, Arsène Druel.</p>
+  <p></p><p>Developed by Miquel De Cáceres, Víctor Granda, Adriana Tovar, Antoine Cabon, Nicolas Martin-StPaul, Arsène Druel.</p>
 </div>
 
 <div class="pkgdown">
