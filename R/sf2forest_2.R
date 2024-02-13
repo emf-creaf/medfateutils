@@ -1,22 +1,20 @@
 
-#' This function takes a standard  frame and generates an object with all plots and years
+#' Forest inventory processing
 #'
-#' @param input_df standard data frame
-#' @param country country code "FR" "ES" or "US"
-#' @param version NA as default, enter "ifn2" "ifn3" OR "ifn4" only for SPAIN
-#' @param tree standard data frame with tree info
-#' @param regen  standard data frame with regen info
-#' @param understory standard data frame with understory info
-#' @param herbs standard data frame with herbs info
-#' @param filterNA if TRUE records with NA for DBH or HT  are eliminated
-#' @param filterDead if TRUE only records of live tree are conserved
-#' @param minDBH  min DBH value
-#' @param filterminDBH if TRUE records are eliminated below minDBH
+#' This function takes a standard data frame as input and creates a list of \code{\link{forest}} objects
+#'
+#' @param input_df Standard data frame generated using package \code{esus}.
+#' @param filterNA Boolean flag. If TRUE records with missing values for DBH or Height are eliminated.
+#' @param filterDead Boolean flag. If TRUE only records of live tree are kept.
+#' @param minDBH  Min DBH value to keep.
+#' @param filterminDBH Boolean flag. If TRUE records are eliminated below minDBH
 #' @param setDefaults set defaults param for roots
+#' @param .verbose A boolean flag to indicate console output
 #'
+#' @returns A list of \code{\link{forest}} objects.
+#'
+#' @export
 sf2forest <- function(input_df, filterNA, filterDead, minDBH,filterminDBH, setDefaults, .verbose = TRUE) {
-
-   # browser()
 
   assertthat::assert_that(
     !is.null(input_df),
@@ -118,94 +116,25 @@ sf2forest <- function(input_df, filterNA, filterDead, minDBH,filterminDBH, setDe
 
 
 
-  # purrr::pmap(
-  #
-  #    .l = list(
-  #     id = input_df[["ID_UNIQUE_PLOT"]],
-  #     year = input_df[["YEAR"]],
-  #     version = input_df[["version"]],
-  #     country = input_df[["country"]],
-  #     tree = input_df[["tree"]],
-  #     regen = input_df[["regen"]],
-  #     understory = input_df[["understory"]]
-  #   ),
-  #   .f = \(id,
-  #          year,
-  #          version,
-  #          country,
-  #          tree,
-  #          regen,
-  #          understory
-  #
-  #   ) {
-  #
-  #     cat("Processing ID:", id)
-  #
-  #
-  #     # browser()
-  #     understory<-data.frame(understory)
-  #
-  #     #seleccionar herbs y shrub ( si los hay)
-  #     if (is.null(understory[["shrub"]]) == TRUE) {
-  #       shrub <- tibble::tibble()
-  #     } else{
-  #       shrub = understory[["shrub"]]
-  #     }
-  #
-  #     if (is.null(understory[["herbs"]])) {
-  #       herbs <- tibble::tibble()
-  #     }else{
-  #       herbs = understory[["herbs"]]
-  #     }
-  #
-  #     if (is.null(regen) == TRUE) {
-  #       regen <- tibble::tibble()}
-  #
-  #     if (country == "FR"){
-  #       forest<- forestplotlist_fr(id,year,country, tree, regen, shrub, herbs, filterNA, filterDead,  minDBH, filterminDBH, setDefaults, .verbose)
-  #     }
-  #
-  #     if (country == "ES"){
-  #       forest<- forestplotlist_es(id, version, country, tree, regen, shrub, filterNA, filterDead,  minDBH, filterminDBH, setDefaults, .verbose)
-  #     }
-  #     if (country == "US"){
-  #       forest <- forestplotlist_us(id, year, country, tree, regen, shrub,herbs, filterNA, filterDead,  minDBH, filterminDBH, setDefaults, .verbose)
-  #     }
-  #
-  #     return(forest)
-  #
-  #
-  #   } |>
-  #     purrr::list_rbind()
-  #
-  #
-  # )
+
+
+
+# This function takes row of a standard data frame of FIA, FR or ES and creates a list following the format of a forest object
 #
-#
-#
-# }
-
-
-
-
-#' This function takes row of a standard data frame of FIA, FR or ES and creates a list following the format of a forest object
-#'
-#' @param id id code for plot
-#' @param year year of sampling , NA as default for ES
-#' @param country country code "FR" "ES" or "US"
-#' @param version NA as default, enter "ifn2" "ifn3" OR "ifn4" only for SPAIN
-#' @param tree standard data frame with tree info
-#' @param regen  standard data frame with regen info
-#' @param understory standard data frame with understory info
-#' @param herbs standard data frame with herbs info
-#' @param filterNA if TRUE records with NA for DBH or HT  are eliminated
-#' @param filterDead if TRUE only records of alive trees are conserved
-#' @param minDBH  min DBH value
-#' @param filterminDBH if TRUE records are eliminated below minDBH
-#' @param setDefaults set defaults params for root depth
-#' @param verbose A boolean flag to indicate console output
-
-
+# @param id id code for plot
+# @param year year of sampling , NA as default for ES
+# @param country country code "FR" "ES" or "US"
+# @param version NA as default, enter "ifn2" "ifn3" OR "ifn4" only for SPAIN
+# @param tree standard data frame with tree info
+# @param regen  standard data frame with regen info
+# @param understory standard data frame with understory info
+# @param herbs standard data frame with herbs info
+# @param filterNA if TRUE records with NA for DBH or HT  are eliminated
+# @param filterDead if TRUE only records of alive trees are conserved
+# @param minDBH  min DBH value
+# @param filterminDBH if TRUE records are eliminated below minDBH
+# @param setDefaults set defaults params for root depth
+# @param .verbose A boolean flag to indicate console output
 forestplotlist_es <- function(id,version, country, tree, regen, shrub, filterNA, filterDead, minDBH,filterminDBH, setDefaults, .verbose = TRUE){
 
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/sf2forest_2.R
 \name{sf2forest}
 \alias{sf2forest}
-\title{This function takes a standard  frame and generates an object with all plots and years}
+\title{Forest inventory processing}
 \usage{
 sf2forest(
   input_df,
@@ -15,30 +15,23 @@ sf2forest(
 )
 }
 \arguments{
-\item{input_df}{standard data frame}
+\item{input_df}{Standard data frame generated using package \code{esus}.}
 
-\item{filterNA}{if TRUE records with NA for DBH or HT  are eliminated}
+\item{filterNA}{Boolean flag. If TRUE records with missing values for DBH or Height are eliminated.}
 
-\item{filterDead}{if TRUE only records of live tree are conserved}
+\item{filterDead}{Boolean flag. If TRUE only records of live tree are kept.}
 
-\item{minDBH}{min DBH value}
+\item{minDBH}{Min DBH value to keep.}
 
-\item{filterminDBH}{if TRUE records are eliminated below minDBH}
+\item{filterminDBH}{Boolean flag. If TRUE records are eliminated below minDBH}
 
 \item{setDefaults}{set defaults param for roots}
 
-\item{country}{country code "FR" "ES" or "US"}
-
-\item{version}{NA as default, enter "ifn2" "ifn3" OR "ifn4" only for SPAIN}
-
-\item{tree}{standard data frame with tree info}
-
-\item{regen}{standard data frame with regen info}
-
-\item{understory}{standard data frame with understory info}
-
-\item{herbs}{standard data frame with herbs info}
+\item{.verbose}{A boolean flag to indicate console output}
+}
+\value{
+A list of \code{\link{forest}} objects.
 }
 \description{
-This function takes a standard  frame and generates an object with all plots and years
+This function takes a standard data frame as input and creates a list of \code{\link{forest}} objects
 }

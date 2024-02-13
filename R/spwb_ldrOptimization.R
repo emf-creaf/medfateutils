@@ -163,7 +163,7 @@ spwb_ldrExploration<-function(x, meteo, cohorts = NULL,
       # Outputs
       years <- substr(as.Date(rownames(meteo)), start = 1, stop = 4)
       ma <- function(x,n=10){
-        f = filter(x,rep(1/n,n), method = "convolution", sides = 2)
+        f = stats::filter(x,rep(1/n,n), method = "convolution", sides = 2)
         f = f[!is.na(f)]
         # print(sum(is.na(f)))
         f

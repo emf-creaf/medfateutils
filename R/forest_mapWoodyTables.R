@@ -149,6 +149,7 @@ forest_mapTreeTable<-function(x, mapping_x, SpParams, plot_size_x = NULL) {
 }
 
 #' @rdname forest_mapWoodyTables
+#' @export
 forest_mapShrubTable<-function(y, mapping_y, SpParams, plot_size_y = NULL) {
   n = nrow(y)
   shrubData = data.frame(
@@ -207,6 +208,7 @@ forest_mapShrubTable<-function(y, mapping_y, SpParams, plot_size_y = NULL) {
 }
 
 #' @rdname forest_mapWoodyTables
+#' @export
 forest_mapWoodyTables<-function(x = NULL, y = NULL, mapping_x = NULL, mapping_y = NULL, SpParams, plot_size_x=NULL, plot_size_y = NULL) {
   f = emptyforest()
   if(!is.null(x)) {
