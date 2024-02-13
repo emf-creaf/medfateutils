@@ -1,9 +1,10 @@
 #' Populate tree species allometries
 #'
-#' Populates allometric coefficients for tree species from an input table, trying to use the taxonomic closest entity
+#' Populates allometric coefficients for tree species and genus of an input parameter table on the basis of their
+#' accepted name.
 #'
 #' @param SpParams A data frame of medfate species parameters to be populated
-#' @param allom_table A data frame of allometric parameters in columns and taxonomic entities (from species to group) as row names.
+#' @param allom_table A data frame of allometric parameters in columns and taxonomic entities (species or genus) as row names.
 #' @param allom_type A string with the type of allometry to be filled, either "foliarbiomass", "barkthickness", "crownwidth" or "crownratio".
 #' @param erase_previous A boolean flag to indicate that values should be set to NA before populating with data
 #'
@@ -36,12 +37,9 @@ populateTreeAllometries<-function(SpParams,
   nmis <- 0
   nsp <- 0
   ngen <- 0
-  nfam <- 0
-  norder <- 0
-  ngroup <- 0
   if(erase_previous) SpParams[,allom_vars] = NA
   for(i in 1:nrow(SpParams)) {
-    nm = SpParams$Name[i]
+    nm = SpParams$AcceptedName[i]
     genus = SpParams$Genus[i]
     family = SpParams$Family[i]
     order = SpParams$Order[i]
@@ -54,28 +52,12 @@ populateTreeAllometries<-function(SpParams,
       found <- FALSE
       if(nm %in% allom_names) { # Species level
         allom_row <- which(allom_names==nm)
-        nsp <- nsp + 1
+        if(nm==genus) {
+          ngen <- ngen + 1
+        } else {
+          nsp <- nsp + 1
+        }
         found <- TRUE
-      }
-      if((!found) && (genus %in% allom_names)) { #Genus level in
-        allom_row <- which(allom_names==genus)
-        found <- TRUE
-        ngen <- ngen + 1
-      }
-      if((!found) && (family %in% allom_names)) { #Family level
-        allom_row <- which(allom_names==family)
-        nfam <- nfam + 1
-        found <- TRUE
-      }
-      if((!found) && (order %in% allom_names)) { #Order level
-        allom_row <- which(allom_names==order)
-        norder <- norder + 1
-        found <- TRUE
-      }
-      if((!found) && (group %in% allom_names)) { #Group level
-        allom_row <- which(allom_names==group)
-        found <- TRUE
-        ngroup <- ngroup + 1
       }
       if(found) {
         SpParams[i, allom_vars] <- allom_table[allom_row, allom_vars]
@@ -84,11 +66,10 @@ populateTreeAllometries<-function(SpParams,
       }
     }
   }
-  message(paste0("Assignments species: ", nsp, " genus: ", ngen," family: ",nfam, " order:", norder," group: ", ngroup))
+  message(paste0("Assignments species: ", nsp, " genus: ", ngen))
   if(nmis>0) message(paste0(nmis,
-                            " missing allometry coefficients (out of ",
-                            ntree,
-                            " tree species) after populating with input data.\n"))
+                            " missing allometry coefficients (", round(100*nmis/ntree),
+                            "% of ", ntree, " tree species) after populating with input data.\n"))
   return(SpParams)
 }
 
@@ -111,15 +92,18 @@ populateShrubAllometriesFromMedfuels<-function(SpParams,
   gen_sp = paste(species_groups$Genus, species_groups$Species)
   nshrub <- 0
   nmis <- 0
+  nsp <- 0
+  ngr <- 0
+  ngen <- 0
   for(i in 1:nrow(SpParams)) {
     growth_form <- SpParams$GrowthForm[i]
     if(growth_form %in% c("Shrub", "Tree/Shrub")) {
       nshrub <- nshrub +1
-      nm <- SpParams$Name[i]
-      gen <- strsplit(nm," ")[[1]][1]
+      nm <- SpParams$AcceptedName[i]
       if(nm %in% sp_allom) { # If species-specific allometry available
         sp_row<-which(sp_allom==nm)
         if(length(sp_row)==1) {
+          nsp <- nsp + 1
           for(j in 1:length(parnames)) {
             SpParams[i, parnames[j]] = sp_params_allom[sp_row, coef_mapping[[j]]]
           }
@@ -128,17 +112,19 @@ populateShrubAllometriesFromMedfuels<-function(SpParams,
         form_raunkiaer <-  species_groups$`shrub type`[which(gen_sp==nm)[1]]
         gr_row<-which(gr_allom==form_raunkiaer)
         if(length(gr_row)==1) {
+          ngr <- ngr + 1
           for(j in 1:length(parnames)) {
             SpParams[i, parnames[j]]= group_params_allom[gr_row, coef_mapping[[j]]]
           }
         }
-      } else if (gen %in% species_groups$Genus) { # If genus occurs in medfuels table
-        forms_raunkiaer <-  species_groups$`shrub type`[which(species_groups$Genus==gen)]
+      } else if (nm %in% species_groups$Genus) { # If name is a genus and occurs in medfuels table
+        forms_raunkiaer <-  species_groups$`shrub type`[which(species_groups$Genus==nm)]
         # Find most-frequent  raunkiaer form
         tfr<-table(forms_raunkiaer)
         tfr<-tfr[order(tfr, decreasing=TRUE)]
         gr_row<-which(gr_allom==names(tfr)[1])
         if(length(gr_row)==1) {
+          ngen <- ngen + 1
           for(j in 1:length(parnames)) {
             SpParams[i, parnames[j]]= group_params_allom[gr_row, coef_mapping[[j]]]
           }
@@ -150,6 +136,7 @@ populateShrubAllometriesFromMedfuels<-function(SpParams,
   }
 
   for(j in 1:length(parnames)) {
+    message(paste0("Assignments by species: ", nsp, " by raunkiaer group (species): ", ngr ," by raunkiaer (genus): ", ngen))
     nmis <- sum(is.na(SpParams[SpParams$GrowthForm %in% c("Shrub", "Tree/Shrub"),parnames[j]]))
     if(nmis>0) message(paste0("'",parnames[j], "' has ", nmis,
                               " missing trait values (",

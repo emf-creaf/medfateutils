@@ -25,7 +25,7 @@ populateShrubAllometriesFromMedfuels(
 \arguments{
 \item{SpParams}{A data frame of medfate species parameters to be populated}
 
-\item{allom_table}{A data frame of allometric parameters in columns and taxonomic entities (from species to group) as row names.}
+\item{allom_table}{A data frame of allometric parameters in columns and taxonomic entities (species or genus) as row names.}
 
 \item{allom_type}{A string with the type of allometry to be filled, either "foliarbiomass", "barkthickness", "crownwidth" or "crownratio".}
 
@@ -43,7 +43,8 @@ populateShrubAllometriesFromMedfuels(
 A modified data frame of medfate species parameters
 }
 \description{
-Populates allometric coefficients for tree species from an input table, trying to use the taxonomic closest entity
+Populates allometric coefficients for tree species and genus of an input parameter table on the basis of their
+accepted name.
 }
 \seealso{
 \code{\link{initSpParams}}
