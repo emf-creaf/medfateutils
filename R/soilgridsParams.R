@@ -51,11 +51,11 @@ soilgridsParams <- function(x, widths = c(300, 700, 1000, 2000), verbose = FALSE
 
   if(verbose) {
     cat(paste0("Querying ", npoints," points to rest.isric.org:\n"))
-    pb = txtProgressBar(0, npoints, style=3)
+    cli::cli_progress_bar(name = "Points", total = npoints)
   }
   reslist = vector("list", npoints)
   for(i in 1:npoints) {
-    if(verbose) setTxtProgressBar(pb, i)
+    if(verbose) cli::cli_progress_update()
     tryCatch( {
       resSG = data.frame(matrix(nrow = 6, ncol = 6))
       names(resSG) = c("widths", "clay", "sand", "om", "bd", "rfc")
@@ -90,7 +90,7 @@ soilgridsParams <- function(x, widths = c(300, 700, 1000, 2000), verbose = FALSE
       message(paste("Problems retrieving point",i,": ", cond,"\n"))
     })
   }
-  if(verbose) cat("\n")
+  if(verbose) cli::cli_progress_done()
   if(length(reslist)==1) reslist = reslist[[1]]
   return(reslist)
 }

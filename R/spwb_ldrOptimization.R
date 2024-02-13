@@ -124,7 +124,8 @@ spwb_ldrExploration<-function(x, meteo, cohorts = NULL,
     }
     x_1sp$control$verbose <- F
 
-    pb <- txtProgressBar(max = nrow(cc), style = 3)
+
+    cli::cli_progress_bar(name = "Exploring combinations", total = nrow(cc))
     for(row in 1:nrow(cc)){
       i <- cc[row,1]
       j <- cc[row,2]
@@ -187,10 +188,11 @@ spwb_ldrExploration<-function(x, meteo, cohorts = NULL,
       } else {
         An[ci,i,j] <- mean(s_res$Plants$NetPhotosynthesis[op_days], na.rm=TRUE)
       }
-      setTxtProgressBar(pb, row)
+      cli::cli_progress_update()
     }
     cat("\n")
   }
+  cli::cli_progress_done()
   res <-list(cohorts = cohorts, RZ = RZ, V1 = V1, Z50 = Z50, E = E, An = An, PsiMin = PsiMin)
   class(res)<-list("spwb_ldrExploration","list")
   return(res)

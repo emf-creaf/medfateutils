@@ -16,6 +16,7 @@ reference:
   desc:  Forest object definition from inventory data
   contents:
   - starts_with("IFN2forest")
+  - starts_with("sf2forest")
   - starts_with("forest")
   - starts_with("example")
 
