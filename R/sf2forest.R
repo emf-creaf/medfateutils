@@ -13,6 +13,15 @@
 #' @returns A list of \code{\link{forest}} objects.
 #'
 #' @export
+#' @examples
+#' # Load example 'sf' for the french forest inventory
+#' data(example_ffi)
+#'
+#' # Create a list of forest objects
+#' forest_list <- sf2forest(example_ffi)
+#'
+#' # Examine first forest
+#' forest_list[[1]]
 sf2forest <- function(input_df,
                       filterNA = FALSE,
                       filterDead = TRUE,
@@ -45,7 +54,7 @@ sf2forest <- function(input_df,
 
 
   assertthat::assert_that(
-    is.na(minDBH) || is.numeric(minDBH), minDBH > 0,
+    is.na(minDBH) || (is.numeric(minDBH) && minDBH > 0),
     msg = cli::cli_abort("minDBH must be either missing or a numeric and positive value ")
   )
 

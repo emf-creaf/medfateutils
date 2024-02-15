@@ -32,6 +32,7 @@
 "_PACKAGE"
 
 ## usethis namespace: start
+#' @import medfate
 #' @importFrom assertthat assert_that
 #' @importFrom magrittr "%>%"
 #' @importFrom taxize classification get_gbifid_

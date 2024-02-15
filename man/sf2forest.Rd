@@ -32,3 +32,13 @@ A list of \code{\link{forest}} objects.
 \description{
 This function takes a standard data frame as input and creates a list of \code{\link{forest}} objects
 }
+\examples{
+# Load example 'sf' for the french forest inventory
+data(example_ffi)
+
+# Create a list of forest objects
+forest_list <- sf2forest(example_ffi)
+
+# Examine first forest
+forest_list[[1]]
+}
