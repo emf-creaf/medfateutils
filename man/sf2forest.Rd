@@ -6,12 +6,11 @@
 \usage{
 sf2forest(
   input_df,
-  filterNA,
-  filterDead,
-  minDBH,
-  filterminDBH,
-  setDefaults,
-  .verbose = TRUE
+  filterNA = FALSE,
+  filterDead = TRUE,
+  minDBH = NA,
+  setDefaults = TRUE,
+  .verbose = FALSE
 )
 }
 \arguments{
@@ -21,9 +20,7 @@ sf2forest(
 
 \item{filterDead}{Boolean flag. If TRUE only records of live tree are kept.}
 
-\item{minDBH}{Min DBH value to keep.}
-
-\item{filterminDBH}{Boolean flag. If TRUE records are eliminated below minDBH}
+\item{minDBH}{Min DBH value to keep. If non-missing, records are eliminated below minDBH}
 
 \item{setDefaults}{set defaults param for roots}
 

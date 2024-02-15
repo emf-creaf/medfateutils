@@ -1,13 +1,16 @@
 # test data -----------------------------------------------------------------------------------
 
-
+library(medfateutils)
+data(example_ffi)
+data(example_ifn)
+data(example_fia)
 
 
 test_that("forestplotlist_es  works as intended", {
 
 
 #buscar uno que tenga shrub data
-  test_file_ifn<-standard_ifn[5,]
+  test_file_ifn<-example_ifn[5,]
 
 expected_names <- c(
   "ID",
@@ -30,9 +33,8 @@ expect_true(
     filterNA =TRUE,
     filterDead=TRUE,
     minDBH = 30,
-    filterminDBH =TRUE,
     setDefaults=TRUE,
-    .verbose = TRUE
+    .verbose = FALSE
     ))
   )
 )
@@ -62,9 +64,8 @@ expect_error(
     filterNA =TRUE,
     filterDead=TRUE,
     minDBH = 30,
-    filterminDBH =TRUE,
     setDefaults=TRUE,
-    .verbose = TRUE
+    .verbose = FALSE
   )),
   "Country must be especified as a character vector either ES, US or FR"
 )
@@ -75,7 +76,7 @@ expect_error(
 test_that("forestplotlist_fr  works as intended", {
 
   #buscar uno que tenga shrub data
-  test_file_ffi <- standard_ffi[1,]
+  test_file_ffi <- example_ffi[1,]
 
   #hacer pruebas con ausencias de parametros y modificar la funcion para warnings
 
@@ -102,7 +103,6 @@ test_that("forestplotlist_fr  works as intended", {
         filterNA = TRUE,
         filterDead = TRUE,
         minDBH = 30,
-        filterminDBH = TRUE,
         setDefaults = TRUE,
         .verbose = FALSE)
       ))
@@ -133,9 +133,8 @@ test_that("forestplotlist_fr  works as intended", {
       filterNA =TRUE,
       filterDead=TRUE,
       minDBH = 30,
-      filterminDBH =TRUE,
       setDefaults=TRUE,
-      .verbose = TRUE
+      .verbose = FALSE
     )),
     "Country must be especified as a character vector either ES, US or FR"
   )
@@ -146,7 +145,7 @@ test_that("forestplotlist_fr  works as intended", {
 test_that("forestplotlist_us  works as intended", {
 
   #buscar uno que tenga shrub data
-  test_file_fia<-standard_fia[11,]
+  test_file_fia<-example_fia[11,]
 
   #hacer pruebas con ausencias de parametros y modificar la funcion para warnings
 
@@ -173,7 +172,6 @@ test_that("forestplotlist_us  works as intended", {
         filterNA = TRUE,
         filterDead = TRUE,
         minDBH = 30,
-        filterminDBH = TRUE,
         setDefaults = TRUE,
         .verbose = FALSE)
       ))
@@ -204,9 +202,8 @@ test_that("forestplotlist_us  works as intended", {
       filterNA =TRUE,
       filterDead=TRUE,
       minDBH = 30,
-      filterminDBH =TRUE,
       setDefaults=TRUE,
-      .verbose = TRUE
+      .verbose = FALSE
     )),
     "Country must be especified as a character vector either ES, US or FR"
   )
@@ -222,7 +219,7 @@ test_that("sf2forest  works as intended  for ES", {
 
 
 
- test_input_ifn <-standard_ifn
+ test_input_ifn <-example_ifn
 
   expect_true(
     is.list(
@@ -231,9 +228,8 @@ test_that("sf2forest  works as intended  for ES", {
         filterNA = TRUE,
         filterDead = TRUE,
         minDBH = 30,
-        filterminDBH = TRUE,
         setDefaults = TRUE,
-        .verbose = TRUE)
+        .verbose = FALSE)
       ))
   )
 
@@ -248,11 +244,10 @@ test_that("sf2forest  works as intended  for ES", {
       filterNA = TRUE,
       filterDead = TRUE,
       minDBH = "-30",
-      filterminDBH = TRUE,
       setDefaults = TRUE,
-      .verbose = TRUE)
+      .verbose = FALSE)
     ,
-    "minDBH must be a numeric and positive value"
+    "minDBH must be either missing or a numeric and positive value"
   )
 
   expect_error(
@@ -261,9 +256,8 @@ test_that("sf2forest  works as intended  for ES", {
       filterNA = TRUE,
       filterDead = TRUE,
       minDBH = 30,
-      filterminDBH = TRUE,
       setDefaults = TRUE,
-      .verbose = TRUE)
+      .verbose = FALSE)
     ,
     "The input is empty. Please specified an input that follows the standard data frame structure."
   )
@@ -274,9 +268,8 @@ test_that("sf2forest  works as intended  for ES", {
       filterNA = TRUE,
       filterDead = TRUE,
       minDBH = 30,
-      filterminDBH = TRUE,
       setDefaults = TRUE,
-      .verbose = TRUE)
+      .verbose = FALSE)
     ,
     "The input is empty. Please specified an input that follows the standard data frame structure."
   )
@@ -288,9 +281,8 @@ test_that("sf2forest  works as intended  for ES", {
       filterNA = TRUE,
       filterDead = TRUE,
       minDBH = 30,
-      filterminDBH = TRUE,
       setDefaults = TRUE,
-      .verbose = TRUE)
+      .verbose = FALSE)
     ,
     "Some columns are missing. Check that all of these are present: ID_UNIQUE_PLOT,COUNTRY, tree, regen, understory)"
   )
@@ -301,9 +293,8 @@ test_that("sf2forest  works as intended  for ES", {
       filterNA = TRUE,
       filterDead = TRUE,
       minDBH = 30,
-      filterminDBH = TRUE,
       setDefaults = TRUE,
-      .verbose = TRUE)
+      .verbose = FALSE)
     ,
     "Column version is missing."
   )
@@ -317,7 +308,7 @@ test_that("sf2forest  works as intended  for US", {
 
   #hacer pruebas con ausencias de parametros y modificar la funcion para warnings
 
-  test_input_fia <- standard_fia
+  test_input_fia <- example_fia
 
 
   expect_true(
@@ -327,9 +318,8 @@ test_that("sf2forest  works as intended  for US", {
         filterNA = TRUE,
         filterDead = TRUE,
         minDBH = 30,
-        filterminDBH = TRUE,
         setDefaults = TRUE,
-        .verbose = TRUE)
+        .verbose = FALSE)
       ))
   )
 
@@ -345,11 +335,10 @@ test_that("sf2forest  works as intended  for US", {
       filterNA = TRUE,
       filterDead = TRUE,
       minDBH = "-30",
-      filterminDBH = TRUE,
       setDefaults = TRUE,
-      .verbose = TRUE)
+      .verbose = FALSE)
     ,
-    "minDBH must be a numeric and positive value"
+    "minDBH must be either missing or a numeric and positive value"
   )
 
   expect_error(
@@ -358,9 +347,8 @@ test_that("sf2forest  works as intended  for US", {
       filterNA = TRUE,
       filterDead = TRUE,
       minDBH = 30,
-      filterminDBH = TRUE,
       setDefaults = TRUE,
-      .verbose = TRUE)
+      .verbose = FALSE)
     ,
     "The input is empty. Please specified an input that follows the standard data frame structure."
   )
@@ -371,9 +359,8 @@ test_that("sf2forest  works as intended  for US", {
       filterNA = TRUE,
       filterDead = TRUE,
       minDBH = 30,
-      filterminDBH = TRUE,
       setDefaults = TRUE,
-      .verbose = TRUE)
+      .verbose = FALSE)
     ,
     "The input is empty. Please specified an input that follows the standard data frame structure."
   )
@@ -385,9 +372,8 @@ test_that("sf2forest  works as intended  for US", {
       filterNA = TRUE,
       filterDead = TRUE,
       minDBH = 30,
-      filterminDBH = TRUE,
       setDefaults = TRUE,
-      .verbose = TRUE)
+      .verbose = FALSE)
     ,
     "Some columns are missing. Check that all of these are present: ID_UNIQUE_PLOT,COUNTRY, tree, regen, understory)"
   )
@@ -397,9 +383,8 @@ test_that("sf2forest  works as intended  for US", {
       filterNA = TRUE,
       filterDead = TRUE,
       minDBH = 30,
-      filterminDBH = TRUE,
       setDefaults = TRUE,
-      .verbose = TRUE)
+      .verbose = FALSE)
     ,
     "Column YEAR is missing."
   )
@@ -413,7 +398,7 @@ test_that("sf2forest  works as intended  for FR", {
 
   #hacer pruebas con ausencias de parametros y modificar la funcion para warnings
 
-  test_input_ffi <- standard_ffi
+  test_input_ffi <- example_ffi
 
 
   expect_true(
@@ -423,9 +408,8 @@ test_that("sf2forest  works as intended  for FR", {
         filterNA = TRUE,
         filterDead = TRUE,
         minDBH = 30,
-        filterminDBH = TRUE,
         setDefaults = TRUE,
-        .verbose = TRUE)
+        .verbose = FALSE)
       ))
   )
 
@@ -440,11 +424,10 @@ test_that("sf2forest  works as intended  for FR", {
       filterNA = TRUE,
       filterDead = TRUE,
       minDBH = "-30",
-      filterminDBH = TRUE,
       setDefaults = TRUE,
-      .verbose = TRUE)
+      .verbose = FALSE)
     ,
-    "minDBH must be a numeric and positive value"
+    "minDBH must be either missing or a numeric and positive value"
   )
 
   expect_error(
@@ -453,9 +436,8 @@ test_that("sf2forest  works as intended  for FR", {
       filterNA = TRUE,
       filterDead = TRUE,
       minDBH = 30,
-      filterminDBH = TRUE,
       setDefaults = TRUE,
-      .verbose = TRUE)
+      .verbose = FALSE)
     ,
     "The input is empty. Please specified an input that follows the standard data frame structure."
   )
@@ -466,9 +448,8 @@ test_that("sf2forest  works as intended  for FR", {
       filterNA = TRUE,
       filterDead = TRUE,
       minDBH = 30,
-      filterminDBH = TRUE,
       setDefaults = TRUE,
-      .verbose = TRUE)
+      .verbose = FALSE)
     ,
     "The input is empty. Please specified an input that follows the standard data frame structure."
   )
@@ -480,9 +461,8 @@ test_that("sf2forest  works as intended  for FR", {
       filterNA = TRUE,
       filterDead = TRUE,
       minDBH = 30,
-      filterminDBH = TRUE,
       setDefaults = TRUE,
-      .verbose = TRUE)
+      .verbose = FALSE)
     ,
     "Some columns are missing. Check that all of these are present: ID_UNIQUE_PLOT,COUNTRY, tree, regen, understory)"
   )
@@ -493,7 +473,7 @@ test_that("sf2forest  works as intended  for FR", {
 
 
 # #hacer lo mismo con la funcion general
-# sf2forest (prova2_fia, "US", filterNA=TRUE, filterDead=TRUE, minDBH=30,filterminDBH=TRUE, setDefaults=TRUE, .verbose = TRUE)
+# sf2forest (prova2_fia, "US", filterNA=TRUE, filterDead=TRUE, minDBH=30, setDefaults=TRUE, .verbose = FALSE)
 #
 # # errors
 # expect_warning(
@@ -507,9 +487,8 @@ test_that("sf2forest  works as intended  for FR", {
 #     filterNA =TRUE,
 #     filterDead=TRUE,
 #     minDBH = 30,
-#     filterminDBH =TRUE,
 #     setDefaults=TRUE,
-#     .verbose = TRUE),
+#     .verbose = FALSE),
 #   "Some files"
 # )
 # expect_s3_class(test_error, "tbl")
