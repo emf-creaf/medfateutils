@@ -75,7 +75,7 @@ expect_error(
 test_that("forestplotlist_fr  works as intended", {
 
   #buscar uno que tenga shrub data
-  test_file_ffi <- standard_ffi[41,]
+  test_file_ffi <- standard_ffi[1,]
 
   #hacer pruebas con ausencias de parametros y modificar la funcion para warnings
 
@@ -146,7 +146,7 @@ test_that("forestplotlist_fr  works as intended", {
 test_that("forestplotlist_us  works as intended", {
 
   #buscar uno que tenga shrub data
-  test_file_fia<-standard_fia[46,]
+  test_file_fia<-standard_fia[11,]
 
   #hacer pruebas con ausencias de parametros y modificar la funcion para warnings
 
@@ -334,7 +334,7 @@ test_that("sf2forest  works as intended  for US", {
   )
 
 
-  expect_identical(length(test_res), 52L)
+  expect_identical(length(test_res), 12L)
 
 
 
@@ -430,7 +430,7 @@ test_that("sf2forest  works as intended  for FR", {
   )
 
   expect_identical(length
-                   (test_res), 62L)
+                   (test_res), 14L)
 
 
 

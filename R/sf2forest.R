@@ -145,6 +145,7 @@ forestplotlist_es <- function(id,version, country, tree, regen, shrub, filterNA,
 
 
    # browser()
+
   treeData <- data.frame(tree)
   regenData <- data.frame(regen)
   shrubData <- data.frame(shrub)
@@ -157,8 +158,6 @@ forestplotlist_es <- function(id,version, country, tree, regen, shrub, filterNA,
   if (nrow(treeData)>0){
 
   cli::cli_inform("Processing tree data...")
-
-
 
     tree <- treeData |>
       dplyr::select(any_of(c(
@@ -210,18 +209,17 @@ forestplotlist_es <- function(id,version, country, tree, regen, shrub, filterNA,
       cli::cli_inform("Filtering missing and zero values..." )
 
 
-        if ("OrdenIf3" %in% names(tree)) {
+      if ("OrdenIf3" %in% names(tree)) {
 
 
-          tree <- tree |>
-            dplyr::filter(
-              !(OrdenIf3 %in% c("888", "999")))}
+        tree <- tree |>
+          dplyr::filter(
+            !(OrdenIf3 %in% c("888", "999")))}
 
-        if ("OrdenIf4" %in% names(tree)) {
-          tree <- tree |>
-            dplyr::filter(
-              !(OrdenIf4 %in% c("888", "999")))}
-
+      if ("OrdenIf4" %in% names(tree)) {
+        tree <- tree |>
+          dplyr::filter(
+            !(OrdenIf4 %in% c("888", "999")))}
 
 
 
@@ -306,37 +304,36 @@ forestplotlist_es <- function(id,version, country, tree, regen, shrub, filterNA,
           )
       } else {
 
-        if  ( version == "ifn2"){
+      if  ( version == "ifn2"){
 
-          regen <- regenData |>
-            dplyr::select(
-              ID_UNIQUE_PLOT,
-              SP_CODE,
-              SP_NAME,
-              N,
-              Height,
-              DBH
-            ) |>
-            dplyr::mutate(
-              Z50 = NA ,
-              Z95 = NA,
-              OrdenIf2 = NA) |>
-
-            dplyr::rename(
-              ID =  ID_UNIQUE_PLOT,
-              Species = SP_NAME) |>
-            dplyr::select(
-              ID,
-              SP_CODE,
-              Species,
-              DBH,
-              Height,
-              OrdenIf2,
-              N,
-              Z95,
-              Z50
-            ) |>
-            dplyr::filter(complete.cases(DBH, Height, N))
+        regen <- regenData |>
+          dplyr::select(
+            ID_UNIQUE_PLOT,
+            SP_CODE,
+            SP_NAME,
+            N,
+            Height,
+            DBH
+          ) |>
+          dplyr::mutate(
+            Z50 = NA ,
+            Z95 = NA,
+            OrdenIf2 = NA) |>
+          dplyr::rename(
+            ID =  ID_UNIQUE_PLOT,
+            Species = SP_NAME) |>
+          dplyr::select(
+            ID,
+            SP_CODE,
+            Species,
+            DBH,
+            Height,
+            OrdenIf2,
+            N,
+            Z95,
+            Z50
+          ) |>
+          dplyr::filter(complete.cases(DBH, Height, N))
         }
       }
 
@@ -391,14 +388,13 @@ forestplotlist_es <- function(id,version, country, tree, regen, shrub, filterNA,
 
 
 
-        shrub <- shrub |>
-          dplyr::filter(
-            !is.na(Cover),
-            !is.na(Height),
-            Cover > 0,
-            Height > 0
-
-          )
+      shrub <- shrub |>
+        dplyr::filter(
+          !is.na(Cover),
+          !is.na(Height),
+          Cover > 0,
+          Height > 0
+        )
 
       }
     if (setDefaults) {
@@ -584,16 +580,17 @@ forestplotlist_fr <- function(id, year , country, tree, regen, shrub, herbs, fil
         dplyr::rename(
           ID =  ID_UNIQUE_PLOT,
           Species = SP_NAME) |>
-        dplyr::select(ID,
-                      SP_CODE,
-                      Species,
-                      PLOT,
-                      DBH,
-                      COVER,
-                      Height,
-                      # N,
-                      Z95,
-                      Z50
+        dplyr::select(
+          ID,
+          SP_CODE,
+          Species,
+          PLOT,
+          DBH,
+          COVER,
+          Height,
+          # N,
+          Z95,
+          Z50
         )
 
   }else {regen = tibble::tibble()}
@@ -634,13 +631,13 @@ forestplotlist_fr <- function(id, year , country, tree, regen, shrub, herbs, fil
 
     if (filterNA == TRUE){
 
-        shrub <- shrub |>
-          dplyr::filter(
-            !is.na(Cover),
-            # !is.na(Height),
-            Cover > 0,
-            # Height>0
-          )
+      shrub <- shrub |>
+        dplyr::filter(
+          !is.na(Cover),
+          # !is.na(Height),
+          Cover > 0,
+          # Height>0
+        )
 
     }
 
@@ -783,7 +780,7 @@ forestplotlist_us <- function(id, year, country,  tree, regen, shrub, herbs, fil
 
     cli::cli_inform("Processing regendata...\n")
 
-          regen <- regenData |>
+      regen <- regenData |>
         dplyr::select(
           ID_UNIQUE_PLOT,
           SP_CODE,
@@ -792,7 +789,6 @@ forestplotlist_us <- function(id, year, country,  tree, regen, shrub, herbs, fil
           DENSITY,
           Height,
           DBH
-
         ) |> dplyr::mutate(
 
           Z50 = NA ,
@@ -891,18 +887,11 @@ forestplotlist_us <- function(id, year, country,  tree, regen, shrub, herbs, fil
       nsubp <- length(unique(shrub$SUBP))
 
       shrub <- shrub |>
-
-
-
         dplyr::group_by(Species)|>
-
-
         dplyr::mutate(
-
           #calculate means for plot
           sumCover =  sum(Cover),
           meanCover = sumCover/nsubp,
-
           #ponderado
           Height_p = (Height*Cover),
           #pasar division abajo
@@ -914,7 +903,6 @@ forestplotlist_us <- function(id, year, country,  tree, regen, shrub, herbs, fil
           Height_s = Height,
           Height = meanHeight
           ) |>
-
         dplyr::select(
           ID,
           SP_CODE,
@@ -924,15 +912,8 @@ forestplotlist_us <- function(id, year, country,  tree, regen, shrub, herbs, fil
           Z95,
           Z50
         ) |>
-
         #revisar
         unique()
-
-
-
-
-
-
 
     if (filterNA == TRUE){
         shrub <- shrub |>
