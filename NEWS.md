@@ -5,6 +5,7 @@
 # Version 0.2.0
 - Revision of trait parsing
 - New function sf2forest
+- New species parameter tables: SpParamsES, SpParamsFR, SpParamsUS and SpParamsAU
 
 # Version 0.1.7
 - Compliance with medfate ver. 2.9.0
