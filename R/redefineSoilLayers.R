@@ -14,8 +14,8 @@
 #' @export
 #'
 redefineSoilLayers<-function(SoilParams, widths = c(300, 700, 1000, 2000)) {
-  restarget = data.frame(matrix(nrow = length(widths), ncol = 6))
-  names(restarget) = c("widths", "clay", "sand", "om", "bd", "rfc")
+  restarget = data.frame(matrix(nrow = length(widths), ncol = 7))
+  names(restarget) = c("widths", "clay", "sand", "om", "nitrogen", "bd", "rfc")
   restarget$widths = widths
 
   bottomdepths = cumsum(widths)
@@ -34,6 +34,7 @@ redefineSoilLayers<-function(SoilParams, widths = c(300, 700, 1000, 2000)) {
     restarget$rfc[j] = sum(SoilParams$rfc*p)/sum(p)
     restarget$bd[j] = sum(SoilParams$bd*p)/sum(p)
     restarget$om[j] = sum(SoilParams$om*p)/sum(p)
+    restarget$nitrogen[j] = sum(SoilParams$nitrogen*p)/sum(p)
   }
   return(restarget)
 }

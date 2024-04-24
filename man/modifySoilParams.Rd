@@ -4,11 +4,14 @@
 \alias{modifySoilParams}
 \alias{modifySoilDepth}
 \alias{modifySoilRockContent}
+\alias{modifySoilRockContentFromSoilDepth}
 \title{Modifies soil properties estimated from SoilGrids}
 \usage{
 modifySoilDepth(soildata, soildepth)
 
 modifySoilRockContent(soildata, surfacerock)
+
+modifySoilRockContentFromSoilDepth(soildata, soildepth, soildepthrock = 70)
 }
 \arguments{
 \item{soildata}{A data frame of soil physical parameters or a list of data frames}
@@ -16,6 +19,8 @@ modifySoilRockContent(soildata, surfacerock)
 \item{soildepth}{An estimate of soil depth (in mm) or a vector of soil depths if `soildata` is a list}
 
 \item{surfacerock}{An estimate of surface rock content (in percent) or a vector of such values if `soildata` is a list}
+
+\item{soildepthrock}{An estimate of rock content (in percent) at soil depth, or a vector of such values if `soildata` is a list}
 }
 \value{
 A data frame of modified physical parameters or a list of modified data frames

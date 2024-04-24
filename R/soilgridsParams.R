@@ -46,7 +46,7 @@ soilgridsParams <- function(x, widths = c(300, 700, 1000, 2000), verbose = FALSE
   url.base = "https://rest.isric.org/soilgrids/v2.0/properties/query?"
 
 
-  props_str = "property=bdod&property=cfvo&property=clay&property=ocd&property=ocs&property=sand&property=silt&property=soc"
+  props_str = "property=bdod&property=cfvo&property=clay&property=ocd&property=ocs&property=sand&property=silt&property=soc&property=nitrogen"
   depths_str = "depth=0-5cm&depth=0-30cm&depth=5-15cm&depth=15-30cm&depth=30-60cm&depth=60-100cm&depth=100-200cm"
 
   if(verbose) {
@@ -77,6 +77,8 @@ soilgridsParams <- function(x, widths = c(300, 700, 1000, 2000), verbose = FALSE
           resSG$bd = ans$properties$layers$depths[[j]]$values$mean/d_factors[j]
         } else if(propNames[j]=="soc") {
           resSG$om = ans$properties$layers$depths[[j]]$values$mean/(d_factors[j]*10)
+        } else if(propNames[j]=="nitrogen") {
+          resSG$nitrogen = ans$properties$layers$depths[[j]]$values$mean/d_factors[j]
         } else if(propNames[j]=="cfvo") {
           resSG$rfc = ans$properties$layers$depths[[j]]$values$mean/d_factors[j]
         }

@@ -62,6 +62,7 @@ modifySoilDepth<-function(soildata, soildepth) {
 
 #' @param surfacerock An estimate of surface rock content (in percent) or a vector of such values if `soildata` is a list
 #'
+#' @export
 #' @rdname modifySoilParams
 modifySoilRockContent<-function(soildata, surfacerock) {
   rock_from_surface<-function(surfacerock, depth) {
@@ -87,6 +88,49 @@ modifySoilRockContent<-function(soildata, surfacerock) {
     for(i in 1:length(soildata)) {
       if(inherits(soildata[[i]], "data.frame")) {
         soildata[[i]] = modifySoilRockContentOne(soildata[[i]], surfacerock[i])
+      } else {
+        stop("Wrong class for soil data. Has to be a data.frame or a list of data.frame objects")
+      }
+    }
+    return(soildata)
+  } else {
+    stop("Wrong class for soil data. Has to be a data.frame or a list of data.frame objects")
+  }
+}
+
+
+#' @param soildepthrock An estimate of rock content (in percent) at soil depth, or a vector of such values if `soildata` is a list
+#'
+#' @export
+#' @rdname modifySoilParams
+modifySoilRockContentFromSoilDepth<-function(soildata, soildepth, soildepthrock = 70) {
+  rock_from_soildepth<-function(soildepth, soildepthrock, depth) {
+    coef = 1+3^((depth-soildepth)/1000)
+    return(100*(1 - exp(-(max(10,soildepthrock)/100)*coef)))
+  }
+  modifySoilRockContentFromSoilDepthOne <-function(soildf, soildepthone, soildepthrockone = 70) {
+    nl = nrow(soildf)
+    for(l in 1:nl) {
+      upper = 0
+      if(l>1) upper = sum(soildf$widths[1:(l-1)])
+      lower = sum(soildf$widths[1:l])
+      middepth = 0.5*(upper+lower)
+      prop = 1 - max(0, min(1, (soildepthone - upper)/(lower - upper)))
+      rfc_est = min(99, max(soildf$rfc[l], rock_from_soildepth(soildepthone, soildepthrockone, middepth)))
+      soildf$rfc[l] = prop*rfc_est + (1 - prop)*soildf$rfc[l]
+    }
+    return(soildf)
+  }
+  if(inherits(soildata, "data.frame")) {
+    if(!is.null(soildepth)) if(length(soildepth)>1) stop("'soildepth' has to be of length one when 'soildata' is a data.frame")
+    if(!is.null(soildepthrock)) if(length(soildepthrock)>1) stop("'soildepthrock' has to be of length one when 'soildata' is a data.frame")
+    return(modifySoilRockContentFromSoilDepthOne(soildata, soildepth, soildepthrock))
+  } else if(inherits(soildata, "list")) {
+    if(!is.null(soildepth)) if(length(soildepth)!=length(soildata)) stop("Vector 'soildepth' has to be of the same length as 'soildata'")
+    if(!is.null(soildepthrock)) if(length(soildepthrock)!=length(soildata)) stop("Vector 'soildepthrock' has to be of the same length as 'soildata'")
+    for(i in 1:length(soildata)) {
+      if(inherits(soildata[[i]], "data.frame")) {
+        soildata[[i]] = modifySoilRockContentFromSoilDepthOne(soildata[[i]], soildepth[[i]], soildepthrock[i])
       } else {
         stop("Wrong class for soil data. Has to be a data.frame or a list of data.frame objects")
       }
