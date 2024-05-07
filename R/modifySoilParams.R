@@ -133,7 +133,7 @@ modifySoilRockContentFromSoilDepth<-function(soildata, soildepth, soildepthrock 
       lower = sum(soildf$widths[1:l])
       middepth = 0.5*(upper+lower)
       prop = 1 - max(0, min(1, (soildepthone - upper)/(lower - upper)))
-      rfc_est = min(99, max(soildf$rfc[l], rock_from_soildepth(soildepthone, soildepthrockone, middepth)))
+      rfc_est = min(97.5, max(soildf$rfc[l], rock_from_soildepth(soildepthone, soildepthrockone, middepth)))
       soildf$rfc[l] = prop*rfc_est + (1 - prop)*soildf$rfc[l]
     }
     return(soildf)
