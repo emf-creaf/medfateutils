@@ -82,24 +82,13 @@
 #'    }
 #'  }
 #'
-#'  An additional data table comes from an independent forest inventory survey, used to illustrate the general function \code{\link{forest_mapTreeTable}}:
-#' \itemize{
-#'  \item \code{poblet_trees} - Data frame with example tree plot data from Poblet, Catalonia (717 observations and 4 variables).
-#'    \itemize{
-#'      \item Plot.Code - Plot ID (character)
-#'      \item Indv.Ref - Tree individual (integer)
-#'      \item Species - Species name (character)
-#'      \item Diameter.cm - Tree diameter at breast height (cm)
-#'    }
-#' }
 #' @name example_datasets
-#' @aliases piesMayoresIFN2 piesMenoresIFN2 matorralIFN2 piesMayoresIFN3 regeneraIFN3 matorralIFN3 poblet_trees
+#' @aliases piesMayoresIFN2 piesMenoresIFN2 matorralIFN2 piesMayoresIFN3 regeneraIFN3 matorralIFN3
 #' @docType data
 #' @source
 #' \itemize{
 #'   \item{Data tables \code{piesMayoresIFN2}, \code{piesMenoresIFN2} and \code{matorralIFN2} were extracted from the Second Spanish National Forest Inventory.}
 #'   \item{Data tables \code{piesMayoresIFN3}, \code{regeneraIFN3} and \code{matorralIFN3} were extracted from the Third Spanish National Forest Inventory.}
-#'   \item{Data table \code{poblet_trees} corresponds to field data sampled by the Catalan Forest Ownership Center (Centre de la Propietat Forestal; CPF).}
 #'  }
 #' @keywords data
 NULL

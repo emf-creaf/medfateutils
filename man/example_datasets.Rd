@@ -9,13 +9,11 @@
 \alias{piesMayoresIFN3}
 \alias{regeneraIFN3}
 \alias{matorralIFN3}
-\alias{poblet_trees}
 \title{Example forest inventory data}
 \source{
 \itemize{
   \item{Data tables \code{piesMayoresIFN2}, \code{piesMenoresIFN2} and \code{matorralIFN2} were extracted from the Second Spanish National Forest Inventory.}
   \item{Data tables \code{piesMayoresIFN3}, \code{regeneraIFN3} and \code{matorralIFN3} were extracted from the Third Spanish National Forest Inventory.}
-  \item{Data table \code{poblet_trees} corresponds to field data sampled by the Catalan Forest Ownership Center (Centre de la Propietat Forestal; CPF).}
  }
 }
 \description{
@@ -101,16 +99,5 @@ National Forest Inventory (IFN2 and IFN3), to illustrate function \code{\link{IF
      \item Hm - Average shrub height (dm)
    }
  }
-
- An additional data table comes from an independent forest inventory survey, used to illustrate the general function \code{\link{forest_mapTreeTable}}:
-\itemize{
- \item \code{poblet_trees} - Data frame with example tree plot data from Poblet, Catalonia (717 observations and 4 variables).
-   \itemize{
-     \item Plot.Code - Plot ID (character)
-     \item Indv.Ref - Tree individual (integer)
-     \item Species - Species name (character)
-     \item Diameter.cm - Tree diameter at breast height (cm)
-   }
-}
 }
 \keyword{data}
