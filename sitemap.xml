@@ -25,13 +25,13 @@
     <loc>/reference/IFN_species_mapping.html</loc>
   </url>
   <url>
+    <loc>/reference/SpParamsES.html</loc>
+  </url>
+  <url>
     <loc>/reference/estimateRootingDepth.html</loc>
   </url>
   <url>
     <loc>/reference/example_datasets.html</loc>
-  </url>
-  <url>
-    <loc>/reference/forest_mapWoodyTables.html</loc>
   </url>
   <url>
     <loc>/reference/index.html</loc>
@@ -55,13 +55,7 @@
     <loc>/reference/populateTraits.html</loc>
   </url>
   <url>
-    <loc>/reference/redefineSoilLayers.html</loc>
-  </url>
-  <url>
     <loc>/reference/sf2forest.html</loc>
-  </url>
-  <url>
-    <loc>/reference/soilgridsParams.html</loc>
   </url>
   <url>
     <loc>/reference/spwb_ldrCalibration.html</loc>
