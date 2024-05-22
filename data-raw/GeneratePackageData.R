@@ -120,10 +120,6 @@ load("D:/Datasets/IFN/R scripts/LM optimized RS.RData")
 usethis::use_data(reg.V.2, reg.Z.2, internal=TRUE, overwrite=T)
 rm(list=ls())
 
-# Poblet tree data
-poblet_trees = openxlsx::read.xlsx("data-raw/PobletData.xlsx", sheet="TreeData")
-usethis::use_data(poblet_trees, overwrite = T)
-
 #test data for forest
 load("data-raw/example_ffi.RData")
 load("data-raw/example_fia.RData")
