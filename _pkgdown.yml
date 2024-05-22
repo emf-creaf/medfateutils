@@ -17,12 +17,14 @@ reference:
   contents:
   - starts_with("IFN2forest")
   - starts_with("sf2forest")
-  - starts_with("forest")
   - starts_with("example")
 
 - title: Species codification
   desc:  Translation of forest inventory species codes.
   contents:
+  - SpParamsES
+  - SpParamsFR
+  - SpParamsUS
   - translateSpeciesCodes
   - starts_with("IFN_species")
 
