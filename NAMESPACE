@@ -3,7 +3,6 @@
 export(IFN2forest)
 export(estimateRootingDepth)
 export(estimateRootingDepthList)
-export(initSpParams)
 export(modifySoilDepth)
 export(modifySoilRockContent)
 export(modifySoilRockContentFromSoilDepth)
