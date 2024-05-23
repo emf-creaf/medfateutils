@@ -6,11 +6,6 @@ home:
     href: https://emf-creaf.github.io/medfatebook/index.html
 
 
-articles:
-- title: Species mapping
-  contents:
-    - starts_with("SpeciesMappingIFN")
-
 reference:
 - title: Vegetation parameters
   desc:  Forest object definition from inventory data
@@ -19,15 +14,9 @@ reference:
   - starts_with("sf2forest")
   - starts_with("example")
 
-- title: Species codification
-  desc:  Translation of forest inventory species codes.
-  contents:
-  - translateSpeciesCodes
-
 - title: Soil parameters
   desc:  Access to and modification of soil parameter data
   contents:
-  - starts_with("soilgrids")
   - starts_with("redefineSoil")
   - starts_with("modifySoil")
   - starts_with("spwb_rock")

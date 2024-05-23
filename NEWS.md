@@ -2,6 +2,9 @@
  NEWS for R Package "medfateutils"
 -----------------------------------
 
+# Version 0.3.0
+- Trait functions moved to package medfatetraits
+
 # Version 0.2.0
 - Revision of trait parsing
 - New function sf2forest
