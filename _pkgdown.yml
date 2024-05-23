@@ -22,17 +22,7 @@ reference:
 - title: Species codification
   desc:  Translation of forest inventory species codes.
   contents:
-  - SpParamsES
-  - SpParamsFR
-  - SpParamsUS
   - translateSpeciesCodes
-  - starts_with("IFN_species")
-
-- title: Species parameters
-  desc:  Creation and population of species parameter data tables.
-  contents:
-  - initSpParams
-  - starts_with("populate")
 
 - title: Soil parameters
   desc:  Access to and modification of soil parameter data
