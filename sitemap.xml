@@ -22,12 +22,6 @@
     <loc>/reference/IFN2forest.html</loc>
   </url>
   <url>
-    <loc>/reference/IFN_species_mapping.html</loc>
-  </url>
-  <url>
-    <loc>/reference/SpParamsES.html</loc>
-  </url>
-  <url>
     <loc>/reference/estimateRootingDepth.html</loc>
   </url>
   <url>
@@ -35,9 +29,6 @@
   </url>
   <url>
     <loc>/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/initSpParams.html</loc>
   </url>
   <url>
     <loc>/reference/medfateutils-package.html</loc>
@@ -50,9 +41,6 @@
   </url>
   <url>
     <loc>/reference/populateSpParamsFromInventory.html</loc>
-  </url>
-  <url>
-    <loc>/reference/populateTraits.html</loc>
   </url>
   <url>
     <loc>/reference/sf2forest.html</loc>

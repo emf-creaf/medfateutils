@@ -130,6 +130,7 @@
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Builds from IFN3 data a list whose elements are 'forest' objects</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">IFN_species_mapping</span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>data set ‘IFN_species_mapping’ not found</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">piesMayoresIFN3</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">regeneraIFN3</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">matorralIFN3</span><span class="op">)</span></span></span>
@@ -140,56 +141,18 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Filtering small trees (DBH &lt; 1) ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Filtering dead trees...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Translating species codes...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Filtering wrong growth forms ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Setting default root distribution ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Building forest objects...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> done.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'IFN_species_mapping' not found</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Estimate rooting depth</span></span></span>
 <span class="r-in"><span><span class="va">soilpar</span> <span class="op">&lt;-</span> <span class="fu">defaultSoilParams</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">l2</span> <span class="op">&lt;-</span> <span class="fu">estimateRootingDepthList</span><span class="op">(</span><span class="va">l1</span>, <span class="va">soilpar</span>, <span class="fl">300</span>, <span class="fl">100</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'l1' not found</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Compare tree rooting depths</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">l1</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">treeData</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    IFNcode     Species   DBH Height          N      Z50 Z95 OrdenIf2 OrdenIf3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     0025 Pinus nigra  9.55    750  127.32395 173.1933 813      000      001</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2     0025 Pinus nigra  9.40    650  127.32395 173.1933 813      000      002</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3     0025 Pinus nigra 21.00   1600   31.83099 173.1933 813      002      003</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4     0025 Pinus nigra 23.30   1450   14.14711 173.1933 813      000      004</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5     0025 Pinus nigra 22.15   1450   31.83099 173.1933 813      004      005</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6     0025 Pinus nigra 23.10   1450   14.14711 173.1933 813      000      006</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7     0025 Pinus nigra 19.00   1350   31.83099 173.1933 813      005      007</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8     0025 Pinus nigra 25.40   1450   14.14711 173.1933 813      009      008</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9     0025 Pinus nigra 18.50   1250   31.83099 173.1933 813      011      009</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10    0025 Pinus nigra  8.20    750  127.32395 173.1933 813      000      010</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11    0025 Pinus nigra 21.25   1400   31.83099 173.1933 813      013      011</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12    0025 Pinus nigra 19.30   1300   31.83099 173.1933 813      014      012</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13    0025 Pinus nigra 33.95   1900   14.14711 173.1933 813      017      013</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14    0025 Pinus nigra 11.35    750  127.32395 173.1933 813      000      014</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15    0025 Pinus nigra  8.75    750  127.32395 173.1933 813      000      015</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16    0025 Pinus nigra 10.50    750  127.32395 173.1933 813      000      016</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17    0025 Pinus nigra  5.00    350 1400.56350 173.1933 813     &lt;NA&gt;     &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18    0025 Pinus nigra  1.50    100 1273.23955 173.1933 813     &lt;NA&gt;     &lt;NA&gt;</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'l1' not found</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">l2</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">treeData</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    IFNcode     Species   DBH Height          N Z50 Z95 OrdenIf2 OrdenIf3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     0025 Pinus nigra  9.55    750  127.32395  NA  NA      000      001</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2     0025 Pinus nigra  9.40    650  127.32395  NA  NA      000      002</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3     0025 Pinus nigra 21.00   1600   31.83099  NA  NA      002      003</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4     0025 Pinus nigra 23.30   1450   14.14711  NA  NA      000      004</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5     0025 Pinus nigra 22.15   1450   31.83099  NA  NA      004      005</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6     0025 Pinus nigra 23.10   1450   14.14711  NA  NA      000      006</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7     0025 Pinus nigra 19.00   1350   31.83099  NA  NA      005      007</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8     0025 Pinus nigra 25.40   1450   14.14711  NA  NA      009      008</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9     0025 Pinus nigra 18.50   1250   31.83099  NA  NA      011      009</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10    0025 Pinus nigra  8.20    750  127.32395  NA  NA      000      010</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11    0025 Pinus nigra 21.25   1400   31.83099  NA  NA      013      011</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12    0025 Pinus nigra 19.30   1300   31.83099  NA  NA      014      012</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13    0025 Pinus nigra 33.95   1900   14.14711  NA  NA      017      013</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14    0025 Pinus nigra 11.35    750  127.32395  NA  NA      000      014</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15    0025 Pinus nigra  8.75    750  127.32395  NA  NA      000      015</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16    0025 Pinus nigra 10.50    750  127.32395  NA  NA      000      016</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17    0025 Pinus nigra  5.00    350 1400.56350  NA  NA     &lt;NA&gt;     &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18    0025 Pinus nigra  1.50    100 1273.23955  NA  NA     &lt;NA&gt;     &lt;NA&gt;</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'l2' not found</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
