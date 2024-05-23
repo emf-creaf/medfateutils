@@ -27,9 +27,6 @@ second (IFN2), third (IFN3; DGCN 2005) and fourth (IFN4) editions."><!-- mathjax
   <a href="../reference/index.html">Reference</a>
 </li>
 <li>
-  <a href="../articles/index.html">Articles</a>
-</li>
-<li>
   <a href="../news/index.html">Changelog</a>
 </li>
       </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
@@ -165,7 +162,7 @@ This should normally result in the removal of dead/cut trees.</p></dd>
 <li><p>Fcc: Numeric values of shrub cover (in %).</p></li>
 <li><p>Hm: Average shrub height (in dm).</p></li>
 </ul></li>
-</ul><p>Function <code>IFN2forest</code> call <code><a href="translateSpeciesCodes.html">translateSpeciesCodes</a></code> internally
+</ul><p>Function <code>IFN2forest</code> call <code>translateSpeciesCodes</code> internally
 to translate IFN codes into medfate codes.</p>
     </div>
     <div id="references">
@@ -174,7 +171,7 @@ to translate IFN codes into medfate codes.</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
-    <div class="dont-index"><p><code>forest</code>, <code><a href="translateSpeciesCodes.html">translateSpeciesCodes</a></code> <code><a href="example_datasets.html">example_datasets</a></code></p></div>
+    <div class="dont-index"><p><code>forest</code>, <code>translateSpeciesCodes</code> <code><a href="example_datasets.html">example_datasets</a></code></p></div>
     </div>
     <div id="author">
     <h2>Author</h2>
@@ -202,7 +199,7 @@ to translate IFN codes into medfate codes.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Filtering small trees (DBH &lt; 1) ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Filtering dead trees...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Translating species codes...</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'IFN_species_mapping' not found</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in translateSpeciesCodes(x = x$Especie, species_names = IFN_species_mapping$Name,     species_codes = IFN_species_mapping$Codes):</span> could not find function "translateSpeciesCodes"</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Plot codes are in list names</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">l</span><span class="op">)</span></span></span>
@@ -221,7 +218,7 @@ to translate IFN codes into medfate codes.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Filtering small trees (DBH &lt; 1) ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Filtering dead trees...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Translating species codes...</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'IFN_species_mapping' not found</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in translateSpeciesCodes(x = x$Especie, species_names = IFN_species_mapping$Name,     species_codes = IFN_species_mapping$Codes):</span> could not find function "translateSpeciesCodes"</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
