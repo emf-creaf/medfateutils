@@ -1,45 +1,13 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>/404.html</loc>
-  </url>
-  <url>
-    <loc>/authors.html</loc>
-  </url>
-  <url>
-    <loc>/index.html</loc>
-  </url>
-  <url>
-    <loc>/news/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/IFN2forest.html</loc>
-  </url>
-  <url>
-    <loc>/reference/estimateRootingDepth.html</loc>
-  </url>
-  <url>
-    <loc>/reference/example_datasets.html</loc>
-  </url>
-  <url>
-    <loc>/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/medfateutils-package.html</loc>
-  </url>
-  <url>
-    <loc>/reference/modifySoilParams.html</loc>
-  </url>
-  <url>
-    <loc>/reference/sf2forest.html</loc>
-  </url>
-  <url>
-    <loc>/reference/spwb_ldrCalibration.html</loc>
-  </url>
-  <url>
-    <loc>/reference/spwb_ldrOptimization.html</loc>
-  </url>
-  <url>
-    <loc>/reference/spwb_rockOptimization.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://emf-creaf.github.io/medfateutils/404.html</loc></url>
+<url><loc>https://emf-creaf.github.io/medfateutils/authors.html</loc></url>
+<url><loc>https://emf-creaf.github.io/medfateutils/index.html</loc></url>
+<url><loc>https://emf-creaf.github.io/medfateutils/news/index.html</loc></url>
+<url><loc>https://emf-creaf.github.io/medfateutils/reference/estimateRootingDepth.html</loc></url>
+<url><loc>https://emf-creaf.github.io/medfateutils/reference/index.html</loc></url>
+<url><loc>https://emf-creaf.github.io/medfateutils/reference/medfateutils-package.html</loc></url>
+<url><loc>https://emf-creaf.github.io/medfateutils/reference/spwb_ldrCalibration.html</loc></url>
+<url><loc>https://emf-creaf.github.io/medfateutils/reference/spwb_ldrOptimization.html</loc></url>
+<url><loc>https://emf-creaf.github.io/medfateutils/reference/spwb_rockOptimization.html</loc></url>
 </urlset>
+
