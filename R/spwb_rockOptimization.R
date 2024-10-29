@@ -171,7 +171,7 @@
 #' data(examplemeteo)
 #'
 #' #Load example plot plant data
-#' data(exampleforestMED)
+#' data(exampleforest)
 #'
 #' #Default species parameterization
 #' data(SpParamsMED)
@@ -183,7 +183,7 @@
 #' control <- defaultControl("Granier")
 #'
 #' #Initialize input
-#' x <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+#' x <- spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 #'
 #' #Rock fragment content optimization
 #' spwb_rockOptimization(x, meteo = examplemeteo,

@@ -34,17 +34,11 @@
 ## usethis namespace: start
 #' @import medfate
 #' @importFrom assertthat assert_that
-#' @importFrom magrittr "%>%"
-#' @importFrom taxize classification get_gbifid_
-#' @importFrom httr GET content
-#' @importFrom sf st_transform st_coordinates st_geometry
-#' @importFrom jsonlite fromJSON
 #' @importFrom methods as
 #' @importFrom cli cli_li cli_progress_bar cli_progress_update cli_progress_done
 #' @importFrom stats predict quantile aggregate filter nls uniroot complete.cases
 #' @importFrom utils data
 #' @importFrom dplyr bind_rows filter
-#' @importFrom purrr pmap list_rbind
 #' @importFrom tibble tibble as_tibble
 ## usethis namespace: end
 NULL

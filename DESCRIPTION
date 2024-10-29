@@ -2,7 +2,7 @@ Package: medfateutils
 Type: Package
 Title: Utility Functions for Package `medfate`
 Version: 0.3.0
-Date: 2024-05-23
+Date: 2024-10-29
 Authors@R: c(
 	person('Miquel', 'De Cáceres', role=c('aut','cre', 'cph'), email='miquelcaceres@gmail.com', comment = c(ORCID = "0000-0001-7132-2080")),
   person('Víctor', 'Granda', role='aut', comment = c(ORCID = "0000-0002-0469-1991")),
@@ -15,7 +15,7 @@ Description: Utility functions to facilitate defining inputs (soil, species or v
   package medfate.
 License: GPL (>= 2)
 Depends: R (>= 3.4.0), medfate (>= 4.0.0)
-Imports: assertthat, cli, taxize, httr, jsonlite, methods, purrr, sf, magrittr, tibble, dplyr
+Imports: assertthat, cli, methods, tibble, dplyr
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.3.1

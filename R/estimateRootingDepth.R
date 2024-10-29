@@ -19,24 +19,9 @@
 #' @encoding UTF-8
 #' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, EMF-CREAF
 #'
-#' @seealso \code{\link[medfate]{forest}}, \code{\link{IFN2forest}}
+#' @seealso \code{\link[medfate]{forest}}
 #'
 #' @examples
-#' # Builds from IFN3 data a list whose elements are 'forest' objects
-#' data(IFN_species_mapping)
-#' data(piesMayoresIFN3)
-#' data(regeneraIFN3)
-#' data(matorralIFN3)
-#' l1 <- IFN2forest(piesMayoresIFN3, IFN_species_mapping, SpParamsMED,
-#'                matorral = matorralIFN3, regenera = regeneraIFN3)
-#'
-#' # Estimate rooting depth
-#' soilpar <- defaultSoilParams()
-#' l2 <- estimateRootingDepthList(l1, soilpar, 300, 100, SpParamsMED)
-#'
-#' # Compare tree rooting depths
-#' print(l1[[1]]$treeData)
-#' print(l2[[1]]$treeData)
 #'
 #' @name estimateRootingDepth
 estimateRootingDepth<-function(forest, soil, PET_summer, P_summer, SpParams,
