@@ -6,6 +6,9 @@
 \usage{
 spwb_rockOptimization(
   x,
+  soil,
+  SpParams,
+  control,
   meteo,
   PLC90_target = 12,
   PLC90_tol = 0.5,
@@ -17,7 +20,13 @@ spwb_rockOptimization(
 )
 }
 \arguments{
-\item{x}{An object of class \code{\link[medfate]{spwbInput}}.}
+\item{x}{An object of class \code{\link[medfate]{forest}}.}
+
+\item{soil}{An object of class \code{\link{data.frame}} or \code{\link[medfate]{soil}}, containing soil parameters per soil layer.}
+
+\item{SpParams}{A data frame with species parameters (see \code{\link[medfate]{SpParamsDefinition}} and \code{\link[medfate]{SpParamsMED}}).}
+
+\item{control}{A list with default control parameters (see \code{\link[medfate]{defaultControl}}).}
 
 \item{meteo}{A data frame with daily meteorological data series (see \code{\link[medfate]{spwb}}).}
 
@@ -62,17 +71,13 @@ data(exampleforest)
 #Default species parameterization
 data(SpParamsMED)
 
-#Initialize soil with default soil params
-examplesoil <- soil(defaultSoilParams(2))
+#Initialize soil with two layers
+examplesoil <- defaultSoilParams(4)
 
-#Initialize control parameters
-control <- defaultControl("Granier")
-
-#Initialize input
-x <- spwbInput(exampleforest,examplesoil, SpParamsMED, control)
-
-#Rock fragment content optimization
-spwb_rockOptimization(x, meteo = examplemeteo,
+#Rock fragment content optimization (Granier)
+spwb_rockOptimization(exampleforest, soil = examplesoil,
+                      SpParams = SpParamsMED, meteo = examplemeteo,
+                      control = defaultControl("Granier"),
                       elevation = 100, latitude = 41.82592)
 }
 }

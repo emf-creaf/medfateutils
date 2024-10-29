@@ -23,7 +23,7 @@
       }
       model  =  try(nls(PLC90 ~ 100/(1+exp(slope/25*(P-SEW))), data=ResAnalysis, start=c(slope=slopeVal,P=iPval)), silent = TRUE )
       # model  =  try(nls(QPLCl9 ~ ((100-min(ResAnalysis[,2]))/(1+exp(slope/25*(P-SEW)))+min(ResAnalysis[,2])), data=ResAnalysis, start=c(slope=-2,P=80)), silent = TRUE )
-      if ( class(model) != "try-error" ) modelOK = TRUE
+      if (!inherits(model,"try-error")) modelOK = TRUE
     }
   }
 
@@ -56,7 +56,7 @@
         sigmoVal = 1
       }
       model  =  try(nls(PLC90 ~ 100/(sigmo+exp(slope/25*(P-SEW))), data=ResAnalysis, start=c(slope=slopeVal,P=iPval,sigmo=sigmoVal)), silent = TRUE )
-      if ( class(model) != "try-error" ) modelOK = TRUE
+      if (!inherits(model,"try-error")) modelOK = TRUE
     }
   }
 
@@ -88,10 +88,10 @@
 
 
   sigmaRes = rep(Inf,4)
-  if ( doModels[1] && class(model1) != "try-error" ) sigmaRes[1] = summary(model1)$sigma
-  if ( doModels[2] && class(model2) != "try-error" ) sigmaRes[2] = summary(model2)$sigma
-  if ( doModels[3] && class(model3) != "try-error" ) sigmaRes[3] = summary(model3)$sigma
-  if ( doModels[4] && class(model4) != "try-error" ) sigmaRes[4] = summary(model4)$sigma
+  if ( doModels[1] && !inherits(model1,"try-error")) sigmaRes[1] = summary(model1)$sigma
+  if ( doModels[2] && !inherits(model2,"try-error")) sigmaRes[2] = summary(model2)$sigma
+  if ( doModels[3] && !inherits(model3,"try-error")) sigmaRes[3] = summary(model3)$sigma
+  if ( doModels[4] && !inherits(model4,"try-error")) sigmaRes[4] = summary(model4)$sigma
   if ( nrow(ResAnalysis)<=3 && min(sigmaRes)%in%sigmaRes[3:4] && all(sigmaRes[3:4] > 0.5) ) sigmaRes = sigmaRes*Inf # Remove choice on the sigmoide at simu 2 if there is an another choice with 1/x.... but to be confirmed
   minSigmaModel = 0
   if ( any(sigmaRes!=Inf) ) minSigmaModel = which(sigmaRes==min(sigmaRes))
@@ -129,7 +129,10 @@
 #' corresponding to given vegetation, weather and target percent loss
 #' of conductance (PLC), following the method described in Druel et al. (2023).
 #'
-#' @param x An object of class \code{\link[medfate]{spwbInput}}.
+#' @param x An object of class \code{\link[medfate]{forest}}.
+#' @param SpParams A data frame with species parameters (see \code{\link[medfate]{SpParamsDefinition}} and \code{\link[medfate]{SpParamsMED}}).
+#' @param soil An object of class \code{\link{data.frame}} or \code{\link[medfate]{soil}}, containing soil parameters per soil layer.
+#' @param control A list with default control parameters (see \code{\link[medfate]{defaultControl}}).
 #' @param meteo A data frame with daily meteorological data series (see \code{\link[medfate]{spwb}}).
 #' @param PLC90_target Stem PLC target (quantile 90).
 #' @param PLC90_tol Limit of the PLC target tolerance, only in some conditions.
@@ -174,51 +177,52 @@
 #' #Default species parameterization
 #' data(SpParamsMED)
 #'
-#' #Initialize soil with default soil params
-#' examplesoil <- soil(defaultSoilParams(2))
+#' #Initialize soil with two layers
+#' examplesoil <- defaultSoilParams(4)
 #'
-#' #Initialize control parameters
-#' control <- defaultControl("Granier")
-#'
-#' #Initialize input
-#' x <- spwbInput(exampleforest,examplesoil, SpParamsMED, control)
-#'
-#' #Rock fragment content optimization
-#' spwb_rockOptimization(x, meteo = examplemeteo,
+#' #Rock fragment content optimization (Granier)
+#' spwb_rockOptimization(exampleforest, soil = examplesoil,
+#'                       SpParams = SpParamsMED, meteo = examplemeteo,
+#'                       control = defaultControl("Granier"),
 #'                       elevation = 100, latitude = 41.82592)
 #' }
-spwb_rockOptimization<-function(x, meteo,
+#' @export
+spwb_rockOptimization<-function(x, soil, SpParams, control, meteo,
                                 PLC90_target = 12, PLC90_tol = 0.5,
                                 max_simu = 7, model_varLim = 10,
                                 max_rocks = 99, verbose = FALSE, ...){
 
-  x$control$verbose = FALSE
-  x$control$cavitationRefill = "rate"
-  soil <- x$soil
-  nlayers <- length(soil$dVec)
-  LAI_max_coh <- x$above$LAI_live
+  control$verbose = FALSE
+  control$leafCavitationRecovery = "annual"
+  control$stemCavitationRecovery = "annual"
+  if(!inherits(soil, "soil")) {
+    soil <- medfate::soil(soil)
+  }
+  nlayers <- nrow(soil)
+
+  LAI_max_coh <- medfate::plant_LAI(x, SpParams)
   LAI_max <- sum(LAI_max_coh, na.rm = TRUE)
 
   # Select non variable parameters
-  coarseFragOri <- sum(soil$rfc*soil$dVec)/sum(soil$dVec)
+  coarseFragOri <- sum(soil$rfc*soil$widths)/sum(soil$widths)
   listCoarseFragOri <- soil$rfc
   orderCF <- order(listCoarseFragOri)
-  listDepth <- soil$dVec
+  listDepth <- soil$widths
 
-  SEW_ori <- sum(medfate::soil_waterExtractable(soil, model = x$control$soilFunctions))
+  SEW_ori <- sum(medfate::soil_waterExtractable(soil, model = control$soilFunctions))
 
   soil_max <- soil
   soil_max$rfc <- rep(0, nlayers)
   soil_min <- soil
   soil_min$rfc <- rep(max_rocks, nlayers)
-  SEW_max <- sum(medfate::soil_waterExtractable(soil_max, model = x$control$soilFunctions))
-  SEW_min <- sum(medfate::soil_waterExtractable(soil_min, model = x$control$soilFunctions))
+  SEW_max <- sum(medfate::soil_waterExtractable(soil_max, model = control$soilFunctions))
+  SEW_min <- sum(medfate::soil_waterExtractable(soil_min, model = control$soilFunctions))
 
   # Function to be optimized for factor corresponding to sew_target
   f_sew_diff <- function(factor, sew_target) {
     soil_tmp <- soil
     soil_tmp$rfc <- pmax(pmin(soil_tmp$rfc*factor,max_rocks),0)
-    sew <- sum(medfate::soil_waterExtractable(soil_tmp, model = x$control$soilFunctions))
+    sew <- sum(medfate::soil_waterExtractable(soil_tmp, model = control$soilFunctions))
     return(sew_target - sew)
   }
 
@@ -247,12 +251,11 @@ spwb_rockOptimization<-function(x, meteo,
     # Update soil for simulation
     soil_new <- soil
     soil_new$rfc <- round(listCoarseFragNew,4)
-    SEW_new <- sum(medfate::soil_waterExtractable(soil_new, model = x$control$soilFunctions))
-    x_new <- x
-    x_new$soil <- soil_new
+    SEW_new <- sum(medfate::soil_waterExtractable(soil_new, model = control$soilFunctions))
+    input_new <- medfate::spwbInput(x, soil = soil_new, SpParams = SpParams, control = control)
 
     # Launch simulation
-    S_new <- spwb(x = x_new, meteo = meteo, ...)
+    S_new <- spwb(x = input_new, meteo = meteo, ...)
 
     # 90% quantile by species of annual maximum PLC
     PLC_new <- 100*apply(summary(S_new, output="StemPLC", FUN = max),2,quantile, prob = 0.9)

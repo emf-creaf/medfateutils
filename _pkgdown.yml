@@ -13,14 +13,12 @@ reference:
   - starts_with("example")
 
 - title: Soil parameters
-  desc:  Access to and modification of soil parameter data
+  desc:  Estimation of soil parameters
   contents:
-  - starts_with("redefineSoil")
-  - starts_with("modifySoil")
   - starts_with("spwb_rock")
 
 - title: Root parameters
-  desc:  Belowground structure
+  desc:  Estimation of root parameters
   contents:
   - starts_with("estimateRooting")
   - starts_with("spwb_ldr")

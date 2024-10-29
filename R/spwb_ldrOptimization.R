@@ -27,6 +27,7 @@
 #' @param heat_stop An integer defining the number of days during to discard from the calculation of the optimal root distribution. Usefull if the soil water content initialization is not certain
 #' @param ... Additional parameters to function \code{\link[medfate]{spwb}}.
 #'
+#' @export
 spwb_ldrExploration<-function(x, meteo, cohorts = NULL,
                               RZmin = 301, RZmax = 4000, V1min = 0.01, V1max = 0.94, resolution = 10,
                               heat_stop = 0, transformation = "identity", verbose = FALSE,
@@ -38,7 +39,7 @@ spwb_ldrExploration<-function(x, meteo, cohorts = NULL,
   trans <- function(x) do.call(transformation, list(x))
   inverse_trans <- .inverse(trans, lower = 0.01, upper = 100) # inverse of the function used for the transformation
 
-  if(RZmax > x$soil$SoilDepth){
+  if(RZmax > sum(x$soil$widths)){
     if(verbose) cat("\n RZmax is larger than soil depth\n")
   }
 
@@ -46,7 +47,7 @@ spwb_ldrExploration<-function(x, meteo, cohorts = NULL,
   RZ <- as.numeric(unlist(sapply(RZ_trans, FUN = inverse_trans)))
 
   # the case where RZ = Z1 will create problems when using the LDR model -> remove if it exists
-  Z1 <- x$soil$dVec[1]
+  Z1 <- x$soil$widths[1]
   if(sum(RZ == Z1) > 0){
     if(verbose) cat("\nThe function to derive the root proportion in each soil layer is not defined for RZ = Z1 (depth of the first soil layer)\n",
                     "This value is removed\n",
@@ -72,8 +73,8 @@ spwb_ldrExploration<-function(x, meteo, cohorts = NULL,
   Z50 <- .root_ldrZ50(V = array(V1,dim = dim(mExplore)), Z = array(Z1, dim = dim(mExplore)), Z95 = t(array(RZ, dim = dim(mExplore))))
   dimnames(Z50) <- dimnames(mExplore)
   # Prepare array for V
-  V <- array(dim = c(length(x$soil$dVec),length(V1), length(RZ)),
-             dimnames = list(layer = 1:length(x$soil$dVec), V1 = V1, RZ = RZ))
+  V <- array(dim = c(length(x$soil$widths),length(V1), length(RZ)),
+             dimnames = list(layer = 1:length(x$soil$widths), V1 = V1, RZ = RZ))
 
   # Sum LAI of all species
   x$above$LAI_live <- sum(x$above$LAI_live)
@@ -133,13 +134,13 @@ spwb_ldrExploration<-function(x, meteo, cohorts = NULL,
       # Update the depth of the different soil layer to match RZ
       s. <- x$soil
       s.$SoilDepth <- RZ[j]
-      dCum <- cumsum(s.$dVec)
+      dCum <- cumsum(s.$widths)
       layersWithinRZ <- dCum < RZ[j]
       layersWithinRZ <- c(T,layersWithinRZ[-length(layersWithinRZ)])
-      s.$dVec <- s.$dVec[layersWithinRZ] # remove the layers not included
-      nl <- length(s.$dVec) #new number of layers
-      s.$dVec[nl] <- s.$dVec[nl]-dCum[nl]+RZ[j] # adjust the width of the last layer
-      # s.$Water_FC[nl] = soil$Water_FC[nl]*(s.$dVec[nl]/soil$dVec[nl]) #Adjust volume of the last layer
+      s.$widths <- s.$widths[layersWithinRZ] # remove the layers not included
+      nl <- length(s.$widths) #new number of layers
+      s.$widths[nl] <- s.$widths[nl]-dCum[nl]+RZ[j] # adjust the width of the last layer
+      # s.$Water_FC[nl] = soil$Water_FC[nl]*(s.$widths[nl]/soil$widths[nl]) #Adjust volume of the last layer
       # Adjust the other soil parameters to the new number of layers
       s.[["sand"]] <- s.[["sand"]][1:nl]
       s.[["clay"]] <- s.[["clay"]][1:nl]
@@ -155,14 +156,14 @@ spwb_ldrExploration<-function(x, meteo, cohorts = NULL,
 
       V[,i,j] <- 0
       x_1sp$belowLayers$V = x$belowLayers$V[sp,1:nl,drop = FALSE]
-      x_1sp$belowLayers$V[1,] <- root_ldrDistribution(Z50 = Z50[i,j], Z95 = RZ[j], d=s.$dVec)
+      x_1sp$belowLayers$V[1,] <- root_ldrDistribution(Z50 = Z50[i,j], Z95 = RZ[j], Z100 = sum(s.$widths), d=s.$widths)
       V[1:length(x_1sp$belowLayers$V),i,j] <- x_1sp$belowLayers$V
 
       x_1sp[["soil"]] <- s.
       s_res <- spwb(x = x_1sp, meteo = meteo, ...)
 
       # Outputs
-      years <- substr(as.Date(rownames(meteo)), start = 1, stop = 4)
+      years <- substr(as.Date(meteo$dates), start = 1, stop = 4)
       ma <- function(x,n=10){
         f = stats::filter(x,rep(1/n,n), method = "convolution", sides = 2)
         f = f[!is.na(f)]
@@ -262,7 +263,7 @@ spwb_ldrExploration<-function(x, meteo, cohorts = NULL,
 #' data(examplemeteo)
 #'
 #' #Load example plot plant data
-#' data(exampleforestMED)
+#' data(exampleforest)
 #'
 #' #Default species parameterization
 #' data(SpParamsMED)
@@ -274,7 +275,7 @@ spwb_ldrExploration<-function(x, meteo, cohorts = NULL,
 #' control <- defaultControl("Granier")
 #'
 #' #Initialize input
-#' x <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+#' x <- spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 #'
 #' #Run exploration (weather subset for faster computation)
 #' y <- spwb_ldrExploration(x = x, meteo = examplemeteo[1:50,],
@@ -286,6 +287,7 @@ spwb_ldrExploration<-function(x, meteo, cohorts = NULL,
 #' }
 #'
 #' @name spwb_ldrOptimization
+#' @export
 spwb_ldrOptimization<-function(y, psi_crit, opt_mode = 1) {
 
 

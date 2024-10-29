@@ -54,6 +54,7 @@
 #'  \code{\link{spwb_ldrOptimization}} for when no measured data is available,
 #'  \code{\link[medfate]{spwb}}, \code{\link[medfate]{soil}}, \code{\link{root_ldrDistribution}}
 #'
+#' @export
 spwb_ldrCalibration <- function(x, meteo, calibVar, obs,
                                RZmin = 301, RZmax = 4000, V1min = 0.01,
                                V1max = 0.94, resolution = 20, heat_stop = 0,

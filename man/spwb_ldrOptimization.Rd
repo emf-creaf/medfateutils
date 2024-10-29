@@ -93,7 +93,7 @@ and limitations of the optimization method are given in Cabon et al. (2019).
 data(examplemeteo)
 
 #Load example plot plant data
-data(exampleforestMED)
+data(exampleforest)
 
 #Default species parameterization
 data(SpParamsMED)
@@ -105,7 +105,7 @@ examplesoil <- soil(defaultSoilParams(2))
 control <- defaultControl("Granier")
 
 #Initialize input
-x <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+x <- spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 
 #Run exploration (weather subset for faster computation)
 y <- spwb_ldrExploration(x = x, meteo = examplemeteo[1:50,],

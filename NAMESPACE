@@ -2,6 +2,10 @@
 
 export(estimateRootingDepth)
 export(estimateRootingDepthList)
+export(spwb_ldrCalibration)
+export(spwb_ldrExploration)
+export(spwb_ldrOptimization)
+export(spwb_rockOptimization)
 import(medfate)
 importFrom(assertthat,assert_that)
 importFrom(cli,cli_li)
