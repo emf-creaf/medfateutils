@@ -123,23 +123,21 @@
   return(SEW_target)
 }
 
-
-
 #' Optimization of rock fragment content
 #'
 #' Function \code{spwb_rockOptimization} finds optimum rock fragment content in the soil
 #' corresponding to given vegetation, weather and target percent loss
 #' of conductance (PLC), following the method described in Druel et al. (2023).
 #'
-#' @param x An object of class \code{\link{spwbInput}}.
-#' @param meteo A data frame with daily meteorological data series (see \code{\link{spwb}}).
+#' @param x An object of class \code{\link[medfate]{spwbInput}}.
+#' @param meteo A data frame with daily meteorological data series (see \code{\link[medfate]{spwb}}).
 #' @param PLC90_target Stem PLC target (quantile 90).
 #' @param PLC90_tol Limit of the PLC target tolerance, only in some conditions.
 #' @param max_simu Maximum of simulation authorized before stopping.
 #' @param model_varLim Limit of the soil extractable water (SEW) variation of the model accepted.
 #' @param max_rocks Maximum content in coarse fragments allowed for any soil layer.
 #' @param verbose A logical value. Print the internal messages of the function?
-#' @param ... Additional parameters to function \code{\link{spwb}}.
+#' @param ... Additional parameters to function \code{\link[medfate]{spwb}}.
 #'
 #' @details
 #' The function performs a model inversion based on an ecohydrological assumption,
@@ -163,7 +161,7 @@
 #'
 #' Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 #'
-#' @seealso \code{\link{spwb}}, \code{\link{soil}}, \code{\link{spwb_ldrOptimization}}
+#' @seealso \code{\link[medfate]{spwb}}, \code{\link[medfate]{soil}}, \code{\link{spwb_ldrOptimization}}
 #'
 #' @examples
 #' \donttest{
@@ -189,7 +187,6 @@
 #' spwb_rockOptimization(x, meteo = examplemeteo,
 #'                       elevation = 100, latitude = 41.82592)
 #' }
-#'
 spwb_rockOptimization<-function(x, meteo,
                                 PLC90_target = 12, PLC90_tol = 0.5,
                                 max_simu = 7, model_varLim = 10,

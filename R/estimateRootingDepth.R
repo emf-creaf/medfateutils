@@ -21,7 +21,6 @@
 #'
 #' @seealso \code{\link[medfate]{forest}}
 #'
-#' @examples
 #'
 #' @name estimateRootingDepth
 estimateRootingDepth<-function(forest, soil, PET_summer, P_summer, SpParams,

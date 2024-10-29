@@ -15,7 +15,7 @@
 
 #' @rdname spwb_ldrOptimization
 #'
-#' @param x An object of class \code{\link{spwbInput}}.
+#' @param x An object of class \code{\link[medfate]{spwbInput}}.
 #' @param meteo A data frame with daily meteorological data series (see \code{\link{spwb}}).
 #' @param cohorts A character string with the names of cohorts to be explored. If \code{NULL} then all cohorts are explored.
 #' @param RZmin The minimum value of RZ (the rooting depth) to be explored (in mm)
@@ -25,7 +25,7 @@
 #' @param resolution An integer defining the number of values to obtain by discretization of the root parameters RZ and V1. The number of parameter combinations and therefore the computation cost increases increase with the square of resolution
 #' @param transformation Function to modify the size of Z intervals to be explored (by default, bins are equal).
 #' @param heat_stop An integer defining the number of days during to discard from the calculation of the optimal root distribution. Usefull if the soil water content initialization is not certain
-#' @param ... Additional parameters to function \code{\link{spwb}}.
+#' @param ... Additional parameters to function \code{\link[medfate]{spwb}}.
 #'
 spwb_ldrExploration<-function(x, meteo, cohorts = NULL,
                               RZmin = 301, RZmax = 4000, V1min = 0.01, V1max = 0.94, resolution = 10,
