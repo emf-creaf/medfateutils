@@ -14,6 +14,7 @@ Authors@R: c(
 Description: Utility functions to facilitate defining inputs (soil, species or vegetation parameters) for simulations with
   package medfate.
 License: GPL (>= 2)
+URL: https://emf-creaf.github.io/medfateutils/, https://github.com/emf-creaf/medfateutils
 Depends: R (>= 3.4.0), medfate (>= 4.0.0)
 Imports: assertthat, cli, methods
 Encoding: UTF-8

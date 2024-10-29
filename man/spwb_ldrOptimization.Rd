@@ -87,36 +87,6 @@ inducing 50 percent of loss of conductance for the and gymnosperms and 88 percen
 the angiosperms (Urli et al., 2013, Brodribb et al., 2010). Details of the hypothesis
 and limitations of the optimization method are given in Cabon et al. (2019).
 }
-\examples{
-\donttest{
-#Load example daily meteorological data
-data(examplemeteo)
-
-#Load example plot plant data
-data(exampleforest)
-
-#Default species parameterization
-data(SpParamsMED)
-
-#Initialize soil with default soil params
-examplesoil <- soil(defaultSoilParams(2))
-
-#Initialize control parameters
-control <- defaultControl("Granier")
-
-#Initialize input
-x <- spwbInput(exampleforest,examplesoil, SpParamsMED, control)
-
-#Run exploration (weather subset for faster computation)
-y <- spwb_ldrExploration(x = x, meteo = examplemeteo[1:50,],
-                        elevation = 100, latitude = 41.82592)
-
-#Optimization under different modes
-spwb_ldrOptimization(y = y, psi_crit = c(-2,-3,-4), opt_mode = 1)
-
-}
-
-}
 \references{
 Brodribb, T.J., Bowman, D.J.M.S., Nichols, S., Delzon, S., Burlett, R., 2010. Xylem function and growth rate interact to determine recovery rates after exposure to extreme water deficit. New Phytol. 188, 533–542. doi:10.1111/j.1469-8137.2010.03393.x
 

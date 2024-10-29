@@ -95,7 +95,7 @@ spwb_ldrExploration<-function(x, meteo, cohorts = NULL,
     coh = cohorts[ci]
     sp = which(row.names(x$cohorts)==coh)
 
-    cat(paste("Exploring root distribution of cohort", coh,"(", x$cohorts$Name[sp],"):\n"))
+    if(verbose) cat(paste("Exploring root distribution of cohort", coh,"(", x$cohorts$Name[sp],"):\n"))
 
     x_1sp <- x
     x_1sp$cohorts <- x$cohorts[sp,,drop = FALSE]
@@ -126,7 +126,7 @@ spwb_ldrExploration<-function(x, meteo, cohorts = NULL,
     x_1sp$control$verbose <- F
 
 
-    cli::cli_progress_bar(name = "Exploring combinations", total = nrow(cc))
+    if(verbose) cli::cli_progress_bar(name = "Exploring combinations", total = nrow(cc))
     for(row in 1:nrow(cc)){
       i <- cc[row,1]
       j <- cc[row,2]
@@ -189,11 +189,11 @@ spwb_ldrExploration<-function(x, meteo, cohorts = NULL,
       } else {
         An[ci,i,j] <- mean(s_res$Plants$NetPhotosynthesis[op_days], na.rm=TRUE)
       }
-      cli::cli_progress_update()
+      if(verbose) cli::cli_progress_update()
     }
     cat("\n")
   }
-  cli::cli_progress_done()
+  if(verbose) cli::cli_progress_done()
   res <-list(cohorts = cohorts, RZ = RZ, V1 = V1, Z50 = Z50, E = E, An = An, PsiMin = PsiMin)
   class(res)<-list("spwb_ldrExploration","list")
   return(res)
@@ -256,35 +256,6 @@ spwb_ldrExploration<-function(x, meteo, cohorts = NULL,
 #' Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 #'
 #' @seealso \code{\link{spwb}}, \code{\link{soil}}, \code{\link{root_ldrDistribution}}
-#'
-#' @examples
-#' \donttest{
-#' #Load example daily meteorological data
-#' data(examplemeteo)
-#'
-#' #Load example plot plant data
-#' data(exampleforest)
-#'
-#' #Default species parameterization
-#' data(SpParamsMED)
-#'
-#' #Initialize soil with default soil params
-#' examplesoil <- soil(defaultSoilParams(2))
-#'
-#' #Initialize control parameters
-#' control <- defaultControl("Granier")
-#'
-#' #Initialize input
-#' x <- spwbInput(exampleforest,examplesoil, SpParamsMED, control)
-#'
-#' #Run exploration (weather subset for faster computation)
-#' y <- spwb_ldrExploration(x = x, meteo = examplemeteo[1:50,],
-#'                         elevation = 100, latitude = 41.82592)
-#'
-#' #Optimization under different modes
-#' spwb_ldrOptimization(y = y, psi_crit = c(-2,-3,-4), opt_mode = 1)
-#'
-#' }
 #'
 #' @name spwb_ldrOptimization
 #' @export
