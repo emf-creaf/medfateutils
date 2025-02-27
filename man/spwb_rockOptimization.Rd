@@ -10,10 +10,9 @@ spwb_rockOptimization(
   SpParams,
   control,
   meteo,
-  PLC90_target = 12,
-  PLC90_tol = 0.5,
-  max_simu = 7,
-  model_varLim = 10,
+  PLCquantile = 0.9,
+  qPLC_target = 12,
+  qPLC_tol = 0.5,
   max_rocks = 99,
   verbose = FALSE,
   ...
@@ -30,13 +29,11 @@ spwb_rockOptimization(
 
 \item{meteo}{A data frame with daily meteorological data series (see \code{\link[medfate]{spwb}}).}
 
-\item{PLC90_target}{Stem PLC target (quantile 90).}
+\item{PLCquantile}{Maximum PLC quantile to be calculated across years.}
 
-\item{PLC90_tol}{Limit of the PLC target tolerance, only in some conditions.}
+\item{qPLC_target}{Target PLC to be achieved (by default 12\%).}
 
-\item{max_simu}{Maximum of simulation authorized before stopping.}
-
-\item{model_varLim}{Limit of the soil extractable water (SEW) variation of the model accepted.}
+\item{qPLC_tol}{Tolerance of PLC difference to target accepted when finding solution.}
 
 \item{max_rocks}{Maximum content in coarse fragments allowed for any soil layer.}
 
@@ -46,7 +43,7 @@ spwb_rockOptimization(
 }
 \value{
 Function \code{spwb_rockOptimization} returns a list containing the estimated rock fragment content,
-the corresponding soil extractable water and a dataframe of simulation results needed for the estimation.
+the corresponding soil extractable water and the number of simulation runs performed.
 }
 \description{
 Function \code{spwb_rockOptimization} finds optimum rock fragment content in the soil
@@ -56,7 +53,7 @@ of conductance (PLC), following the method described in Druel et al. (2023).
 \details{
 The function performs a model inversion based on an ecohydrological assumption,
 consisting in that forest leaf area index is in equilibrium with a low embolism
-rate under normal conditions. This is translated in that the 90\% interannual quantile of
+rate under normal conditions. This is translated in that the (by default 90\%) interannual quantile of
 the maximum annual percent loss of conductance (PLC), averaged over plant cohorts,
 should be close to a target PLC value (by default 12\%).
 }
